@@ -1,0 +1,13 @@
+{
+  "Name": "RuneMagic",
+  "Author": "fierro",
+  "Version": "0.1.0",
+  "Description": "Adds a new magic system to the game.",
+  "UniqueID": "fierro.rune_magic",
+  "UpdateKeys": [
+    "R"
+  ],
+  "EntryDll": "runemagic.dll",
+  "MinimumApiVersion": "3.0.0",
+
+}

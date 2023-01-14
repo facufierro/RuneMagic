@@ -1,0 +1,78 @@
+[
+	{
+		"$ItemType": "CraftingRecipe",
+		"ID": "rune_translocation_recipe",
+		"KnownByDefault": true,
+		"Ingredients": [
+			{
+				"Type": "VanillaObject",
+				"Value": 390,
+				"Quantity": 1
+			}
+		],
+		"Result": [
+			{
+				"Value": {
+					"Value": "fierro.rune_magic_dga/rune_translocation"
+				}
+			}
+		]
+	},
+	{
+		"$ItemType": "CraftingRecipe",
+		"ID": "rune_water_recipe",
+		"KnownByDefault": true,
+		"Ingredients": [
+			{
+				"Type": "VanillaObject",
+				"Value": 390,
+				"Quantity": 1
+			}
+		],
+		"Result": [
+			{
+				"Value": {
+					"Value": "fierro.rune_magic_dga/rune_water"
+				}
+			}
+		]
+	},
+	{
+		"$ItemType": "CraftingRecipe",
+		"ID": "rune_magic_recipe",
+		"KnownByDefault": true,
+		"Ingredients": [
+			{
+				"Type": "VanillaObject",
+				"Value": 390,
+				"Quantity": 1
+			}
+		],
+		"Result": [
+			{
+				"Value": {
+					"Value": "fierro.rune_magic_dga/rune_magic"
+				}
+			}
+		]
+	},
+	{
+		"$ItemType": "CraftingRecipe",
+		"ID": "runic_inscription_table_recipe",
+		"KnownByDefault": true,
+		"Ingredients": [
+			{
+				"Type": "VanillaObject",
+				"Value": 390,
+				"Quantity": 1
+			}
+		],
+		"Result": [
+			{
+				"Value": {
+					"Value": "fierro.rune_magic_dga/runic_inscription_table"
+				}
+			}
+		]
+	}
+]

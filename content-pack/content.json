@@ -1,0 +1,14 @@
+[
+    {
+        "$ItemType": "ContentIndex",
+        "FilePath": "objects.json"
+    },
+    {
+        "$ItemType": "ContentIndex",
+        "FilePath": "crafting_stations.json"
+    },
+    {
+        "$ItemType": "ContentIndex",
+        "FilePath": "recipes.json"
+    }
+]

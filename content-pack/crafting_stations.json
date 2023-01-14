@@ -1,0 +1,8 @@
+[
+    {
+        "$ItemType": "BigCraftable",
+        "ID": "runic_inscription_table",
+        "Texture": "assets/runic_inscription_table.png",
+        "ProvidesLight": true
+    }
+]

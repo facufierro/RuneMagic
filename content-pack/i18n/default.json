@@ -1,0 +1,22 @@
+{
+	//Rune of Translocation
+	"object.rune_translocation.name": "Rune of Translocation",
+	"object.rune_translocation.description": "Teleports the player to a target location.",
+	"crafting.rune_translocation_recipe.name": "Rune of Translocation",
+	"crafting.rune_translocation_recipe.description": "Teleports the player to a target location.",
+	//Rune of Water
+	"object.rune_water.name": "Rune of Water",
+	"object.rune_water.description": "Place it in the ground to water the area around it until depleted.",
+	"crafting.rune_water_recipe.name": "Rune of Water",
+	"crafting.rune_water_recipe.description": "Place it in the ground to water the area around it until depleted.",
+	//Rune of Magic
+	"object.rune_magic.name": "Rune of Magic",
+	"object.rune_magic.description": "Launches a magic projectile that seeks the nearest enemy.",
+	"crafting.rune_magic_recipe.name": "Rune of Magic",
+	"crafting.rune_magic_recipe.description": "Launches a magic projectile that seeks the nearest enemy.",
+	//Runic Inscription Table
+	"big-craftable.runic_inscription_table.name": "Runic Inscription Table",
+	"big-craftable.runic_inscription_table.description": "Table used to inscribe runes.",
+	"crafting.runic_inscription_table_recipe.name": "Runic Inscription Table",
+	"crafting.runic_inscription_table_recipe.description": "Table used to inscribe runes."
+}

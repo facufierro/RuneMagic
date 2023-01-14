@@ -1,0 +1,32 @@
+[
+    {
+        "$ItemType": "Object",
+        "ID": "rune_translocation",
+        "Texture": "assets/runes/rune_translocation.png",
+        "Category": "Crafting",
+        "Placeable": false,
+        "HideFromShippingCollection": true
+    },
+    {
+        "$ItemType": "Object",
+        "ID": "rune_water",
+        "Texture": "assets/runes/rune_water.png",
+        "Category": "Crafting",
+        "Placeable": true,
+        "HideFromShippingCollection": true,
+        "SprinklerTiles": [
+            {
+                "X": -2,
+                "Y": -2
+            }
+        ]
+    },
+    {
+        "$ItemType": "Object",
+        "ID": "rune_magic",
+        "Texture": "assets/runes/rune_magic.png",
+        "Category": "Crafting",
+        "Placeable": false,
+        "HideFromShippingCollection": true
+    }
+]
