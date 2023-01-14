@@ -5,34 +5,27 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Monsters;
-
+using Object = StardewValley.Object;
 namespace RuneMagic
 {
-    public interface IDynamicGameAssetsApi
-    {
-        public string GetDGAItemId(object item_);
-        public object SpawnDGAItem(string fullId, Color? color);
-        public string[] ListContentPacks();
-        public string[] GetItemsByPack(string packname);
-        public string[] GetAllItems();
-        public void AddEmbeddedPack(IManifest manifest, string dir);
-    }
-    public interface IJsonAssetsApi
-    {
-        int GetObjectId(string name);
-        void LoadAssets(string path);
-    }
+
 
     internal sealed class ModEntry : Mod
     {
 
+        private List<Rune> Runes = new List<Rune>();
 
-        private IDynamicGameAssetsApi apiDGA;
+
+        private IJsonAssetsApi JsonAssets;
+        private ISpaceCoreApi SpaceCore;
+        private IConditionsChecker ConditionsChecker;
 
         public override void Entry(IModHelper helper)
         {
@@ -42,35 +35,53 @@ namespace RuneMagic
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
+            helper.Events.GameLoop.Saving += OnSaving;
+            helper.Events.GameLoop.Saved += OnSaved;
         }
+
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            apiDGA = Helper.ModRegistry.GetApi<IDynamicGameAssetsApi>("spacechase0.DynamicGameAssets");
-            if (apiDGA != null)
+            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
+            if (JsonAssets == null)
             {
-                IManifest manifest = new MyManifest("fierro.rune_magic_dga", "rune_magic_dga", "fierro", "Content for RuneMagicMod", new SemanticVersion("0.1.0"))
-                {
-                    ContentPackFor = new MyManifestContentPackFor
-                    {
-                        UniqueID = "spacechase0.DynamicGameAssets"
-                    },
-                    ExtraFields = new Dictionary<string, object>() { { "DGA.FormatVersion", 2 }, { "DGA.ConditionsFormatVersion", "1.28.4" } }
-                };
-                //get the path to dga folder
-
-                apiDGA.AddEmbeddedPack(manifest, Path.Combine(Helper.DirectoryPath, "content-pack"));
+                Monitor.Log("Can't find Json Assets API", LogLevel.Error);
+                return;
             }
+            JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
+
+            SpaceCore = Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
+            if (SpaceCore == null)
+            {
+                Monitor.Log("Can't find SpaceCore API", LogLevel.Error);
+                return;
+            }
+            SpaceCore.RegisterSerializerType(typeof(Rune));
+
+            ConditionsChecker = Helper.ModRegistry.GetApi<IConditionsChecker>("Cherry.ExpandedPreconditionsUtility");
+            if (ConditionsChecker == null)
+            {
+                Monitor.Log("Can't find ConditionsChecker API", LogLevel.Error);
+                return;
+            }
+            ConditionsChecker.Initialize(false, "RuneMagic");
+
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            //add embeded content pack using the manifest.json in the content pack
 
+        }
+        private void OnSaving(object sender, SavingEventArgs e)
+        {
 
+        }
+        private void OnSaved(object sender, SavedEventArgs e)
+        {
 
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             InitializeRunes();
+
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
@@ -82,9 +93,11 @@ namespace RuneMagic
                 //if the item is a rune and is current item write to console the name and charges
                 if (Game1.player.CurrentItem is Rune)
                 {
-
+                    Rune rune = (Rune)Game1.player.CurrentItem;
+                    rune.Charges--;
                     //write to console the name and charges
-                    Monitor.Log($"Name: {((Rune)Game1.player.CurrentItem).Name} Charges: {((Rune)Game1.player.CurrentItem).Charges}", LogLevel.Info);
+                    Monitor.Log(rune.Name + " " + rune.Charges);
+
                 }
 
             }
@@ -96,6 +109,8 @@ namespace RuneMagic
 
         private void InitializeRunes()
         {
+
+
             //get all items from player inventory
             var items = Game1.player.Items;
             //loop through all items with a for loop
@@ -103,10 +118,15 @@ namespace RuneMagic
             {
                 if (items[i] != null && items[i].Name.Contains("Rune of "))
                 {
+                    //check if 
                     //cast the item to a rune
                     items[i] = new Rune(items[i].ParentSheetIndex, items[i].Stack);
+                    //add the rune to the list of runes in inventory
+                    Runes.Add((Rune)items[i]);
                 }
             }
+
         }
+
     }
 }

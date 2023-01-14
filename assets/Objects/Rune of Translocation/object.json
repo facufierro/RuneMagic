@@ -1,0 +1,17 @@
+{
+    "Name": "Rune of Translocation",
+    "Price": 200,
+    "Description": "Teleports you to a target location.",
+    "Category": "Crafting",
+    "Edibility": -300,
+    "Recipe": {
+        "ResultCount": 1,
+        "Ingredients": [
+            {
+                "Object": 390,
+                "Count": 1
+            }
+        ],
+        "IsDefault": true
+    }
+}

@@ -22,7 +22,7 @@ namespace RuneMagic
         Timed
     }
 
-    internal class Spell
+    public class Spell
     {
         public SpellType Type { get; set; }
 
