@@ -10,8 +10,10 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Monsters;
 using StardewValley.Projectiles;
+using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.Spells
+namespace RuneMagic.assets.Spells
+
 {
 
     public enum SpellType
@@ -58,9 +60,16 @@ namespace RuneMagic.Spells
         }
         public void Water()
         {
-            Type = SpellType.Active;
-            //print a message
-            Game1.addHUDMessage(new HUDMessage("Water spell cast", 2));
+            //get tile at cursor position
+            Vector2 target = Game1.currentCursorTile;
+            //check if it can be watered
+            if (Game1.currentLocation.terrainFeatures.ContainsKey(target) && Game1.currentLocation.terrainFeatures[target] is HoeDirt)
+            {
+                //water the tile
+                HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[target];
+                dirt.state.Value = HoeDirt.watered;
+
+            }
 
         }
     }

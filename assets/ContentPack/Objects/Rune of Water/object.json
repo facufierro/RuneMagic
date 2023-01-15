@@ -1,7 +1,7 @@
 {
-  "Name": "Rune of Translocation",
-  "Price": -1,
-  "Description": "Teleports you to a target location.",
+  "Name": "Rune of Water",
+  "Price": 0,
+  "Description": "Waters tiles at target location",
   "Category": "Crafting",
   "Edibility": -300,
   "Recipe": {

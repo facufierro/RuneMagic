@@ -8,7 +8,7 @@ using StardewModdingAPI.Events;
 using Object = StardewValley.Object;
 using System.Xml.Serialization;
 using System.Threading;
-using RuneMagic.Spells;
+using RuneMagic.assets.Spells;
 
 namespace RuneMagic.assets.Items
 {
@@ -42,6 +42,7 @@ namespace RuneMagic.assets.Items
                     Spell.Translocation();
                     break;
                 case "Water":
+                    Spell.Water();
                     break;
                 default:
                     break;
