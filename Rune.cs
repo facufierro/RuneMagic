@@ -14,27 +14,21 @@ namespace RuneMagic
     public class Rune : Object
     {
 
-
         public int Charges { get; set; }
         public Spell Spell { get; set; }
-
 
 
         public Rune()
         {
         }
-        //make a constructor of rune using the constructor for object
-        public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
+
+        public Rune(Item item)
         {
             Charges = 5;
             Spell = new Spell();
 
-            ParentSheetIndex = parentSheetIndex;
-            Stack = stack;
-            IsRecipe = isRecipe;
-
+            ParentSheetIndex = item.ParentSheetIndex;
+            Stack = item.Stack;
         }
-
-
     }
 }

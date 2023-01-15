@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -11,8 +12,8 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Monsters;
 using Object = StardewValley.Object;
+
 namespace RuneMagic
 {
 
@@ -20,23 +21,14 @@ namespace RuneMagic
     internal sealed class ModEntry : Mod
     {
 
-        private List<Rune> Runes = new List<Rune>();
-
-
         private IJsonAssetsApi JsonAssets;
         private ISpaceCoreApi SpaceCore;
-        private IConditionsChecker ConditionsChecker;
 
         public override void Entry(IModHelper helper)
         {
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
-            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
-            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
-            helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
-            helper.Events.Player.InventoryChanged += OnInventoryChanged;
-            helper.Events.GameLoop.Saving += OnSaving;
-            helper.Events.GameLoop.Saved += OnSaved;
+            helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -56,77 +48,47 @@ namespace RuneMagic
                 return;
             }
             SpaceCore.RegisterSerializerType(typeof(Rune));
-
-            ConditionsChecker = Helper.ModRegistry.GetApi<IConditionsChecker>("Cherry.ExpandedPreconditionsUtility");
-            if (ConditionsChecker == null)
-            {
-                Monitor.Log("Can't find ConditionsChecker API", LogLevel.Error);
-                return;
-            }
-            ConditionsChecker.Initialize(false, "RuneMagic");
-
-        }
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-
-        }
-        private void OnSaving(object sender, SavingEventArgs e)
-        {
-
-        }
-        private void OnSaved(object sender, SavedEventArgs e)
-        {
-
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             InitializeRunes();
-
-        }
-        private void OnDayStarted(object sender, DayStartedEventArgs e)
-        {
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (e.Button == SButton.MouseRight)
             {
-                //if the item is a rune and is current item write to console the name and charges
-                if (Game1.player.CurrentItem is Rune)
-                {
-                    Rune rune = (Rune)Game1.player.CurrentItem;
-                    rune.Charges--;
-                    //write to console the name and charges
-                    Monitor.Log(rune.Name + " " + rune.Charges);
 
-                }
+                //if current item is a rune print name and charges as warn
+
+                Rune rune = (Rune)Game1.player.CurrentItem;
+                Monitor.Log(rune.Name + " " + rune.Charges, LogLevel.Warn);
+
+
+
 
             }
-        }
-        private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
-        {
-
         }
 
         private void InitializeRunes()
         {
-
-
-            //get all items from player inventory
-            var items = Game1.player.Items;
-            //loop through all items with a for loop
-            for (int i = 0; i < items.Count; i++)
+            //player not null 
+            if (Game1.player == null)
             {
-                if (items[i] != null && items[i].Name.Contains("Rune of "))
-                {
-                    //check if 
-                    //cast the item to a rune
-                    items[i] = new Rune(items[i].ParentSheetIndex, items[i].Stack);
-                    //add the rune to the list of runes in inventory
-                    Runes.Add((Rune)items[i]);
-                }
+                return;
             }
 
-        }
+            //get objects in player inventory that have "Rune of " in the name
+            var runes = Game1.player.Items.Where(i => i != null && i.Name.Contains("Rune of ")).ToList();
 
+            for (int i = 0; i < runes.Count; i++)
+            {
+                if (runes[i] is not Rune)
+                {
+                    //convert the item to an object of type Rune
+                    runes[i] = new Rune(runes[i]);
+
+                }
+            }
+        }
     }
 }
