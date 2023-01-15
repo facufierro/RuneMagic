@@ -22,13 +22,17 @@ namespace RuneMagic
         {
         }
 
-        public Rune(Item item)
+        public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
-            Charges = 5;
+            Charges = 1;
             Spell = new Spell();
 
-            ParentSheetIndex = item.ParentSheetIndex;
-            Stack = item.Stack;
+            //ParentSheetIndex = parentSheetIndex;
+            //Stack = stack;
+            //IsRecipe = isRecipe;
+
+
         }
+
     }
 }

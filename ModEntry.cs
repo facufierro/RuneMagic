@@ -1,18 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.IO;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using Object = StardewValley.Object;
+using StardewValley.Objects;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using StardewValley.Menus;
+using StardewValley.Tools;
+using StardewValley.Locations;
+using StardewValley.TerrainFeatures;
+using StardewValley.BellsAndWhistles;
+using StardewValley.Characters;
+using StardewValley.Events;
+using StardewValley.Network;
+
 
 namespace RuneMagic
 {
@@ -51,43 +60,49 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            InitializeRunes();
+            ManageRunes();
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (e.Button == SButton.MouseRight)
             {
-
-                //if current item is a rune print name and charges as warn
-
-                Rune rune = (Rune)Game1.player.CurrentItem;
-                Monitor.Log(rune.Name + " " + rune.Charges, LogLevel.Warn);
-
-
-
-
+                if (Game1.player.CurrentItem is Rune)
+                {
+                    Rune rune = (Rune)Game1.player.CurrentItem;
+                    Monitor.Log("Charges: " + rune.Charges, LogLevel.Warn);
+                    rune.Charges--;
+                }
             }
         }
 
-        private void InitializeRunes()
+        private void ManageRunes()
         {
-            //player not null 
+
             if (Game1.player == null)
             {
                 return;
             }
-
-            //get objects in player inventory that have "Rune of " in the name
-            var runes = Game1.player.Items.Where(i => i != null && i.Name.Contains("Rune of ")).ToList();
-
-            for (int i = 0; i < runes.Count; i++)
+            for (int i = 0; i < Game1.player.Items.Count; i++)
             {
-                if (runes[i] is not Rune)
+                if (Game1.player.Items[i] != null)
                 {
-                    //convert the item to an object of type Rune
-                    runes[i] = new Rune(runes[i]);
-
+                    if (Game1.player.Items[i] is not Rune)
+                    {
+                        if (Game1.player.Items[i].Name.Contains("Rune of "))
+                            Game1.player.Items[i] = new Rune(Game1.player.Items[i].ParentSheetIndex, Game1.player.Items[i].Stack);
+                    }
+                    else
+                    {
+                        Rune rune = (Rune)Game1.player.Items[i];
+                        if (rune.Charges < 1)
+                        {
+                            Game1.player.Items[i] = null;
+                            //play break stone sound
+                            Game1.playSound("stoneStep");
+                        }
+                    }
                 }
+
             }
         }
     }
