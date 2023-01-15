@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
 
-namespace RuneMagic
+namespace RuneMagic.assets.Api
 {
     public interface IJsonAssetsApi
     {

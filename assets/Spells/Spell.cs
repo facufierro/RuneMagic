@@ -11,7 +11,7 @@ using StardewValley;
 using StardewValley.Monsters;
 using StardewValley.Projectiles;
 
-namespace RuneMagic
+namespace RuneMagic.Spells
 {
 
     public enum SpellType

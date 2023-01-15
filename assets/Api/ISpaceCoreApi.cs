@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic
+namespace RuneMagic.assets.Api
 {
     public interface ISpaceCoreApi
     {

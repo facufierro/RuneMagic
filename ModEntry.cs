@@ -4,24 +4,10 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Objects;
 using System.Xml.Serialization;
-using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley.Menus;
-using StardewValley.Tools;
-using StardewValley.Locations;
-using StardewValley.TerrainFeatures;
-using StardewValley.BellsAndWhistles;
-using StardewValley.Characters;
-using StardewValley.Events;
-using StardewValley.Network;
-
+using RuneMagic.assets.Items;
+using RuneMagic.assets.Api;
+using Rune = RuneMagic.assets.Items.Rune;
 
 namespace RuneMagic
 {
@@ -48,7 +34,7 @@ namespace RuneMagic
                 Monitor.Log("Can't find Json Assets API", LogLevel.Error);
                 return;
             }
-            JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets"));
+            JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets/ContentPack"));
 
             SpaceCore = Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
             if (SpaceCore == null)
@@ -69,8 +55,7 @@ namespace RuneMagic
                 if (Game1.player.CurrentItem is Rune)
                 {
                     Rune rune = (Rune)Game1.player.CurrentItem;
-                    Monitor.Log("Charges: " + rune.Charges, LogLevel.Warn);
-                    rune.Charges--;
+                    rune.Activate(Game1.player.CurrentItem);
                 }
             }
         }

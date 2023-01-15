@@ -7,8 +7,10 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using Object = StardewValley.Object;
 using System.Xml.Serialization;
+using System.Threading;
+using RuneMagic.Spells;
 
-namespace RuneMagic
+namespace RuneMagic.assets.Items
 {
     [XmlType("Mods_Rune")]
     public class Rune : Object
@@ -24,15 +26,29 @@ namespace RuneMagic
 
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
-            Charges = 1;
+            Charges = 5;
             Spell = new Spell();
-
-            //ParentSheetIndex = parentSheetIndex;
-            //Stack = stack;
-            //IsRecipe = isRecipe;
-
-
         }
 
+        public void Activate(Item rune)
+        {
+
+            string runeName = rune.Name.Substring(8);
+            switch (runeName)
+            {
+                case "Magic":
+                    break;
+                case "Translocation":
+                    Spell.Translocation();
+                    break;
+                case "Water":
+                    break;
+                default:
+                    break;
+
+            }
+            Charges--;
+        }
     }
 }
+
