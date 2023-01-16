@@ -1,0 +1,17 @@
+{
+  "Name": "Rune of Teleportation",
+  "Price": 0,
+  "Description": "Teleports the player home.",
+  "Category": "Crafting",
+  "Edibility": -300,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": 390,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

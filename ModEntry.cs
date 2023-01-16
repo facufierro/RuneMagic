@@ -1,29 +1,34 @@
-﻿using System.IO;
+﻿using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.assets.Api;
+using RuneMagic.assets.Spells;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Objects;
-using System.Xml.Serialization;
-using System.Text;
-using RuneMagic.assets.Items;
-using RuneMagic.assets.Api;
+using System;
+using System.IO;
+using System.Reflection;
 using Rune = RuneMagic.assets.Items.Rune;
 
 namespace RuneMagic
 {
-
-
-    internal sealed class ModEntry : Mod
+    public sealed class ModEntry : Mod
     {
+        //instance of the Mod class
+        public static ModEntry Instance;
 
         private IJsonAssetsApi JsonAssets;
         private ISpaceCoreApi SpaceCore;
 
         public override void Entry(IModHelper helper)
         {
+            Instance = this;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
+            helper.Events.Content.AssetRequested += OnAssetRequested;
+            helper.Events.GameLoop.DayStarted += OnDayStarted;
+
+            helper.Events.GameLoop.Saving += OnSaving;
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -43,10 +48,45 @@ namespace RuneMagic
                 return;
             }
             SpaceCore.RegisterSerializerType(typeof(Rune));
+            SpaceCore.RegisterSerializerType(typeof(Spell));
+        }
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            if (e.Name.IsEquivalentTo("assets/Textures/projectile"))
+            {
+                e.LoadFromModFile<Texture2D>("assets/Textures/projectile.png", AssetLoadPriority.Medium);
+            }
+        }
+        private void OnSaving(object sender, SavingEventArgs e)
+        {
+            //remove spells from runes
+            foreach (var item in Game1.player.Items)
+            {
+                if (item is Rune rune)
+                {
+                    rune.Spell = null;
+                }
+            }
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             ManageRunes();
+        }
+        private void OnDayStarted(object sender, DayStartedEventArgs e)
+        {
+
+            foreach (Item item in Game1.player.Items)
+            {
+
+
+                if (item is Rune rune && rune.Spell == null)
+                {
+                    rune.InitializeSpell();
+
+
+                }
+
+            }
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
@@ -55,14 +95,16 @@ namespace RuneMagic
                 if (Game1.player.CurrentItem is Rune)
                 {
                     Rune rune = (Rune)Game1.player.CurrentItem;
-                    rune.Activate(Game1.player.CurrentItem);
+                    rune.Activate();
                 }
+
+                //log player facing direction to a flot in console as warn
+                Monitor.Log(Game1.player.FacingDirection.ToString(), LogLevel.Warn);
             }
         }
 
         private void ManageRunes()
         {
-
             if (Game1.player == null)
             {
                 return;
@@ -81,13 +123,11 @@ namespace RuneMagic
                         Rune rune = (Rune)Game1.player.Items[i];
                         if (rune.Charges < 1)
                         {
-                            Game1.player.Items[i] = null;
-                            //play break stone sound
-                            Game1.playSound("stoneStep");
+                            //remove one stack from the rune
+                            Game1.player.Items[i].Stack--;
                         }
                     }
                 }
-
             }
         }
     }

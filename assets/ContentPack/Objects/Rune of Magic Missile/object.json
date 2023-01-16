@@ -1,0 +1,17 @@
+{
+  "Name": "Rune of Magic Missile",
+  "Price": 0,
+  "Description": "Launches three missiles to a target.",
+  "Category": "Crafting",
+  "Edibility": -300,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": 390,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

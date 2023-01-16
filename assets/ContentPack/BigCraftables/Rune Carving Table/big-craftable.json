@@ -1,0 +1,17 @@
+{
+  "Name": "Rune Carving Table",
+  "Price": -1,
+  "CanSell": false,
+  "Description": "Table used to carve runes.",
+  "ProvidesLight": true,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": 390,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}
