@@ -1,0 +1,17 @@
+{
+  "Name": "Rune of Labor",
+  "Price": -1,
+  "Description": "Tills the soil at the target area",
+  "Category": "Crafting",
+  "Edibility": -300,
+  "Recipe": {
+    "ResultCount": 1,
+    "Ingredients": [
+      {
+        "Object": 390,
+        "Count": 1
+      }
+    ],
+    "IsDefault": true
+  }
+}

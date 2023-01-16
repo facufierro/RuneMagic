@@ -10,7 +10,11 @@ namespace RuneMagic.assets.Spells
 {
     public class Translocation : Spell
     {
-        public Translocation() { }
+        public Translocation()
+        {
+            Type = SpellType.Active;
+            School = MagicSchool.Alteration;
+        }
 
         public override void Cast()
         {

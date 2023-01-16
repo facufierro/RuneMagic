@@ -77,13 +77,9 @@ namespace RuneMagic
 
             foreach (Item item in Game1.player.Items)
             {
-
-
                 if (item is Rune rune && rune.Spell == null)
                 {
                     rune.InitializeSpell();
-
-
                 }
 
             }
@@ -125,6 +121,8 @@ namespace RuneMagic
                         {
                             //remove one stack from the rune
                             Game1.player.Items[i].Stack--;
+
+
                         }
                     }
                 }

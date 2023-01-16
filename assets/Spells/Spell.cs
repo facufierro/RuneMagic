@@ -27,11 +27,21 @@ namespace RuneMagic.assets.Spells
         Daily,
         Buff
     }
+    public enum MagicSchool
+    {
+        Abjuration, //protects against magic (warding, protection)
+        Alteration, //alters reality (teleportation, tranformation of objects)
+        Conjuration, //creates objects from nothing (summons, portals)
+        Evocation, //alters the threads of magic itself (fire, lightning, arcane )
+        Enchanting, //changes the properties of objects people (enchanting, curses)
+        Illusion, //creates illusions (invisibility, phantoms)
+    }
 
     [XmlType("Mods_Spell")]
     public abstract class Spell
     {
         public SpellType Type { get; set; }
+        public MagicSchool School { get; set; }
         public Farmer Player { get; set; } = Game1.player;
         public Vector2 Cursor { get; set; }
         public int CurrentCooldown { get; set; }

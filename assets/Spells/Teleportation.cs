@@ -9,13 +9,17 @@ namespace RuneMagic.assets.Spells
 {
     public class Teleportation : Spell
     {
-        public Teleportation() { }
+        public Teleportation()
+        {
+            Type = SpellType.Active;
+            School = MagicSchool.Alteration;
+        }
 
         public override void Cast()
         {
             if (!UsedToday)
             {
-                Game1.warpFarmer("FarmHouse", 4, 2, false);
+                Game1.warpFarmer("FarmHouse", 4, 3, false);
                 UsedToday = true;
             }
             else

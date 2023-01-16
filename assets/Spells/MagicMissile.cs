@@ -14,7 +14,10 @@ namespace RuneMagic.assets.Spells
 
         public MagicMissile()
         {
+            Type = SpellType.Active;
+            School = MagicSchool.Evocation;
             ProjectileNumber = 3;
+
         }
         public override void Cast()
         {

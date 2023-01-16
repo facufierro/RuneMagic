@@ -5,26 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 
 namespace RuneMagic.assets.Spells
 {
-    public class Hydration : Spell
+    public class Labor : Spell
     {
-        public Hydration()
+        public Labor()
         {
             Type = SpellType.Active;
-            School = MagicSchool.Evocation;
+            School = MagicSchool.Conjuration;
         }
         public override void Cast()
         {
+            //get tile at cursor location
             Cursor = Game1.currentCursorTile;
-            if (Game1.currentLocation.terrainFeatures.ContainsKey(Cursor) && Game1.currentLocation.terrainFeatures[Cursor] is HoeDirt)
+            //if tile is tillable
+            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Cursor))
             {
-                HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[Cursor];
-                dirt.state.Value = HoeDirt.watered;
-
+                //till tile
+                Game1.currentLocation.terrainFeatures.Add(Cursor, new HoeDirt());
             }
+
         }
     }
 }
