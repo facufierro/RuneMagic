@@ -25,14 +25,16 @@ namespace RuneMagic.assets.Spells.Effects
         private NetInt Range = new();
         private NetBool IsHoming = new();
         private NetVector2 CursorPosition = new();
-
+        private NetVector2 RandomCursorPosition = new();
+        private NetInt Spread = new();
 
         private Texture2D Texture;
         private readonly NetString TextureId = new();
         private Vector2 Target;
         private float nearestDistance = float.MaxValue;
         private Monster nearestMonster = null;
-
+        private bool seekTarget = false;
+        private double creationTime;
 
         private static readonly Random Rand = new();
 
@@ -41,9 +43,9 @@ namespace RuneMagic.assets.Spells.Effects
         *********/
         public SpellProjectile()
         {
-            NetFields.AddFields(MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, IsHoming, TextureId);
+            NetFields.AddFields(MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, Spread, IsHoming, TextureId);
         }
-        public SpellProjectile(Farmer source, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, bool isHoming)
+        public SpellProjectile(Farmer source, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, int spread, bool isHoming)
             : this()
         {
             Source = source;
@@ -52,6 +54,7 @@ namespace RuneMagic.assets.Spells.Effects
             BonusDamage.Value = bonusDamage;
             Velocity.Value = velocity;
             Range.Value = range;
+            Spread.Value = spread;
             IsHoming.Value = isHoming;
 
 
@@ -64,10 +67,11 @@ namespace RuneMagic.assets.Spells.Effects
             TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/projectile.png").BaseName;
 
             CursorPosition.Value = new Vector2(Game1.getMousePosition().X + Game1.viewport.X + Game1.tileSize, Game1.getMousePosition().Y + Game1.viewport.Y + Game1.tileSize);
+            RandomCursorPosition.Value = new Vector2(CursorPosition.X + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread), CursorPosition.Y + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread));
+            creationTime = Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
 
             if (IsHoming.Value)
             {
-
                 foreach (var character in source.currentLocation.characters)
                 {
                     if (character is Monster mob)
@@ -80,22 +84,46 @@ namespace RuneMagic.assets.Spells.Effects
                         }
                     }
                 }
-
             }
-
         }
 
         public override bool update(GameTime time, GameLocation location)
         {
-            if (nearestMonster is not null && (int)nearestDistance < Range)
+            ModEntry.Instance.Monitor.Log($"{seekTarget}");
+
+            //wait 2 seconds before seeking target using GameTime to wait
+            if (!seekTarget)
             {
-                Target.X = nearestMonster.position.Value.X + Game1.tileSize;
-                Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
+
+                if (time.TotalGameTime.TotalMilliseconds - creationTime > 500)
+                {
+                    seekTarget = true;
+                }
+
+
+            }
+
+            if (seekTarget == false)
+            {
+                //Target = random position around the cursor
+                Target = RandomCursorPosition;
+
             }
             else
             {
-                Target = CursorPosition;
+                if (nearestMonster is not null && (int)nearestDistance < Range)
+                {
+                    Target.X = nearestMonster.position.Value.X + Game1.tileSize;
+                    Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
+                }
+                else
+                {
+                    Target = CursorPosition;
+                }
             }
+
+
+
 
 
             Vector2 direction = Target - position;
@@ -107,14 +135,16 @@ namespace RuneMagic.assets.Spells.Effects
 
             if (distance <= 3)
             {
-                //wait 200 game ticks before despawning
                 if (time.TotalGameTime.TotalMilliseconds > 300)
                 {
                     Disappear(location);
                     return true;
                 }
-
-
+            }
+            if (time.TotalGameTime.TotalMilliseconds - creationTime > 2000)
+            {
+                Disappear(location);
+                return true;
             }
             return base.update(time, location);
         }
