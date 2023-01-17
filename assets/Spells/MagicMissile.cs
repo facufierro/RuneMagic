@@ -24,6 +24,8 @@ namespace RuneMagic.assets.Spells
         {
 
             Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, 1, 4, 1, 5, 400, true));
+            Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, 1, 4, 1, 4, 400, true));
+            Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, 1, 4, 1, 6, 400, true));
         }
     }
 }
