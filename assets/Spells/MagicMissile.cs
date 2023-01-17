@@ -23,7 +23,10 @@ namespace RuneMagic.assets.Spells
         public override void Cast()
         {
             for (int i = 0; i < ProjectileNumber; i++)
-                Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, 1, 4, 1, 7, 400, 3, true));
+                Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, "object", 1, 4, 1, 8, 400, 3, true, ""));
+            //play sound effect wand
+            Game1.playSound("wand");
+
 
         }
     }

@@ -17,6 +17,7 @@ namespace RuneMagic.assets.Spells.Effects
         ** Fields
         *********/
         private readonly Farmer Source;
+        private NetString SpellTexture = new();
         private readonly NetInt MinDamage = new();
         private readonly NetInt MaxDamage = new();
         private readonly NetInt BonusDamage = new();
@@ -27,6 +28,8 @@ namespace RuneMagic.assets.Spells.Effects
         private NetVector2 CursorPosition = new();
         private NetVector2 RandomCursorPosition = new();
         private NetInt Spread = new();
+        private NetString SoundHit = new();
+
 
         private Texture2D Texture;
         private readonly NetString TextureId = new();
@@ -43,12 +46,13 @@ namespace RuneMagic.assets.Spells.Effects
         *********/
         public SpellProjectile()
         {
-            NetFields.AddFields(MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, Spread, IsHoming, TextureId);
+            NetFields.AddFields(SpellTexture, MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, Spread, IsHoming, SoundHit, TextureId);
         }
-        public SpellProjectile(Farmer source, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, int spread, bool isHoming)
+        public SpellProjectile(Farmer source, string spellTexture, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, int spread, bool isHoming, string soundHit)
             : this()
         {
             Source = source;
+            SpellTexture.Value = spellTexture;
             MinDamage.Value = minDamage;
             MaxDamage.Value = maxDamage;
             BonusDamage.Value = bonusDamage;
@@ -56,15 +60,15 @@ namespace RuneMagic.assets.Spells.Effects
             Range.Value = range;
             Spread.Value = spread;
             IsHoming.Value = isHoming;
-
+            SoundHit.Value = soundHit;
 
             theOneWhoFiredMe.Set(source.currentLocation, Source);
             position.Value = Source.getStandingPosition();
             position.X += Source.GetBoundingBox().Width;
             position.Y += Source.GetBoundingBox().Height;
             damagesMonsters.Value = true;
-            Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/projectile.png");
-            TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/projectile.png").BaseName;
+            Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/{spellTexture}.png");
+            TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/{spellTexture}.png").BaseName;
 
             CursorPosition.Value = new Vector2(Game1.getMousePosition().X + Game1.viewport.X + Game1.tileSize, Game1.getMousePosition().Y + Game1.viewport.Y + Game1.tileSize);
             RandomCursorPosition.Value = new Vector2(CursorPosition.X + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread), CursorPosition.Y + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread));
@@ -89,9 +93,9 @@ namespace RuneMagic.assets.Spells.Effects
 
         public override bool update(GameTime time, GameLocation location)
         {
-            ModEntry.Instance.Monitor.Log($"{seekTarget}");
 
-            //wait 2 seconds before seeking target using GameTime to wait
+
+
             if (!seekTarget)
             {
 
@@ -137,11 +141,16 @@ namespace RuneMagic.assets.Spells.Effects
             {
                 if (time.TotalGameTime.TotalMilliseconds > 300)
                 {
+                    //play sound 
+                    if (SoundHit.Value != "")
+                    {
+                        Game1.playSound(SoundHit.Value);
+                    }
                     Disappear(location);
                     return true;
                 }
             }
-            if (time.TotalGameTime.TotalMilliseconds - creationTime > 2000)
+            if (time.TotalGameTime.TotalMilliseconds - creationTime > 1000)
             {
                 Disappear(location);
                 return true;

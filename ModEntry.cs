@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Rune = RuneMagic.assets.Items.Rune;
+using System.Linq;
 
 namespace RuneMagic
 {
@@ -51,12 +52,20 @@ namespace RuneMagic
             SpaceCore.RegisterSerializerType(typeof(Spell));
 
 
+
+
+
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
             if (e.Name.IsEquivalentTo("assets/Textures/projectile"))
             {
-                e.LoadFromModFile<Texture2D>("assets/Textures/projectile.png", AssetLoadPriority.Medium);
+
+                //get only the names from the textures in the assets folder
+                string[] textureNames = Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets/Spells/Effects"), "*.png", SearchOption.AllDirectories)
+                          .Select(Path.GetFileNameWithoutExtension)
+                          .ToArray();
+                e.LoadFromModFile<Texture2D>($"assets/Textures/{textureNames}.png", AssetLoadPriority.Medium);
             }
         }
         private void OnSaving(object sender, SavingEventArgs e)
