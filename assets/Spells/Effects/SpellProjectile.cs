@@ -48,9 +48,6 @@ namespace RuneMagic.assets.Spells.Effects
             position.X += Source.GetBoundingBox().Width;
             position.Y += Source.GetBoundingBox().Height;
 
-            //get cursor tile position
-            Vector2 target = Game1.currentCursorTile;
-
 
             int facingDirection = source.FacingDirection;
 
