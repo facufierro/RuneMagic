@@ -96,12 +96,18 @@ namespace RuneMagic.assets.Spells.Effects
                 Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
             }
 
-            Vector2 distance = Target - position;
-            Vector2 direction = distance;
+
+            Vector2 direction = Target - position;
             direction.Normalize();
             xVelocity.Value = direction.X * Velocity;
             yVelocity.Value = direction.Y * Velocity;
+            int distance = (int)Vector2.Distance(position, Target);
 
+            if (distance <= 1)
+            {
+                Disappear(location);
+                return true;
+            }
             return base.update(time, location);
         }
 
@@ -138,11 +144,7 @@ namespace RuneMagic.assets.Spells.Effects
 
         public override bool isColliding(GameLocation location)
         {
-            if (IsHoming.Value)
-            {
-                return location.doesPositionCollideWithCharacter(getBoundingBox()) != null;
-            }
-            else return base.isColliding(location);
+            return base.isColliding(location);
         }
 
         public override Rectangle getBoundingBox()
@@ -168,6 +170,8 @@ namespace RuneMagic.assets.Spells.Effects
         *********/
         private void Disappear(GameLocation location)
         {
+
+
             Game1.createRadialDebris(location, TextureId.Value, Game1.getSourceRectForStandardTileSheet(projectileSheet, 0), 4,
                 (int)position.X, (int)position.Y, 6 + Rand.Next(10), (int)(position.Y / (double)Game1.tileSize) + 1,
                 new Color(255, 255, 255, 8 + Rand.Next(64)), 2.0f);
