@@ -62,6 +62,8 @@ namespace RuneMagic.assets.Spells.Effects
             damagesMonsters.Value = true;
             Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/projectile.png");
             TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/projectile.png").BaseName;
+            var cursorPosition = Game1.getMousePosition();
+            var cursorPositionInGame = new Vector2(cursorPosition.X + Game1.viewport.X + Game1.tileSize, cursorPosition.Y + Game1.viewport.Y + Game1.tileSize);
 
             if (IsHoming.Value)
             {
@@ -70,7 +72,7 @@ namespace RuneMagic.assets.Spells.Effects
                 {
                     if (character is Monster mob)
                     {
-                        float distance = Utility.distance(mob.Position.X, position.X, mob.Position.Y, position.Y);
+                        float distance = Utility.distance(mob.Position.X, cursorPositionInGame.X, mob.Position.Y, cursorPositionInGame.Y);
                         if (distance < nearestDistance)
                         {
                             nearestDistance = distance;
@@ -82,8 +84,7 @@ namespace RuneMagic.assets.Spells.Effects
             }
             if (nearestMonster is null || (int)nearestDistance > Range)
             {
-                var cursorPosition = Game1.getMousePosition();
-                var cursorPositionInGame = new Vector2(cursorPosition.X + Game1.viewport.X + Game1.tileSize, cursorPosition.Y + Game1.viewport.Y + Game1.tileSize);
+
                 Target = cursorPositionInGame;
             }
         }
