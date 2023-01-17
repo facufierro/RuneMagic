@@ -96,8 +96,6 @@ namespace RuneMagic.assets.Spells.Effects
                         }
                     }
                 }
-
-
                 LookForTarget = nearestMob;
 
             }
@@ -148,6 +146,17 @@ namespace RuneMagic.assets.Spells.Effects
 
         public override bool update(GameTime time, GameLocation location)
         {
+            bool hasMonsters = false;
+            foreach (var character in location.characters)
+            {
+                if (character is Monster)
+                {
+                    hasMonsters = true;
+                    break;
+                }
+            }
+            if (!hasMonsters)
+                Homing.Value = false;
             if (Homing.Value)
             {
                 if (LookForTarget is not { Health: > 0 } || LookForTarget.currentLocation == null)
@@ -167,6 +176,7 @@ namespace RuneMagic.assets.Spells.Effects
 
             return base.update(time, location);
         }
+
 
         public override void updatePosition(GameTime time)
         {
