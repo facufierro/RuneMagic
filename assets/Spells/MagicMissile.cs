@@ -23,7 +23,7 @@ namespace RuneMagic.assets.Spells
         public override void Cast()
         {
 
-            SpellProjectile projectile1 = new SpellProjectile(Player, 5, 3, 0f, false);
+            SpellProjectile projectile1 = new SpellProjectile(Player, 5, 3, 400, true);
             Game1.currentLocation.projectiles.Add(projectile1);
 
 

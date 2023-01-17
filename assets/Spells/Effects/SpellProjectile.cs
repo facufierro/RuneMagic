@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Monsters;
 using StardewValley.Projectiles;
@@ -18,12 +20,16 @@ namespace RuneMagic.assets.Spells.Effects
         private readonly NetInt Damage = new();
         private readonly NetFloat Direction = new();
         private readonly NetFloat Velocity = new();
-        private readonly NetFloat Angle = new();
-        private NetBool Homing = new();
+        private NetInt Range = new();
+        private NetBool IsHoming = new();
+
+
 
         private Texture2D Texture;
         private readonly NetString TextureId = new();
-        private Monster LookForTarget;
+        private Vector2 Target;
+        private float nearestDistance = float.MaxValue;
+        private Monster nearestMonster = null;
 
         private static readonly Random Rand = new();
 
@@ -32,71 +38,65 @@ namespace RuneMagic.assets.Spells.Effects
         *********/
         public SpellProjectile()
         {
-            NetFields.AddFields(Damage, Direction, Velocity, Angle, Homing, TextureId);
+            NetFields.AddFields(Damage, Direction, Velocity, Range, IsHoming, TextureId);
         }
-        public SpellProjectile(Farmer source, int damage, float velocity, float angle, bool homing)
+        public SpellProjectile(Farmer source, int damage, float velocity, int range, bool isHoming)
             : this()
         {
             Source = source;
             Damage.Value = damage;
             Velocity.Value = velocity;
-            Angle.Value = angle;
-            Homing.Value = homing;
+            Range.Value = range;
+            IsHoming.Value = isHoming;
+
 
             theOneWhoFiredMe.Set(source.currentLocation, Source);
             position.Value = Source.getStandingPosition();
             position.X += Source.GetBoundingBox().Width;
             position.Y += Source.GetBoundingBox().Height;
-
-
-            int facingDirection = source.FacingDirection;
-
-            switch (facingDirection)
-            {
-                case 0:
-                    xVelocity.Value = (float)Rand.NextDouble() - angle;
-                    yVelocity.Value = -Velocity.Value;
-                    break;
-                case 1:
-                    xVelocity.Value = Velocity.Value;
-                    yVelocity.Value = (float)Rand.NextDouble() - angle;
-                    break;
-                case 2:
-                    xVelocity.Value = (float)Rand.NextDouble() - angle;
-                    yVelocity.Value = Velocity.Value;
-                    break;
-                case 3:
-                    xVelocity.Value = -Velocity.Value;
-                    yVelocity.Value = (float)Rand.NextDouble() - angle;
-                    break;
-            }
-
             damagesMonsters.Value = true;
-
             Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/projectile.png");
             TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/projectile.png").BaseName;
 
-
-            if (Homing.Value)
+            if (IsHoming.Value)
             {
-                float nearestDist = float.MaxValue;
-                Monster nearestMob = null;
+
                 foreach (var character in source.currentLocation.characters)
                 {
                     if (character is Monster mob)
                     {
-                        float dist = Utility.distance(mob.Position.X, position.X, mob.Position.Y, position.Y);
-                        if (dist < nearestDist)
+                        float distance = Utility.distance(mob.Position.X, position.X, mob.Position.Y, position.Y);
+                        if (distance < nearestDistance)
                         {
-                            nearestDist = dist;
-                            nearestMob = mob;
+                            nearestDistance = distance;
+                            nearestMonster = mob;
                         }
                     }
                 }
-                LookForTarget = nearestMob;
 
             }
+            if (nearestMonster is null)
+            {
+                var cursorPosition = Game1.getMousePosition();
+                var cursorPositionInGame = new Vector2(cursorPosition.X + Game1.viewport.X + Game1.tileSize, cursorPosition.Y + Game1.viewport.Y + Game1.tileSize);
+                Target = cursorPositionInGame;
+            }
         }
+
+        public override bool update(GameTime time, GameLocation location)
+        {
+            if (nearestMonster is not null && (int)nearestDistance < Range)
+            {
+                Target.X = nearestMonster.position.Value.X + Game1.tileSize;
+                Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
+            }
+            Vector2 direction = Target - position;
+            direction.Normalize();
+            xVelocity.Value = direction.X * Velocity;
+            yVelocity.Value = direction.Y * Velocity;
+            return base.update(time, location);
+        }
+
 
         public override void behaviorOnCollisionWithMineWall(int tileX, int tileY)
         {
@@ -113,7 +113,7 @@ namespace RuneMagic.assets.Spells.Effects
 
         public override void behaviorOnCollisionWithOther(GameLocation loc)
         {
-            if (!Homing.Value)
+            if (!IsHoming.Value)
                 Disappear(loc);
         }
 
@@ -123,13 +123,13 @@ namespace RuneMagic.assets.Spells.Effects
 
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation loc)
         {
-            if (!Homing.Value)
+            if (!IsHoming.Value)
                 Disappear(loc);
         }
 
         public override bool isColliding(GameLocation location)
         {
-            if (Homing.Value)
+            if (IsHoming.Value)
             {
                 return location.doesPositionCollideWithCharacter(getBoundingBox()) != null;
             }
@@ -140,40 +140,6 @@ namespace RuneMagic.assets.Spells.Effects
         {
             return new((int)(position.X - Game1.tileSize), (int)(position.Y - Game1.tileSize), Game1.tileSize / 2, Game1.tileSize / 2);
         }
-
-        public override bool update(GameTime time, GameLocation location)
-        {
-            bool hasMonsters = false;
-            foreach (var character in location.characters)
-            {
-                if (character is Monster)
-                {
-                    hasMonsters = true;
-                    break;
-                }
-            }
-            if (!hasMonsters)
-                Homing.Value = false;
-            if (Homing.Value)
-            {
-                if (LookForTarget is not { Health: > 0 } || LookForTarget.currentLocation == null)
-                {
-                    Disappear(location);
-                    return true;
-                }
-                else
-                {
-                    Vector2 unit = new Vector2(LookForTarget.GetBoundingBox().Center.X + 32, LookForTarget.GetBoundingBox().Center.Y + 32) - position;
-                    unit.Normalize();
-
-                    xVelocity.Value = unit.X * Velocity.Value;
-                    yVelocity.Value = unit.Y * Velocity.Value;
-                }
-            }
-
-            return base.update(time, location);
-        }
-
 
         public override void updatePosition(GameTime time)
         {
