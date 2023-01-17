@@ -51,22 +51,19 @@ namespace RuneMagic
             SpaceCore.RegisterSerializerType(typeof(Rune));
             SpaceCore.RegisterSerializerType(typeof(Spell));
 
-
-
-
-
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            if (e.Name.IsEquivalentTo("assets/Textures/projectile"))
+            string[] textureNames = Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets/Spells/Effects"), "*.png", SearchOption.AllDirectories)
+                      .Select(Path.GetFileNameWithoutExtension)
+                      .ToArray();
+            if (e.Name.IsEquivalentTo($"assets/Textures/{textureNames}"))
             {
-
-                //get only the names from the textures in the assets folder
-                string[] textureNames = Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets/Spells/Effects"), "*.png", SearchOption.AllDirectories)
-                          .Select(Path.GetFileNameWithoutExtension)
-                          .ToArray();
                 e.LoadFromModFile<Texture2D>($"assets/Textures/{textureNames}.png", AssetLoadPriority.Medium);
             }
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/mail"))
+                e.Edit(RegisterLetter);
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -85,15 +82,15 @@ namespace RuneMagic
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-
             foreach (Item item in Game1.player.Items)
             {
                 if (item is Rune rune && rune.Spell == null)
                 {
                     rune.InitializeSpell();
                 }
-
             }
+            Monitor.Log(JsonAssets.GetBigCraftableId("Rune Inscription Table").ToString(), LogLevel.Alert);
+            Game1.player.mailbox.Add("RuneMagicWizardLetter");
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
@@ -104,9 +101,6 @@ namespace RuneMagic
                     Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
                 }
-
-                //log player facing direction to a flot in console as warn
-                Monitor.Log(Game1.player.FacingDirection.ToString(), LogLevel.Warn);
             }
         }
 
@@ -138,6 +132,14 @@ namespace RuneMagic
                     }
                 }
             }
+        }
+        private void RegisterLetter(IAssetData asset)
+        {
+            var data = asset.AsDictionary<string, string>().Data;
+            data["RuneMagicWizardLetter"] = "Hello @... " +
+                "^^ I have been watching you for a while now, and I have noticed that you have an interest in magic. " +
+                "^ This is for you, my friend." +
+                $"%item object 301 %%";
         }
     }
 }

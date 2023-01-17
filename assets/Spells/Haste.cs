@@ -17,7 +17,7 @@ namespace RuneMagic.assets.Spells
 
         public override void Cast()
         {
-            Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 60, "Glyph of Haste", "Glyph of Haste"));
+            Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 10, "Glyph of Haste", "Glyph of Haste"));
         }
 
     }
