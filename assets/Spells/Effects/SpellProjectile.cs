@@ -101,12 +101,19 @@ namespace RuneMagic.assets.Spells.Effects
             direction.Normalize();
             xVelocity.Value = direction.X * Velocity;
             yVelocity.Value = direction.Y * Velocity;
-            int distance = (int)Vector2.Distance(position, Target);
 
-            if (distance <= 1)
+            float distance = Vector2.Distance(position, Target);
+
+            if (distance <= 3)
             {
-                Disappear(location);
-                return true;
+                //wait 200 game ticks before despawning
+                if (time.TotalGameTime.TotalMilliseconds > 300)
+                {
+                    Disappear(location);
+                    return true;
+                }
+
+
             }
             return base.update(time, location);
         }
