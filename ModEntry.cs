@@ -49,6 +49,8 @@ namespace RuneMagic
             }
             SpaceCore.RegisterSerializerType(typeof(Rune));
             SpaceCore.RegisterSerializerType(typeof(Spell));
+
+
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
@@ -70,7 +72,7 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            ManageRunes();
+            RegisterRunes();
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
@@ -99,7 +101,7 @@ namespace RuneMagic
             }
         }
 
-        private void ManageRunes()
+        private void RegisterRunes()
         {
             if (Game1.player == null)
             {

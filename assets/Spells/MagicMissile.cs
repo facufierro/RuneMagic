@@ -1,4 +1,5 @@
-﻿using RuneMagic.assets.Spells.Effects;
+﻿using RuneMagic.assets.Items;
+using RuneMagic.assets.Spells.Effects;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,10 @@ namespace RuneMagic.assets.Spells
         public override void Cast()
         {
 
+            SpellProjectile projectile1 = new SpellProjectile(Player, 5, 3, 0f, false);
+            Game1.currentLocation.projectiles.Add(projectile1);
 
-            for (int i = 0; i < ProjectileNumber; i++)
-            {
-                SpellProjectile projectile = new SpellProjectile(Player, 10, 3, 0.5f, true);
-                Game1.currentLocation.projectiles.Add(projectile);
-            }
+
         }
     }
 }

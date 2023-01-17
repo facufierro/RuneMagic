@@ -46,6 +46,7 @@ namespace RuneMagic.assets.Items
 
 
             string spellName = Name.Substring(8);
+            spellName = spellName.Replace(" ", "");
             //get the spell class namespace
             Type spellType = Assembly.GetExecutingAssembly().GetType("RuneMagic.assets.Spells." + spellName);
             Spell = (Spell)Activator.CreateInstance(spellType);
