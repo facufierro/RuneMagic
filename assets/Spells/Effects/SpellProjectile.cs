@@ -17,7 +17,9 @@ namespace RuneMagic.assets.Spells.Effects
         ** Fields
         *********/
         private readonly Farmer Source;
-        private readonly NetInt Damage = new();
+        private readonly NetInt MinDamage = new();
+        private readonly NetInt MaxDamage = new();
+        private readonly NetInt BonusDamage = new();
         private readonly NetFloat Direction = new();
         private readonly NetFloat Velocity = new();
         private NetInt Range = new();
@@ -31,6 +33,7 @@ namespace RuneMagic.assets.Spells.Effects
         private float nearestDistance = float.MaxValue;
         private Monster nearestMonster = null;
 
+
         private static readonly Random Rand = new();
 
         /*********
@@ -38,13 +41,15 @@ namespace RuneMagic.assets.Spells.Effects
         *********/
         public SpellProjectile()
         {
-            NetFields.AddFields(Damage, Direction, Velocity, Range, IsHoming, TextureId);
+            NetFields.AddFields(MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, IsHoming, TextureId);
         }
-        public SpellProjectile(Farmer source, int damage, float velocity, int range, bool isHoming)
+        public SpellProjectile(Farmer source, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, bool isHoming)
             : this()
         {
             Source = source;
-            Damage.Value = damage;
+            MinDamage.Value = minDamage;
+            MaxDamage.Value = maxDamage;
+            BonusDamage.Value = bonusDamage;
             Velocity.Value = velocity;
             Range.Value = range;
             IsHoming.Value = isHoming;
@@ -75,7 +80,7 @@ namespace RuneMagic.assets.Spells.Effects
                 }
 
             }
-            if (nearestMonster is null)
+            if (nearestMonster is null || (int)nearestDistance > Range)
             {
                 var cursorPosition = Game1.getMousePosition();
                 var cursorPositionInGame = new Vector2(cursorPosition.X + Game1.viewport.X + Game1.tileSize, cursorPosition.Y + Game1.viewport.Y + Game1.tileSize);
@@ -90,41 +95,45 @@ namespace RuneMagic.assets.Spells.Effects
                 Target.X = nearestMonster.position.Value.X + Game1.tileSize;
                 Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
             }
-            Vector2 direction = Target - position;
+
+            Vector2 distance = Target - position;
+            Vector2 direction = distance;
             direction.Normalize();
             xVelocity.Value = direction.X * Velocity;
             yVelocity.Value = direction.Y * Velocity;
+
             return base.update(time, location);
         }
 
 
         public override void behaviorOnCollisionWithMineWall(int tileX, int tileY)
         {
+
         }
 
-        public override void behaviorOnCollisionWithMonster(NPC npc, GameLocation loc)
+        public override void behaviorOnCollisionWithMonster(NPC npc, GameLocation location)
         {
             if (npc is not Monster)
                 return;
 
-            bool didDmg = loc.damageMonster(npc.GetBoundingBox(), Damage.Value, Damage.Value + 1, false, Source);
-            Disappear(loc);
+            bool didDmg = location.damageMonster(npc.GetBoundingBox(), MinDamage.Value + BonusDamage.Value, MaxDamage.Value + BonusDamage.Value, false, Source);
+            Disappear(location);
         }
 
-        public override void behaviorOnCollisionWithOther(GameLocation loc)
+        public override void behaviorOnCollisionWithOther(GameLocation location)
         {
-            if (!IsHoming.Value)
-                Disappear(loc);
+
+
         }
 
-        public override void behaviorOnCollisionWithPlayer(GameLocation loc, Farmer farmer)
+        public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer farmer)
         {
+
         }
 
-        public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation loc)
+        public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
-            if (!IsHoming.Value)
-                Disappear(loc);
+            Disappear(location);
         }
 
         public override bool isColliding(GameLocation location)
@@ -157,9 +166,12 @@ namespace RuneMagic.assets.Spells.Effects
         /*********
         ** Private methods
         *********/
-        private void Disappear(GameLocation loc)
+        private void Disappear(GameLocation location)
         {
-            Game1.createRadialDebris(loc, TextureId.Value, Game1.getSourceRectForStandardTileSheet(projectileSheet, 0), 4, (int)position.X, (int)position.Y, 6 + Rand.Next(10), (int)(position.Y / (double)Game1.tileSize) + 1, new Color(255, 255, 255, 8 + Rand.Next(64)), 2.0f);
+            Game1.createRadialDebris(location, TextureId.Value, Game1.getSourceRectForStandardTileSheet(projectileSheet, 0), 4,
+                (int)position.X, (int)position.Y, 6 + Rand.Next(10), (int)(position.Y / (double)Game1.tileSize) + 1,
+                new Color(255, 255, 255, 8 + Rand.Next(64)), 2.0f);
+
             destroyMe = true;
         }
     }
