@@ -1,7 +1,7 @@
 {
-  "Name": "Rune of Translocation",
+  "Name": "Rune of Displacement",
   "Price": -1,
-  "Description": "Teleports you to a target location.",
+  "Description": "Teleports the caster a short distance.",
   "Category": "Crafting",
   "Edibility": -300,
   "Recipe": {

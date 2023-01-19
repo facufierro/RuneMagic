@@ -12,7 +12,9 @@ using System.Linq;
 using Object = StardewValley.Object;
 using StardewValley.Monsters;
 using System.Collections.Generic;
-
+using Microsoft.Xna.Framework;
+using System.ComponentModel;
+using SpaceCore;
 namespace RuneMagic
 {
     public sealed class ModEntry : Mod
@@ -21,7 +23,7 @@ namespace RuneMagic
         public static ModEntry Instance;
 
         private IJsonAssetsApi JsonAssets;
-        private ISpaceCoreApi SpaceCore;
+
 
 
 
@@ -35,9 +37,9 @@ namespace RuneMagic
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.Saving += OnSaving;
-            //on charcter friendship change
+            helper.Events.Player.InventoryChanged += OnInventoryChanged;
 
-
+            SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
 
         }
 
@@ -45,9 +47,9 @@ namespace RuneMagic
         {
             JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
             JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets/ContentPack"));
-            SpaceCore = Helper.ModRegistry.GetApi<ISpaceCoreApi>("spacechase0.SpaceCore");
-            SpaceCore.RegisterSerializerType(typeof(Rune));
-            SpaceCore.RegisterSerializerType(typeof(Spell));
+            IApi spaceCore = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
+            spaceCore.RegisterSerializerType(typeof(Rune));
+            spaceCore.RegisterSerializerType(typeof(Spell));
 
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
@@ -60,12 +62,9 @@ namespace RuneMagic
                 e.LoadFromModFile<Texture2D>($"assets/Textures/{textureNames}.png", AssetLoadPriority.Medium);
             }
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Mail"))
-                e.Edit(RegisterLetter);
-            if (e.NameWithoutLocale.IsEquivalentTo("Data/Events"))
-            {
-                e.Edit(RegisterEvents);
-            }
-
+                e.Edit(RegisterMail);
+            if (e.NameWithoutLocale.IsEquivalentTo("Data/Event"))
+                e.Edit(RegisterEvent);
 
         }
         private void OnSaving(object sender, SavingEventArgs e)
@@ -82,6 +81,18 @@ namespace RuneMagic
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             RegisterRunes();
+        }
+        private void OnEventFinished(object sender, EventArgs e)
+        {
+            if (Game1.CurrentEvent.id == 15065001)
+            {
+                Object inscriptionTable = new Object(Vector2.Zero, JsonAssets.GetBigCraftableId("Inscription Table"));
+                Game1.player.Position = new Vector2(7 * Game1.tileSize, 22 * Game1.tileSize);
+                Game1.player.addItemToInventory(inscriptionTable);
+                Game1.player.holdUpItemThenMessage(inscriptionTable);
+            }
+
+
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
@@ -139,13 +150,49 @@ namespace RuneMagic
                     Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
                 }
+                //print cursor tile position and the map name
+                Monitor.Log($"Location: {Game1.currentCursorTile.X}, {Game1.currentCursorTile.Y} {Game1.currentLocation.Name}");
+                Monitor.Log($"Wizard Friendship: {Game1.player.getFriendshipHeartLevelForNPC("Wizard")}");
             }
 
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {
 
+            if (e.NewLocation.Name == "WizardHouse")
+            {
+                if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6)
+                {
+                    var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                        $"/addBigProp 10 17 {JsonAssets.GetBigCraftableId("Inscription Table")}" +
+                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
+                        $"/pause 400" +
+                        $"/advancedMove Wizard false -2 0 3 100 0 2 1 3000" +
+                        $"/move farmer 0 -6 1 true" +
+                        $"/pause 2000" +
+                        $"/speak Wizard \"What do you think about this? Beautiful, isn't it?\"" +
+                        $"/pause 500" +
+                        $"/speak Wizard \"It is a Inscription Table.\"" +
+                        $"/pause 500" +
+                        $"/speak Wizard \"With it, and the right recipes you can make magic!\"" +
+                        $"/pause 1000" +
+                        $"/speak Wizard \"Its a gift. I hope you enjoy it as much as I do.\"" +
+                        $"/end";
+
+                    e.NewLocation.startEvent(new Event(eventString, 15065001));
+
+                }
+
+
+
+
+            }
         }
+        private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
+        {
+
+        }
+
         private void RegisterRunes()
         {
             if (Game1.player == null)
@@ -175,19 +222,19 @@ namespace RuneMagic
                 }
             }
         }
-        private void RegisterLetter(IAssetData asset)
+        private void RegisterMail(IAssetData asset)
         {
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter1"] =
                 "Hello @... " +
                 "^^ I have been watching you for a while now, and I have noticed that you have an interest in magic. " +
                 "^ This is for you, friend." +
                 "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssets.GetObjectId("Rune of Haste")} 1 %%";
+                $"%item object {JsonAssets.GetObjectId("Rune of Magic Missile")} 5 %%";
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter2"] =
                 "My friend... " +
                 "^^ I can sense you have been using the gift I gave you, I hope you enjoy this one." +
                 "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssets.GetObjectId("Rune of Magic Missile")} 1 %%";
+                $"%item object {JsonAssets.GetObjectId("Rune of Magic Displacement")} 5 %%";
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter3"] =
                 "My dear friend @... " +
                 "^^ I think you will appreciate this. " +
@@ -200,11 +247,13 @@ namespace RuneMagic
                "^Please come pay me a visit when you can." +
                "^^-M. Rasmodius, Wizard";
 
+
         }
-        private void RegisterEvents(IAssetData asset)
+        private void RegisterEvent(IAssetData asset)
         {
             var data = asset.AsDictionary<string, string>().Data;
-            data[""] = "";
+            data["15065001/n RuneMagicWizardLetter4"] = "";
         }
+
     }
 }
