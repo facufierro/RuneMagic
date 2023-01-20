@@ -1,0 +1,16 @@
+{
+  "CraftingStations": [
+    {
+      "BigCraftable": "Inscription Table",
+      "ExclusiveRecipes": true,
+      "CraftingRecipes": [
+        "Rune of Haste",
+        "Rune of Hydration",
+        "Rune of Labor",
+        "Rune of Magic Missile",
+        "Rune of Teleportation",
+        "Rune of Displacement"
+      ]
+    }
+  ]
+}

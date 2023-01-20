@@ -1,0 +1,11 @@
+{
+    "Format": "1.28.0",
+    "Changes": [
+      {
+        "Action": "EditImage",
+        "Target": "mochman.rune_magic_ja/Objects/Rune of Displacement/object",
+        "FromFile": "assets/rune_displacement.png",
+        "PatchMode": "Replace"
+      }
+    ]
+}
