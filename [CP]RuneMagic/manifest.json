@@ -1,0 +1,12 @@
+{
+  "Name": "[CP]RuneMagic",
+  "Author": "fierro",
+  "Version": "1.0.0",
+  "Description": "Adds content needed for the Rune Magic mod.",
+  "UniqueID": "fierro.rune_magic_cp",
+  "UpdateKeys": [
+  ],
+  "ContentPackFor": {
+    "UniqueID": "Pathoschild.ContentPatcher"
+  }
+}

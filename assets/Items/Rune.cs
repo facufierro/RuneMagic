@@ -34,13 +34,14 @@ namespace RuneMagic.assets.Items
             Charges = 5;
             InitializeSpell();
             maximumStackSize();
+
         }
 
 
 
         public override int maximumStackSize()
         {
-            return 1;
+            return Charges;
         }
 
         public void Activate()

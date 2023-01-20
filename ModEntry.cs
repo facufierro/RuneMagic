@@ -17,6 +17,7 @@ using System.ComponentModel;
 using SpaceCore;
 using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
+using CustomCraftingStation;
 
 namespace RuneMagic
 {
@@ -36,6 +37,7 @@ namespace RuneMagic
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Content.AssetRequested += OnAssetRequested;
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
@@ -78,6 +80,11 @@ namespace RuneMagic
         private void OnBlankSave(object sender, EventArgs e)
         {
             Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssets.GetObjectId("InscriptionTable")));
+        }
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
