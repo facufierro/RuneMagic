@@ -1,11 +1,31 @@
 {
-    "Format": "1.28.0",
-    "Changes": [
-      {
-        "Action": "EditImage",
-        "Target": "mochman.rune_magic_ja/Objects/Rune of Displacement/object",
-        "FromFile": "assets/rune_displacement.png",
-        "PatchMode": "Replace"
-      }
-    ]
+  "Format": "1.28.0",
+  "Changes": [
+    {
+      "LogName": "Rune Magic Json Assets",
+      "Action": "EditImage",
+      "Target": "{{spacechase0.JsonAssets/ObjectSpriteTilesheet:Rune of Displacement}}",
+      "FromFile": "assets/stone.png",
+      "ToArea": {
+        "X": "{{spacechase0.JsonAssets/ObjectSpriteX:Rune of Displacement}}",
+        "Y": "{{spacechase0.JsonAssets/ObjectSpriteY:Rune of Displacement}}",
+        "Width": "16",
+        "Height": "16"
+      },
+      "PatchMode": "Replace"
+    },
+    {
+      "LogName": "Rune Magic Json Assets",
+      "Action": "EditImage",
+      "Target": "{{spacechase0.JsonAssets/ObjectSpriteTilesheet:Rune of Displacement}}",
+      "FromFile": "assets/rune_red_01.png",
+      "ToArea": {
+        "X": "{{spacechase0.JsonAssets/ObjectSpriteX:Rune of Displacement}}",
+        "Y": "{{spacechase0.JsonAssets/ObjectSpriteY:Rune of Displacement}}",
+        "Width": "16",
+        "Height": "16"
+      },
+      "PatchMode": "Overlay"
+    }
+  ]
 }

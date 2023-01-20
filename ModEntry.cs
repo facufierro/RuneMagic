@@ -18,6 +18,7 @@ using SpaceCore;
 using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
 using CustomCraftingStation;
+using ContentPatcher;
 
 namespace RuneMagic
 {
@@ -27,7 +28,7 @@ namespace RuneMagic
         public static ModEntry Instance;
 
         private IJsonAssetsApi JsonAssets;
-
+        private IContentPatcherAPI ContentPatcherApi;
         private static MagicSkill Skill;
 
 
@@ -58,6 +59,7 @@ namespace RuneMagic
             IApi spaceCore = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(Rune));
             spaceCore.RegisterSerializerType(typeof(Spell));
+            ContentPatcherApi = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
 
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
@@ -220,14 +222,7 @@ namespace RuneMagic
 
         private void OnRendering(object sender, RenderingEventArgs e)
         {
-            if (!Context.IsWorldReady)
-                return;
 
-            Farmer player = Game1.player;
-            if (player.ActiveObject != null && player.ActiveObject is Rune)
-            {
-
-            }
 
 
         }
