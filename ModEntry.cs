@@ -72,6 +72,8 @@ namespace RuneMagic
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
 
+
+
         }
         private void OnBlankSave(object sender, EventArgs e)
         {
@@ -260,6 +262,5 @@ namespace RuneMagic
             var data = asset.AsDictionary<string, string>().Data;
             data["15065001/n RuneMagicWizardLetter4"] = "";
         }
-
     }
 }

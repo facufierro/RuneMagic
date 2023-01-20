@@ -22,15 +22,25 @@ namespace RuneMagic.assets.Items
         public int Charges { get; set; }
         public Spell Spell { get; set; }
 
-        public Rune()
+        public Rune() : base()
         {
-
+            Charges = 5;
+            InitializeSpell();
+            maximumStackSize();
         }
 
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
             Charges = 5;
             InitializeSpell();
+            maximumStackSize();
+        }
+
+
+
+        public override int maximumStackSize()
+        {
+            return 1;
         }
 
         public void Activate()
