@@ -45,8 +45,8 @@ namespace RuneMagic
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
-            //on objectdraw event
-
+            //on prerender
+            helper.Events.Display.Rendering += OnRendering;
 
             RegisterSkill(Skill = new MagicSkill());
         }
@@ -85,6 +85,8 @@ namespace RuneMagic
         {
 
 
+
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -100,6 +102,7 @@ namespace RuneMagic
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             RegisterRunes();
+
 
         }
         private void OnEventFinished(object sender, EventArgs e)
@@ -212,8 +215,22 @@ namespace RuneMagic
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
 
+
         }
 
+        private void OnRendering(object sender, RenderingEventArgs e)
+        {
+            if (!Context.IsWorldReady)
+                return;
+
+            Farmer player = Game1.player;
+            if (player.ActiveObject != null && player.ActiveObject is Rune)
+            {
+
+            }
+
+
+        }
         private void RegisterRunes()
         {
             if (Game1.player == null)
@@ -231,6 +248,10 @@ namespace RuneMagic
                     }
                     else
                     {
+
+
+
+
 
 
                     }
