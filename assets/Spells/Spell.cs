@@ -48,7 +48,7 @@ namespace RuneMagic.assets.Spells
         public int MaxCooldown { get; set; }
         public bool UsedToday { get; set; } = false;
 
-        public abstract void Cast();
+        public abstract bool Cast();
 
     }
 }

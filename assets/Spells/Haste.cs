@@ -15,9 +15,14 @@ namespace RuneMagic.assets.Spells
             School = MagicSchool.Enchanting;
         }
 
-        public override void Cast()
+        public override bool Cast()
         {
+            //check displayed buff by source
+
+
+
             Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 10, "Glyph of Haste", "Glyph of Haste"));
+            return true;
         }
 
     }

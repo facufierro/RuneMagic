@@ -15,6 +15,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using System.ComponentModel;
 using SpaceCore;
+using RuneMagic.assets.Skills;
+using static SpaceCore.Skills;
+
 namespace RuneMagic
 {
     public sealed class ModEntry : Mod
@@ -24,23 +27,26 @@ namespace RuneMagic
 
         private IJsonAssetsApi JsonAssets;
 
-
+        private static MagicSkill Skill;
 
 
         public override void Entry(IModHelper helper)
         {
             Instance = this;
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+            helper.Events.Content.AssetRequested += OnAssetRequested;
+            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
+            helper.Events.GameLoop.DayStarted += OnDayStarted;
+            helper.Events.GameLoop.Saving += OnSaving;
+            SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
-            helper.Events.Content.AssetRequested += OnAssetRequested;
-            helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.Player.Warped += OnWarped;
-            helper.Events.GameLoop.Saving += OnSaving;
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
+            //on objectdraw event
 
-            SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
 
+            RegisterSkill(Skill = new MagicSkill());
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -67,6 +73,10 @@ namespace RuneMagic
                 e.Edit(RegisterEvent);
 
         }
+        private void OnBlankSave(object sender, EventArgs e)
+        {
+            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssets.GetObjectId("InscriptionTable")));
+        }
         private void OnSaving(object sender, SavingEventArgs e)
         {
             //remove spells from runes
@@ -81,6 +91,7 @@ namespace RuneMagic
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             RegisterRunes();
+
         }
         private void OnEventFinished(object sender, EventArgs e)
         {
@@ -104,6 +115,7 @@ namespace RuneMagic
                     rune.InitializeSpell();
                 }
             }
+            Game1.player.AddCustomSkillExperience(Skill, 2150);
 
             //Check for wizard letters 
             //if player has 3 or more friendship with wizard
@@ -210,14 +222,8 @@ namespace RuneMagic
                     }
                     else
                     {
-                        Rune rune = (Rune)Game1.player.Items[i];
-                        if (rune.Charges < 1)
-                        {
-                            //remove one stack from the rune
-                            Game1.player.Items[i].Stack--;
 
 
-                        }
                     }
                 }
             }

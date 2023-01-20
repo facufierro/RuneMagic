@@ -14,7 +14,7 @@ namespace RuneMagic.assets.Spells
             School = MagicSchool.Evocation;
         }
 
-        public override void Cast()
+        public override bool Cast()
         {
             throw new NotImplementedException();
         }

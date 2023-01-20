@@ -35,22 +35,29 @@ namespace RuneMagic.assets.Items
 
         public void Activate()
         {
-            Charges--;
-            if (Spell != null)
-                Spell.Cast();
-            else
-                Console.WriteLine("Spell not found.");
+
+            if (Charges >= 0)
+            {
+                if (Spell != null)
+                {
+                    if (Spell.Cast())
+                    {
+                        Charges--;
+                    }
+                }
+            }
         }
+
         public void InitializeSpell()
         {
-
-
             string spellName = Name.Substring(8);
             spellName = spellName.Replace(" ", "");
-            //get the spell class namespace
             Type spellType = Assembly.GetExecutingAssembly().GetType("RuneMagic.assets.Spells." + spellName);
             Spell = (Spell)Activator.CreateInstance(spellType);
         }
+
+
+
 
     }
 }
