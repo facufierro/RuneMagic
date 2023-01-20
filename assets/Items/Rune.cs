@@ -24,9 +24,7 @@ namespace RuneMagic.assets.Items
 
         public Rune() : base()
         {
-            Charges = 5;
-            InitializeSpell();
-            maximumStackSize();
+ 
         }
 
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
@@ -34,15 +32,14 @@ namespace RuneMagic.assets.Items
             Charges = 5;
             InitializeSpell();
             maximumStackSize();
+            canBeShipped();
+            canBeGivenAsGift();
 
+            //cast drawWhenHeld method and draw nothing on the item position
+            //drawWhenHeld(Game1.spriteBatch, Game1.player.getStandingPosition(), Game1.player);
         }
 
 
-
-        public override int maximumStackSize()
-        {
-            return Charges;
-        }
 
         public void Activate()
         {
@@ -69,6 +66,28 @@ namespace RuneMagic.assets.Items
 
 
 
+        //override drawWhenHeld method and not draw anything
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        {
+            //do nothing
+        }
+
+
+
+
+        public override bool canBeShipped()
+        {
+            return false;
+        }
+        public override bool canBeGivenAsGift()
+        {
+            return false;
+        }
+
+        public override int maximumStackSize()
+        {
+            return Charges;
+        }
 
     }
 }
