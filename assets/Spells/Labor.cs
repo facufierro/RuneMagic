@@ -15,15 +15,18 @@ namespace RuneMagic.assets.Spells
             Type = SpellType.Active;
             School = MagicSchool.Conjuration;
         }
-        public override void Cast()
+        public override bool Cast()
         {
-            //get tile at cursor location
             Cursor = Game1.currentCursorTile;
-            //if tile is tillable
             if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Cursor))
             {
-                //till tile
+
                 Game1.currentLocation.terrainFeatures.Add(Cursor, new HoeDirt());
+                return true;
+            }
+            else
+            {
+                return false;
             }
 
         }

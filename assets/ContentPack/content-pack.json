@@ -1,7 +1,7 @@
 {
-  "Name": "[JA] RuneMagic",
-  "Author": "Fierro",
+  "Name": "[JA]RuneMagic",
+  "Author": "mochman",
   "Version": "0.1.0",
   "Description": "Adds content needed for the Rune Magic mod.",
-  "UniqueID": "fierro.rune_magic_ja"
+  "UniqueID": "mochman.rune_magic_ja"
 }

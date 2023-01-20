@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.assets.Spells
 {
-    public class Translocation : Spell
+    public class Displacement : Spell
     {
-        public Translocation()
+        public Displacement()
         {
             Type = SpellType.Active;
             School = MagicSchool.Alteration;
         }
 
-        public override void Cast()
+        public override bool Cast()
         {
             Cursor = Game1.currentCursorTile;
             Vector2 direction = Cursor - Game1.player.getTileLocation();
@@ -26,6 +26,11 @@ namespace RuneMagic.assets.Spells
             if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(destination))
             {
                 Game1.player.Position = destination * Game1.tileSize;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

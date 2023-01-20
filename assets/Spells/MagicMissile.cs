@@ -20,14 +20,12 @@ namespace RuneMagic.assets.Spells
             ProjectileNumber = 3;
 
         }
-        public override void Cast()
+        public override bool Cast()
         {
             for (int i = 0; i < ProjectileNumber; i++)
                 Game1.currentLocation.projectiles.Add(new SpellProjectile(Player, "object", 1, 4, 1, 8, 400, 3, true, ""));
-            //play sound effect wand
             Game1.playSound("wand");
-
-
+            return true;
         }
     }
 }

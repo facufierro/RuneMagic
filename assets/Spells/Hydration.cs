@@ -16,13 +16,18 @@ namespace RuneMagic.assets.Spells
             Type = SpellType.Active;
             School = MagicSchool.Evocation;
         }
-        public override void Cast()
+        public override bool Cast()
         {
             Cursor = Game1.currentCursorTile;
             if (Game1.currentLocation.terrainFeatures.ContainsKey(Cursor) && Game1.currentLocation.terrainFeatures[Cursor] is HoeDirt)
             {
                 HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[Cursor];
                 dirt.state.Value = HoeDirt.watered;
+                return true;
+            }
+            else
+            {
+                return false;
 
             }
         }
