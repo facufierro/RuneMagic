@@ -8,5 +8,19 @@
   ],
   "ContentPackFor": {
     "UniqueID": "Pathoschild.ContentPatcher"
-  }
+  },
+  "Dependencies": [
+    {
+      "UniqueID": "fierro.rune_magic"
+    },
+    {
+      "UniqueID": "Pathoschild.ContentPatcher"
+    },
+    {
+      "UniqueID": "spacechase0.JsonAssets"
+    },
+    {
+      "UniqueID": "spacechase0.SpaceCore"
+    }
+  ]
 }

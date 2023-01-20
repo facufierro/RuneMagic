@@ -24,19 +24,14 @@ namespace RuneMagic.assets.Items
 
         public Rune() : base()
         {
- 
+
         }
 
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
             Charges = 5;
             InitializeSpell();
-            maximumStackSize();
-            canBeShipped();
-            canBeGivenAsGift();
 
-            //cast drawWhenHeld method and draw nothing on the item position
-            //drawWhenHeld(Game1.spriteBatch, Game1.player.getStandingPosition(), Game1.player);
         }
 
 
@@ -63,17 +58,6 @@ namespace RuneMagic.assets.Items
             Type spellType = Assembly.GetExecutingAssembly().GetType("RuneMagic.assets.Spells." + spellName);
             Spell = (Spell)Activator.CreateInstance(spellType);
         }
-
-
-
-        //override drawWhenHeld method and not draw anything
-        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
-        {
-            //do nothing
-        }
-
-
-
 
         public override bool canBeShipped()
         {
