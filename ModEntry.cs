@@ -59,7 +59,6 @@ namespace RuneMagic
             IApi spaceCore = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(Rune));
             spaceCore.RegisterSerializerType(typeof(Spell));
-            ContentPatcherApi = Helper.ModRegistry.GetApi<IContentPatcherAPI>("Pathoschild.ContentPatcher");
 
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
@@ -81,7 +80,7 @@ namespace RuneMagic
         }
         private void OnBlankSave(object sender, EventArgs e)
         {
-            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssets.GetObjectId("InscriptionTable")));
+
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
@@ -175,10 +174,10 @@ namespace RuneMagic
                 {
                     Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
+                    Monitor.Log($"{rune.CurrentCharges} / {rune.MaxCharges}");
                 }
-                //print cursor tile position and the map name
-                Monitor.Log($"Location: {Game1.currentCursorTile.X}, {Game1.currentCursorTile.Y} {Game1.currentLocation.Name}");
-                Monitor.Log($"Wizard Friendship: {Game1.player.getFriendshipHeartLevelForNPC("Wizard")}");
+
+
             }
 
         }

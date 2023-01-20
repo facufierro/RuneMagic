@@ -19,7 +19,8 @@ namespace RuneMagic.assets.Items
     public class Rune : Object
     {
 
-        public int Charges { get; set; }
+        public int MaxCharges { get; set; }
+        public int CurrentCharges { get; set; }
         public Spell Spell { get; set; }
 
         public Rune() : base()
@@ -29,27 +30,25 @@ namespace RuneMagic.assets.Items
 
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
-            Charges = 5;
+            MaxCharges = 5;
+            CurrentCharges = MaxCharges;
             InitializeSpell();
-
+          
         }
 
 
 
         public void Activate()
         {
-
-            if (Charges >= 0)
+            if (CurrentCharges > 0 && Spell != null)
             {
-                if (Spell != null)
+                if (Spell.Cast())
                 {
-                    if (Spell.Cast())
-                    {
-                        Charges--;
-                    }
+                    CurrentCharges--;
                 }
             }
         }
+
 
         public void InitializeSpell()
         {
@@ -70,7 +69,7 @@ namespace RuneMagic.assets.Items
 
         public override int maximumStackSize()
         {
-            return Charges;
+            return 1;
         }
 
     }
