@@ -3,10 +3,9 @@
   "Author": "fierro",
   "Version": "0.1.0",
   "Description": "Adds content needed for the Rune Magic mod.",
+  "MinimumApiVersion": "3.18.1",
   "UniqueID": "fierro.rune_magic_ccs",
-  "UpdateKeys": [
-    "R"
-  ],
+  "UpdateKeys": [],
   "ContentPackFor": {
     "UniqueID": "Cherry.CustomCraftingStations"
   }

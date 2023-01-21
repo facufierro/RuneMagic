@@ -6,19 +6,13 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using System;
 using System.IO;
-using System.Reflection;
 using Rune = RuneMagic.assets.Items.Rune;
 using System.Linq;
 using Object = StardewValley.Object;
-using StardewValley.Monsters;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.ComponentModel;
 using SpaceCore;
 using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
-using CustomCraftingStation;
-using ContentPatcher;
 
 namespace RuneMagic
 {
@@ -26,36 +20,29 @@ namespace RuneMagic
     {
         //instance of the Mod class
         public static ModEntry Instance;
-
         private IJsonAssetsApi JsonAssets;
-        private IContentPatcherAPI ContentPatcherApi;
         private static MagicSkill Skill;
-
 
         public override void Entry(IModHelper helper)
         {
             Instance = this;
+
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Content.AssetRequested += OnAssetRequested;
-            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
-            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
-            helper.Events.Player.InventoryChanged += OnInventoryChanged;
-            //on prerender
-            helper.Events.Display.Rendering += OnRendering;
 
             RegisterSkill(Skill = new MagicSkill());
+
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
-            JsonAssets.LoadAssets(Path.Combine(Helper.DirectoryPath, "assets/ContentPack"));
             IApi spaceCore = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             spaceCore.RegisterSerializerType(typeof(Rune));
             spaceCore.RegisterSerializerType(typeof(Spell));
@@ -75,19 +62,6 @@ namespace RuneMagic
             if (e.NameWithoutLocale.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
 
-
-
-        }
-        private void OnBlankSave(object sender, EventArgs e)
-        {
-
-        }
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
-        {
-
-
-
-
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -103,8 +77,6 @@ namespace RuneMagic
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             RegisterRunes();
-
-
         }
         private void OnEventFinished(object sender, EventArgs e)
         {
@@ -131,7 +103,7 @@ namespace RuneMagic
             Game1.player.AddCustomSkillExperience(Skill, 2150);
 
             //Check for wizard letters 
-            //if player has 3 or more friendship with wizard
+
             if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
             {
                 if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter1"))
@@ -174,7 +146,6 @@ namespace RuneMagic
                 {
                     Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
-                    Monitor.Log($"{rune.CurrentCharges} / {rune.MaxCharges}");
                 }
 
 
@@ -213,18 +184,7 @@ namespace RuneMagic
 
             }
         }
-        private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
-        {
 
-
-        }
-
-        private void OnRendering(object sender, RenderingEventArgs e)
-        {
-
-
-
-        }
         private void RegisterRunes()
         {
             if (Game1.player == null)
@@ -242,13 +202,11 @@ namespace RuneMagic
                     }
                     else
                     {
-
-
-
-
+                      
 
 
                     }
+
                 }
             }
         }
@@ -284,5 +242,7 @@ namespace RuneMagic
             var data = asset.AsDictionary<string, string>().Data;
             data["15065001/n RuneMagicWizardLetter4"] = "";
         }
+
+
     }
 }
