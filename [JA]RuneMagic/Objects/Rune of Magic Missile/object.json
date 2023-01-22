@@ -5,15 +5,15 @@
   "Category": "Crafting",
   "CategoryTextOverride": "Rune",
   "CategoryColorOverride": "255, 0, 255, 255",
-  "Edibility": -300,
-  "Recipe": {
-    "ResultCount": 1,
-    "Ingredients": [
-      {
-        "Object": 390,
-        "Count": 1
-      }
-    ],
-    "IsDefault": true
-  }
+  "Edibility": -300
+  //"Recipe": {
+  //  "ResultCount": 1,
+  //  "Ingredients": [
+  //    {
+  //      "Object": 390,
+  //      "Count": 1
+  //    }
+  //  ],
+  //  "IsDefault": true
+  //}
 }

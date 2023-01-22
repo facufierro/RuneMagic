@@ -1,0 +1,15 @@
+[
+  {
+    "ProducerName": "Inscription Table",
+    "InputIdentifier": "390",
+    "InputStack": 1,
+    //"FuelIdentifier": null,
+    //"FuelStack": null,
+    "MinutesUntilReady": 20,
+    "OutputIdentifier": "Rune of Displacement",
+    "OutputStack": 1,
+    "Sounds": [
+      "Ship"
+    ]
+  }
+]

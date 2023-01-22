@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework;
 using SpaceCore;
 using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
+using System.Collections.Generic;
+using StardewValley.Menus;
 
 namespace RuneMagic
 {
@@ -38,6 +40,7 @@ namespace RuneMagic
 
             RegisterSkill(Skill = new MagicSkill());
 
+
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -47,21 +50,14 @@ namespace RuneMagic
             spaceCore.RegisterSerializerType(typeof(Rune));
             spaceCore.RegisterSerializerType(typeof(Spell));
 
+
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
-            string[] textureNames = Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets/Spells/Effects"), "*.png", SearchOption.AllDirectories)
-                      .Select(Path.GetFileNameWithoutExtension)
-                      .ToArray();
-            if (e.Name.IsEquivalentTo($"assets/Textures/{textureNames}"))
-            {
-                e.LoadFromModFile<Texture2D>($"assets/Textures/{textureNames}.png", AssetLoadPriority.Medium);
-            }
-            if (e.NameWithoutLocale.IsEquivalentTo("Data/Mail"))
+            if (e.Name.IsEquivalentTo("Data/Mail"))
                 e.Edit(RegisterMail);
-            if (e.NameWithoutLocale.IsEquivalentTo("Data/Event"))
+            if (e.Name.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
-
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -78,6 +74,7 @@ namespace RuneMagic
         {
             RegisterRunes();
         }
+
         private void OnEventFinished(object sender, EventArgs e)
         {
             if (Game1.CurrentEvent.id == 15065001)
@@ -93,14 +90,14 @@ namespace RuneMagic
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             //Initialize spells for runes on day start
-            foreach (Item item in Game1.player.Items)
-            {
-                if (item is Rune rune && rune.Spell == null)
-                {
-                    rune.InitializeSpell();
-                }
-            }
-            Game1.player.AddCustomSkillExperience(Skill, 2150);
+            //foreach (Item item in Game1.player.Items)
+            //{
+            //    if (item is Rune rune && rune.Spell == null)
+            //    {
+            //        rune.InitializeSpell();
+            //    }
+            //}
+            //Game1.player.AddCustomSkillExperience(Skill, 2150);
 
             //Check for wizard letters 
 
@@ -136,6 +133,11 @@ namespace RuneMagic
                 }
 
             }
+
+
+            //Give the player a rune
+            //Rune rune = new Rune(900087, 1);
+            //Game1.player.addItemToInventory(rune);
 
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)

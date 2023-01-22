@@ -42,8 +42,6 @@ namespace RuneMagic.assets.Items
             MaxCooldown = 100;
             CurrentCooldown = 0;
             RechargeRate = 0.1f;
-            //get object position
-
             InitializeSpell();
         }
 
@@ -80,38 +78,6 @@ namespace RuneMagic.assets.Items
 
             }
         }
-
-        public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
-        {
-            base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
-            DrawRune(spriteBatch, location, scaleSize, transparency, layerDepth);
-            DrawCooldown(spriteBatch, location, layerDepth);
-        }
-
-        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
-        {
-            //base.drawWhenHeld(spriteBatch, location, f);
-            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
-            //DrawRune(spriteBatch, location, 1, 1, layerDepth);
-            //DrawCooldown(spriteBatch, location, layerDepth);
-        }
-
-
-        //override the draw method for menus
-        public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1f)
-        {
-            base.draw(spriteBatch, x, y, alpha);
-            DrawRune(spriteBatch, new Vector2(x, y), 1f, alpha, 0.0001f);
-            DrawCooldown(spriteBatch, new Vector2(x, y), 0.0001f);
-        }
-        
-        
-
-
-
-
-
-
         private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth)
         {
             Texture2D runeTexture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/Runes/rune{Spell.RuneTexture}.png");
@@ -125,10 +91,24 @@ namespace RuneMagic.assets.Items
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
 
+        public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+        {
+            base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
+            DrawRune(spriteBatch, location, scaleSize, transparency, layerDepth);
+            DrawCooldown(spriteBatch, location, layerDepth);
 
 
 
 
+
+        }
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
+        {
+            //base.drawWhenHeld(spriteBatch, location, f);
+            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
+            //DrawRune(spriteBatch, location, 1, 1, layerDepth);
+            //DrawCooldown(spriteBatch, location, layerDepth);
+        }
         public override bool canBeShipped()
         {
             return false;

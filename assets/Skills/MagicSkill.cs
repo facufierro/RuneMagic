@@ -38,7 +38,7 @@ namespace RuneMagic.assets.Skills
             : base(MagicSkillId)
         {
             Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Textures/Interface/skill_magic_icon.png");
-            SkillsPageIcon = null;
+            SkillsPageIcon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Textures/Interface/skill_page_magic_icon.png");
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = new Microsoft.Xna.Framework.Color(75, 0, 155);
 

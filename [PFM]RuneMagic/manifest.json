@@ -1,0 +1,12 @@
+{
+  "Name": "[PFM]RuneMagic",
+  "Author": "fierro",
+  "Version": "1.0.0",
+  "Description": "Allow the fishes to born, grow and mature.",
+  "UniqueID": "fierro.rune_magic_pfm",
+  "MinimumApiVersion": "3.0.0",
+  "UpdateKeys": [ "" ],
+  "ContentPackFor": {
+    "UniqueID": "Digus.ProducerFrameworkMod"
+  }
+}
