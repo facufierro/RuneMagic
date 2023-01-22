@@ -1,8 +1,10 @@
 {
   "Name": "Rune of Displacement",
-  "Price": -1,
+  "Price": 0,
   "Description": "Teleports the caster a short distance.",
   "Category": "Crafting",
+  "CategoryTextOverride": "Rune",
+  "CategoryColorOverride": "255, 0, 255, 255",
   "Edibility": -300,
   "Recipe": {
     "ResultCount": 1,

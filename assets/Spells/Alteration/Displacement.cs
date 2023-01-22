@@ -6,14 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Alteration
 {
     public class Displacement : Spell
     {
-        public Displacement()
+
+        public Displacement() : base()
         {
             Type = SpellType.Active;
             School = MagicSchool.Alteration;
+
         }
 
         public override bool Cast()

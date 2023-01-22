@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Evocation
 {
     public class Fireball : Spell
     {
-        public Fireball()
+        public Fireball() : base()
         {
             Type = SpellType.Active;
             School = MagicSchool.Evocation;
+           
         }
 
         public override bool Cast()

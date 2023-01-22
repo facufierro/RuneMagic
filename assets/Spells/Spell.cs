@@ -7,7 +7,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
-using RuneMagic.assets.Spells.Effects;
+
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -33,7 +33,7 @@ namespace RuneMagic.assets.Spells
         Alteration, //alters reality (teleportation, tranformation of objects)
         Conjuration, //creates objects from nothing (summons, portals)
         Evocation, //alters the threads of magic itself (fire, lightning, arcane )
-        Enchanting, //changes the properties of objects people (enchanting, curses)
+        Enchantment, //changes the properties of objects people (enchanting, curses)
         Illusion, //creates illusions (invisibility, phantoms)
     }
 
@@ -44,11 +44,39 @@ namespace RuneMagic.assets.Spells
         public MagicSchool School { get; set; }
         public Farmer Player { get; set; } = Game1.player;
         public Vector2 Cursor { get; set; }
-        public int CurrentCooldown { get; set; }
-        public int MaxCooldown { get; set; }
         public bool UsedToday { get; set; } = false;
+        public int RuneTexture { get; set; }
+        public Color RuneColor { get; set; }
 
         public abstract bool Cast();
+
+        public Spell()
+        {
+            School = (MagicSchool)Enum.Parse(typeof(MagicSchool), GetType().Namespace.Split('.').Last());
+            RuneTexture = Array.IndexOf(GetType().Assembly.GetTypes(), GetType()) % 5 + 1;
+            switch (School)
+            {
+                case MagicSchool.Abjuration:
+                    RuneColor = Color.Teal;
+                    break;
+                case MagicSchool.Conjuration:
+                    RuneColor = Color.Pink;
+                    break;
+                case MagicSchool.Enchantment:
+                    RuneColor = Color.Lime;
+                    break;
+                case MagicSchool.Evocation:
+                    RuneColor = Color.Fuchsia;
+                    break;
+                case MagicSchool.Alteration:
+                    RuneColor = Color.Blue;
+                    break;
+                case MagicSchool.Illusion:
+                    RuneColor = Color.Yellow;
+                    break;
+            }
+
+        }
 
     }
 }

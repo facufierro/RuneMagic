@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Conjuration
 {
     public class Labor : Spell
     {
-        public Labor()
+        public Labor() : base()
         {
             Type = SpellType.Active;
             School = MagicSchool.Conjuration;

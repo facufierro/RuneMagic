@@ -10,6 +10,10 @@
 	<ItemGroup>
 		<Reference Include="SpaceCore" HintPath="$(GameModsPath)\SpaceCore\SpaceCore.dll" Private="False" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="assets\Spells\Illusion\" />
+	  <Folder Include="assets\Spells\Abjuration\" />
+	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="robocopy &quot;$(SolutionDir)[JA]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[JA]RuneMagic&quot; /mir&#xD;&#xA;" />
 		<Exec Command="robocopy &quot;$(SolutionDir)[CCS]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[CCS]RuneMagic&quot; /mir&#xD;&#xA;" />

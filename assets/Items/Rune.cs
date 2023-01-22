@@ -17,42 +17,110 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 using Netcode;
 using StardewValley.Network;
 using StardewValley.Menus;
+using System.Linq;
 
 namespace RuneMagic.assets.Items
 {
     [XmlType("Mods_Rune")]
     public class Rune : Object
     {
-
+        public Spell Spell { get; set; }
         public int MaxCharges { get; set; }
         public int CurrentCharges { get; set; }
-        public Spell Spell { get; set; }
-
-
-
+        public int CurrentCooldown { get; set; }
+        public int MaxCooldown { get; set; }
+        public float RechargeRate { get; set; }
 
         public Rune() : base()
         {
 
         }
-
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
         {
             MaxCharges = 5;
             CurrentCharges = MaxCharges;
+            MaxCooldown = 100;
+            CurrentCooldown = 0;
+            RechargeRate = 0.1f;
+            //get object position
+
             InitializeSpell();
         }
 
+        public void Activate()
+        {
+            if (CurrentCharges > 0 && Spell != null)
+            {
+                if (CurrentCooldown <= 0)
+                {
+                    if (Spell.Cast())
+                    {
+                        CurrentCharges--;
+                        CurrentCooldown = MaxCooldown;
+                    }
+                }
+            }
+        }
+        public void InitializeSpell()
+        {
+            string spellName = Name.Substring(8);
+            spellName = spellName.Replace(" ", "");
 
-        //override the drawinmenu method to add background to the rune using the same parameters as the drawinmenu JUST CHANGE THE TEXTURE
+            //for each spellchol in the enum
+            foreach (MagicSchool spellSchool in Enum.GetValues(typeof(MagicSchool)))
+            {
+                try
+                {
+                    Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.assets.Spells.{spellSchool}.{spellName}");
+                    Spell = (Spell)Activator.CreateInstance(spellType);
+                }
+                catch (Exception)
+                {
+                }
+
+            }
+        }
+
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
-            Texture2D RuneTexture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Textures/Runes/rune_overlay.png");
-            //set layerdepth to draw behind the item
+            DrawRune(spriteBatch, location, scaleSize, transparency, layerDepth);
+            DrawCooldown(spriteBatch, location, layerDepth);
+        }
 
-            spriteBatch.Draw(RuneTexture, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(RuneTexture, 0, 16, 16)),
-                Color.BlueViolet * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
+        {
+            //base.drawWhenHeld(spriteBatch, location, f);
+            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
+            //DrawRune(spriteBatch, location, 1, 1, layerDepth);
+            //DrawCooldown(spriteBatch, location, layerDepth);
+        }
+
+
+        //override the draw method for menus
+        public override void draw(SpriteBatch spriteBatch, int x, int y, float alpha = 1f)
+        {
+            base.draw(spriteBatch, x, y, alpha);
+            DrawRune(spriteBatch, new Vector2(x, y), 1f, alpha, 0.0001f);
+            DrawCooldown(spriteBatch, new Vector2(x, y), 0.0001f);
+        }
+        
+        
+
+
+
+
+
+
+        private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth)
+        {
+            Texture2D runeTexture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/Runes/rune{Spell.RuneTexture}.png");
+
+            spriteBatch.Draw(runeTexture, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(runeTexture, 0, 16, 16)),
+              Spell.RuneColor * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
+        }
+        private void DrawCooldown(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
+        {
             spriteBatch.DrawString(Game1.tinyFont, CurrentCharges.ToString(), new Vector2(location.X + 64 - Game1.smallFont.MeasureString(CurrentCharges.ToString()).X, location.Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
@@ -60,33 +128,6 @@ namespace RuneMagic.assets.Items
 
 
 
-
-
-
-
-
-
-
-
-        public void Activate()
-        {
-            if (CurrentCharges > 0 && Spell != null)
-            {
-                if (Spell.Cast())
-                {
-                    CurrentCharges--;
-                }
-            }
-        }
-
-
-        public void InitializeSpell()
-        {
-            string spellName = Name.Substring(8);
-            spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType("RuneMagic.assets.Spells." + spellName);
-            Spell = (Spell)Activator.CreateInstance(spellType);
-        }
 
         public override bool canBeShipped()
         {
@@ -96,11 +137,11 @@ namespace RuneMagic.assets.Items
         {
             return false;
         }
-
         public override int maximumStackSize()
         {
             return 1;
         }
+
 
     }
 }
