@@ -1,8 +1,10 @@
 {
   "Name": "Rune of Labor",
-  "Price": -1,
+  "Price": 0,
   "Description": "Tills the soil at the target area",
   "Category": "Crafting",
+  "CategoryTextOverride": "Rune",
+  "CategoryColorOverride": "255, 0, 255, 255",
   "Edibility": -300,
   "Recipe": {
     "ResultCount": 1,

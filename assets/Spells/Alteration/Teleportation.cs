@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Alteration
 {
     public class Teleportation : Spell
     {
-        public Teleportation()
+        public Teleportation() : base()
         {
             Type = SpellType.Active;
             School = MagicSchool.Alteration;
         }
-        
+
         public override bool Cast()
         {
             if (!UsedToday)

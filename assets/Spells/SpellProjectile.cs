@@ -9,7 +9,7 @@ using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.assets.Spells.Effects
+namespace RuneMagic.assets.Spells
 {
     internal class SpellProjectile : Projectile
     {
@@ -67,8 +67,8 @@ namespace RuneMagic.assets.Spells.Effects
             position.X += Source.GetBoundingBox().Width;
             position.Y += Source.GetBoundingBox().Height;
             damagesMonsters.Value = true;
-            Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/{spellTexture}.png");
-            TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/{spellTexture}.png").BaseName;
+            Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/Spells/{spellTexture}.png");
+            TextureId.Value = ModEntry.Instance.Helper.ModContent.GetInternalAssetName($"assets/Textures/Spells/{spellTexture}.png").BaseName;
 
             CursorPosition.Value = new Vector2(Game1.getMousePosition().X + Game1.viewport.X + Game1.tileSize, Game1.getMousePosition().Y + Game1.viewport.Y + Game1.tileSize);
             RandomCursorPosition.Value = new Vector2(CursorPosition.X + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread), CursorPosition.Y + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread));

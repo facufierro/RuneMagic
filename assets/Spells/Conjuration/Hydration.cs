@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Conjuration
 {
     public class Hydration : Spell
     {
-        public Hydration()
+        public Hydration() : base()
         {
             Type = SpellType.Active;
             School = MagicSchool.Evocation;

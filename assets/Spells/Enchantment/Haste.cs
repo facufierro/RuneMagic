@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells
+namespace RuneMagic.assets.Spells.Enchantment
 {
     public class Haste : Spell
     {
-        public Haste()
+        public Haste() : base()
         {
             Type = SpellType.Buff;
-            School = MagicSchool.Enchanting;
+            School = MagicSchool.Enchantment;
         }
 
         public override bool Cast()

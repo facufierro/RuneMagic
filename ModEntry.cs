@@ -146,11 +146,9 @@ namespace RuneMagic
                 {
                     Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
+
                 }
-
-
             }
-
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {
@@ -187,25 +185,32 @@ namespace RuneMagic
 
         private void RegisterRunes()
         {
+
             if (Game1.player == null)
             {
                 return;
             }
             for (int i = 0; i < Game1.player.Items.Count; i++)
             {
-                if (Game1.player.Items[i] != null)
+                var item = Game1.player.Items[i];
+                Rune rune = new Rune();
+                if (item != null)
                 {
-                    if (Game1.player.Items[i] is not Rune)
+                    if (item is not Rune)
                     {
-                        if (Game1.player.Items[i].Name.Contains("Rune of "))
+                        if (item.Name.Contains("Rune of "))
+                        {
                             Game1.player.Items[i] = new Rune(Game1.player.Items[i].ParentSheetIndex, Game1.player.Items[i].Stack);
+                            rune = Game1.player.Items[i] as Rune;
+                        }
                     }
                     else
                     {
-                      
 
 
                     }
+
+
 
                 }
             }
