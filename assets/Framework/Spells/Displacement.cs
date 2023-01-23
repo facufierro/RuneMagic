@@ -6,22 +6,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells.Alteration
+namespace RuneMagic.assets.Framework.Spells
 {
     public class Displacement : Spell
     {
 
         public Displacement() : base()
         {
-            Type = SpellType.Active;
-            School = MagicSchool.Alteration;
+            Name = "Displacement";
+            School = School.Alteration;
+            Description = "Teleports a the caster a short distance.";
+            Glyph = $"assets/Textures/Alteration/Displacement.png";
+
+
 
         }
 
         public override bool Cast()
         {
-            Cursor = Game1.currentCursorTile;
-            Vector2 direction = Cursor - Game1.player.getTileLocation();
+            var cursor = Game1.currentCursorTile;
+            Vector2 direction = cursor - Game1.player.getTileLocation();
             direction.Normalize();
             Vector2 destination = Game1.player.getTileLocation() + direction * 5;
 

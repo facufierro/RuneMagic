@@ -1,18 +1,21 @@
-﻿using StardewValley;
+﻿using RuneMagic.assets.Framework;
+using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells.Enchantment
+namespace RuneMagic.assets.Framework.Spells
 {
     public class Haste : Spell
     {
         public Haste() : base()
         {
-            Type = SpellType.Buff;
-            School = MagicSchool.Enchantment;
+            Name = "Haste";
+            School = School.Enchantment;
+            Description = "Increases the caster's movement speed.";
+            Glyph = "assets/Textures/Alteration/Haste.png";
         }
 
         public override bool Cast()

@@ -1,18 +1,23 @@
-﻿using StardewValley;
+﻿using RuneMagic.assets.Framework;
+using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Spells.Alteration
+namespace RuneMagic.assets.Framework.Spells
 {
     public class Teleportation : Spell
     {
+        private bool UsedToday = false;
+
         public Teleportation() : base()
         {
-            Type = SpellType.Active;
-            School = MagicSchool.Alteration;
+            Name = "Teleportation";
+            School = School.Alteration;
+            Description = "Teleports the caster to their home.";
+            Glyph = "assets/Textures/Alteration/Teleportation.png";
         }
 
         public override bool Cast()

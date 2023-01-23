@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.assets.Api;
-using RuneMagic.assets.Spells;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
@@ -15,6 +13,10 @@ using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
 using System.Collections.Generic;
 using StardewValley.Menus;
+using StardewValley.BellsAndWhistles;
+using System.Threading;
+using RuneMagic.assets.Framework;
+using RuneMagic.assets.Framework.Spells;
 
 namespace RuneMagic
 {
@@ -22,9 +24,9 @@ namespace RuneMagic
     {
         //instance of the Mod class
         public static ModEntry Instance;
-        private IJsonAssetsApi JsonAssets;
+        private JsonAssets.IApi JsonAssetsApi;
+        private SpaceCore.IApi SpaceCoreApi;
         private static MagicSkill Skill;
-
         public override void Entry(IModHelper helper)
         {
             Instance = this;
@@ -45,10 +47,11 @@ namespace RuneMagic
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            JsonAssets = Helper.ModRegistry.GetApi<IJsonAssetsApi>("spacechase0.JsonAssets");
-            IApi spaceCore = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
-            spaceCore.RegisterSerializerType(typeof(Rune));
-            spaceCore.RegisterSerializerType(typeof(Spell));
+            JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
+            JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
+            SpaceCoreApi = Helper.ModRegistry.GetApi<SpaceCore.IApi>("spacechase0.SpaceCore");
+            SpaceCoreApi.RegisterSerializerType(typeof(Rune));
+            SpaceCoreApi.RegisterSerializerType(typeof(Spell));
 
 
         }
@@ -58,6 +61,39 @@ namespace RuneMagic
                 e.Edit(RegisterMail);
             if (e.Name.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
+        }
+        private void OnItemsRegistered(object sender, EventArgs e)
+        {
+            //get the number of classes in the RuneMagic.assets.Framework.Spells namespace
+            int numClasses = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Count();
+            //get the names of each class
+            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Select(t => t.Name).ToArray();
+            //register a new spell for each class using classNames
+            for (int i = 0; i < numClasses; i++)
+            {
+                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.assets.Framework.Spells.{classNames[i]}"));
+                JsonAssets.Mod.instance.RegisterObject(ModManifest, new JsonAssets.Data.ObjectData()
+                {
+                    Name = $"Rune of {spell.Name}",
+                    Description = $"{spell.Description}",
+                    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/rune.png"),
+                    Category = JsonAssets.Data.ObjectCategory.Crafting,
+                    CategoryTextOverride = $"{spell.School}",
+                    CategoryColorOverride = spell.GetColor(),
+                    Price = 0,
+                    ContextTags = new List<string>(new[] { "color_red" }),
+                    HideFromShippingCollection = true,
+                });
+
+            }
+
+
+
+
+
+
+
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -94,7 +130,7 @@ namespace RuneMagic
         {
             if (Game1.CurrentEvent.id == 15065001)
             {
-                Object inscriptionTable = new Object(Vector2.Zero, JsonAssets.GetBigCraftableId("Inscription Table"));
+                Object inscriptionTable = new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table"));
                 Game1.player.Position = new Vector2(7 * Game1.tileSize, 22 * Game1.tileSize);
                 Game1.player.addItemToInventory(inscriptionTable);
                 Game1.player.holdUpItemThenMessage(inscriptionTable);
@@ -175,7 +211,7 @@ namespace RuneMagic
                 if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6)
                 {
                     var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
-                        $"/addBigProp 10 17 {JsonAssets.GetBigCraftableId("Inscription Table")}" +
+                        $"/addBigProp 10 17 {JsonAssetsApi.GetBigCraftableId("Inscription Table")}" +
                         $"/speak Wizard \"@! Come in my friend, come in...\"" +
                         $"/pause 400" +
                         $"/advancedMove Wizard false -2 0 3 100 0 2 1 3000" +
@@ -234,18 +270,18 @@ namespace RuneMagic
                 "^^ I have been watching you for a while now, and I have noticed that you have an interest in magic. " +
                 "^ This is for you, friend." +
                 "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssets.GetObjectId("Rune of Magic Missile")} 5 %%";
+                $"%item object {JsonAssetsApi.GetObjectId("Rune of Magic Missile")} 5 %%";
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter2"] =
                 "My friend... " +
                 "^^ I can sense you have been using the gift I gave you, I hope you enjoy this one." +
                 "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssets.GetObjectId("Rune of Magic Displacement")} 5 %%";
+                $"%item object {JsonAssetsApi.GetObjectId("Rune of Displacement")} 5 %%";
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter3"] =
                 "My dear friend @... " +
                 "^^ I think you will appreciate this. " +
                 "^It is very rare so use it with care." +
                 "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssets.GetObjectId("Rune of Teleportation")} 1 %%";
+                $"%item object {JsonAssetsApi.GetObjectId("Rune of Teleportation")} 1 %%";
             asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter4"] =
                "My dear friend @... " +
                "^^ I have something I wish you to have but its too powerful and precious to send it trough mail. " +

@@ -5,14 +5,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="assets\Framework\Spells\Abjuration\**" />
+	  <Compile Remove="assets\Framework\Spells\Illusion\**" />
+	  <EmbeddedResource Remove="assets\Framework\Spells\Abjuration\**" />
+	  <EmbeddedResource Remove="assets\Framework\Spells\Illusion\**" />
+	  <None Remove="assets\Framework\Spells\Abjuration\**" />
+	  <None Remove="assets\Framework\Spells\Illusion\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="SpaceCore" HintPath="$(GameModsPath)\SpaceCore\SpaceCore.dll" Private="False" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="assets\Spells\Illusion\" />
-		<Folder Include="assets\Spells\Abjuration\" />
+		<Reference Include="JsonAssets" HintPath="$(GameModsPath)\JsonAssets\JsonAssets.dll" Private="False" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="assets\Api\" />
 	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="robocopy &quot;$(SolutionDir)[JA]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[JA]RuneMagic&quot; /mir&#xD;&#xA;" />

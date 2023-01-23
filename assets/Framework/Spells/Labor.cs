@@ -5,19 +5,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RuneMagic.assets.Framework;
 
-namespace RuneMagic.assets.Spells.Conjuration
+namespace RuneMagic.assets.Framework.Spells
 {
     public class Labor : Spell
     {
         public Labor() : base()
         {
-            Type = SpellType.Active;
-            School = MagicSchool.Conjuration;
+            Name = "Labor";
+            School = School.Conjuration;
+            Description = "Creates a hoe dirt tile at the cursor.";
+            Glyph = "assets/Textures/Alteration/Labor.png";
         }
         public override bool Cast()
         {
-            Cursor = Game1.currentCursorTile;
+            var Cursor = Game1.currentCursorTile;
             if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Cursor))
             {
 
