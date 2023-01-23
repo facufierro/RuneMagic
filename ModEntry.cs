@@ -37,7 +37,7 @@ namespace RuneMagic
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
-
+            helper.Events.GameLoop.TimeChanged += OnTimeChanged;
             RegisterSkill(Skill = new MagicSkill());
 
 
@@ -72,9 +72,24 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            RegisterRunes();
+            ManageRunes(Game1.player);
         }
+        private void OnTimeChanged(object sender, TimeChangedEventArgs e)
+        {
+            //if the last two digits on e.NewTime are 00
+            if (e.NewTime % 100 == 0)
+            {
+                //regenerate runes
+                foreach (var item in Game1.player.Items)
+                {
+                    if (item is Rune rune)
+                    {
+                        rune.AddCharges(1);
+                    }
+                }
+            }
 
+        }
         private void OnEventFinished(object sender, EventArgs e)
         {
             if (Game1.CurrentEvent.id == 15065001)
@@ -185,34 +200,29 @@ namespace RuneMagic
             }
         }
 
-        private void RegisterRunes()
+        private void ManageRunes(Farmer player)
         {
-
-            if (Game1.player == null)
+            if (player is null)
             {
                 return;
             }
-            for (int i = 0; i < Game1.player.Items.Count; i++)
+
+            for (int i = 0; i < player.Items.Count; i++)
             {
-                var item = Game1.player.Items[i];
-                Rune rune = new Rune();
-                if (item != null)
+
+                if (player.Items[i] != null)
                 {
-                    if (item is not Rune)
+                    if (player.Items[i] is not Rune)
                     {
-                        if (item.Name.Contains("Rune of "))
+                        if (player.Items[i].Name.Contains("Rune of "))
                         {
-                            Game1.player.Items[i] = new Rune(Game1.player.Items[i].ParentSheetIndex, Game1.player.Items[i].Stack);
-                            rune = Game1.player.Items[i] as Rune;
+                            player.Items[i] = new Rune(player.Items[i].ParentSheetIndex, player.Items[i].Stack);
                         }
                     }
                     else
                     {
-
-
+                        (player.Items[i] as Rune).UpdateCooldown();
                     }
-
-
 
                 }
             }

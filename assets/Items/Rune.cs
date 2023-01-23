@@ -29,7 +29,7 @@ namespace RuneMagic.assets.Items
         public int CurrentCharges { get; set; }
         public int CurrentCooldown { get; set; }
         public int MaxCooldown { get; set; }
-        public float RechargeRate { get; set; }
+        public int RegenerationRate { get; set; }
 
         public Rune() : base()
         {
@@ -39,25 +39,21 @@ namespace RuneMagic.assets.Items
         {
             MaxCharges = 5;
             CurrentCharges = MaxCharges;
-            MaxCooldown = 100;
+            MaxCooldown = 2;
             CurrentCooldown = 0;
-            RechargeRate = 0.1f;
+            RegenerationRate = 100;
             InitializeSpell();
         }
 
         public void Activate()
         {
-            if (CurrentCharges > 0 && Spell != null)
+            if (CurrentCharges > 0 && CurrentCooldown <= 0 && Spell != null)
             {
-                if (CurrentCooldown <= 0)
-                {
-                    if (Spell.Cast())
-                    {
-                        CurrentCharges--;
-                        CurrentCooldown = MaxCooldown;
-                    }
-                }
+                CurrentCharges--;
+                CurrentCooldown = MaxCooldown;
+                Spell.Cast();
             }
+
         }
         public void InitializeSpell()
         {
@@ -78,10 +74,27 @@ namespace RuneMagic.assets.Items
 
             }
         }
+
+        public void AddCharges(int amount)
+        {
+            if (CurrentCharges < MaxCharges)
+            {
+                CurrentCharges += amount;
+            }
+        }
+        public void UpdateCooldown()
+        {
+            // count cooldown
+            if (CurrentCooldown > 0)
+            {
+                CurrentCooldown--;
+            }
+        }
+
         private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth)
         {
             Texture2D runeTexture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Textures/Runes/rune{Spell.RuneTexture}.png");
-
+            transparency = (float)CurrentCharges / (float)MaxCharges;
             spriteBatch.Draw(runeTexture, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(runeTexture, 0, 16, 16)),
               Spell.RuneColor * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
         }
@@ -94,20 +107,17 @@ namespace RuneMagic.assets.Items
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
-            DrawRune(spriteBatch, location, scaleSize, transparency, layerDepth);
+
             DrawCooldown(spriteBatch, location, layerDepth);
-
-
-
-
+            DrawRune(spriteBatch, location, scaleSize, transparency, layerDepth);
 
         }
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
         {
-            //base.drawWhenHeld(spriteBatch, location, f);
-            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
-            //DrawRune(spriteBatch, location, 1, 1, layerDepth);
-            //DrawCooldown(spriteBatch, location, layerDepth);
+            base.drawWhenHeld(spriteBatch, location, f);
+            var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
+            DrawRune(spriteBatch, location, 1, 0.1f, layerDepth);
+            DrawCooldown(spriteBatch, location, layerDepth);
         }
         public override bool canBeShipped()
         {
@@ -121,8 +131,6 @@ namespace RuneMagic.assets.Items
         {
             return 1;
         }
-
-
     }
 }
 
