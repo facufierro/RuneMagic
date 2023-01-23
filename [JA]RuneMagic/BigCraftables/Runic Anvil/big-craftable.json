@@ -1,8 +1,8 @@
 {
-  "Name": "Inscription Table",
+  "Name": "Runic Anvil",
   "Price": -1,
   "CanSell": false,
-  "Description": "Table used to inscribe Scrolls.",
+  "Description": "Anvil used to carve Runes.",
   "Recipe": {
     "ResultCount": 1,
     "Ingredients": [

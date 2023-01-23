@@ -1,0 +1,22 @@
+{
+  "BiggerCraftables": [
+    {
+      "Name": "Inscription Table",
+      "Image": "inscription_table.png",
+      "Width": 2,
+      "Length": 2
+    },
+    {
+      "Name": "Runic Anvil",
+      "Image": "runic_anvil.png",
+      "Width": 2,
+      "Length": 1
+    },
+    {
+      "Name": "Runic Altar",
+      "Image": "runic_altar.png",
+      "Width": 3,
+      "Length": 3
+    }
+  ]
+}

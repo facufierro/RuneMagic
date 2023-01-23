@@ -2,7 +2,7 @@
   "Name": "[JA]RuneMagic",
   "Author": "fierro",
   "Version": "0.1.0",
-  "Description": "Adds content needed for the Rune Magic mod.",
+  "Description": "Content needed for the Rune Magic mod.",
   "MinimumApiVersion": "3.18.1",
   "UniqueID": "fierro.rune_magic_ja",
   "UpdateKeys": [],

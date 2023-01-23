@@ -39,7 +39,7 @@ namespace RuneMagic.assets.Items
         {
             MaxCharges = 5;
             CurrentCharges = MaxCharges;
-            MaxCooldown = 2;
+            MaxCooldown = 1;
             CurrentCooldown = 0;
             RegenerationRate = 100;
             InitializeSpell();
@@ -74,7 +74,6 @@ namespace RuneMagic.assets.Items
 
             }
         }
-
         public void AddCharges(int amount)
         {
             if (CurrentCharges < MaxCharges)

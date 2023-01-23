@@ -1,8 +1,8 @@
 {
   "Name": "[PFM]RuneMagic",
   "Author": "fierro",
-  "Version": "1.0.0",
-  "Description": "Allow the fishes to born, grow and mature.",
+  "Version": "0.1.0",
+  "Description": "Content needed for the Rune Magic mod.",
   "UniqueID": "fierro.rune_magic_pfm",
   "MinimumApiVersion": "3.0.0",
   "UpdateKeys": [ "" ],

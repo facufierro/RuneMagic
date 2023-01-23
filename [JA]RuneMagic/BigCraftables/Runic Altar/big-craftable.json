@@ -1,8 +1,8 @@
 {
-  "Name": "Inscription Table",
+  "Name": "Runic Altar",
   "Price": -1,
   "CanSell": false,
-  "Description": "Table used to inscribe Scrolls.",
+  "Description": "Altar used to craft Magic Weapons.",
   "Recipe": {
     "ResultCount": 1,
     "Ingredients": [

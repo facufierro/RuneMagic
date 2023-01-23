@@ -1,0 +1,11 @@
+{
+  "Name": "[BC]RuneMagic",
+  "Description": "Content needed for the Rune Magic mod.",
+  "Version": "1.0.0",
+  "Author": "fierro",
+  "UniqueID": "fierro.rune_magic_bc",
+  "ContentPackFor": {
+    "UniqueID": "spacechase0.BiggerCraftables",
+    "MinimumVersion": "1.0.0"
+  }
+}
