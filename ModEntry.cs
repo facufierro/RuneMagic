@@ -28,6 +28,8 @@ namespace RuneMagic
         private JsonAssets.IApi JsonAssetsApi;
         private SpaceCore.IApi SpaceCoreApi;
         private static MagicSkill Skill;
+
+
         public override void Entry(IModHelper helper)
         {
             Instance = this;
@@ -39,6 +41,7 @@ namespace RuneMagic
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
+            helper.Events.Player.InventoryChanged += OnInventoryChanged;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.TimeChanged += OnTimeChanged;
             RegisterSkill(Skill = new MagicSkill());
@@ -80,7 +83,11 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            ManageRunes(Game1.player);
+            //ManageRunes(Game1.player);
+        }
+        private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
+        {
+
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
         {
@@ -158,9 +165,7 @@ namespace RuneMagic
             }
 
 
-            //Give the player a rune
-            //Rune rune = new Rune(900087, 1);
-            //Game1.player.addItemToInventory(rune);
+
 
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
@@ -271,7 +276,6 @@ namespace RuneMagic
         {
 
 
-            //register big objects
             JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
             {
                 Name = $"Runic Anvil",

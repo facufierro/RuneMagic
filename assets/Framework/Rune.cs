@@ -2,23 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using System;
-using System.Collections.Generic;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using Object = StardewValley.Object;
 using System.Xml.Serialization;
-using System.Threading;
 using System.Reflection;
-using System.Xml.Linq;
-using System.Text;
-using xTile.Dimensions;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Netcode;
-using StardewValley.Network;
-using StardewValley.Menus;
-using System.Linq;
 using RuneMagic.assets.Framework;
-using static Microsoft.Xna.Framework.Graphics.SpriteFont;
 
 namespace RuneMagic.assets.Items
 {
@@ -31,8 +18,7 @@ namespace RuneMagic.assets.Items
         public int CurrentCooldown { get; set; }
         public int MaxCooldown { get; set; }
         public int RegenerationRate { get; set; }
-        public string Texture { get; set; } = "assets/Textures/Items/rune.png";
-        public Lazy<Texture2D> Glyph { get; set; } = new Lazy<Texture2D>(() => ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Textures/Glyphs/glyph1.png"));
+
 
         public Rune() : base()
         {
@@ -87,25 +73,25 @@ namespace RuneMagic.assets.Items
             }
         }
 
-        private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float layerDepth)
-        {
+        //private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float layerDepth)
+        //{
 
-            var transparency = (float)CurrentCharges / (float)MaxCharges;
-            spriteBatch.Draw(Glyph.Value, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Glyph.Value, 0, 16, 16)),
-              Spell.GetColor() * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
-        }
-        private void DrawCooldown(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
-        {
-            spriteBatch.DrawString(Game1.tinyFont, CurrentCharges.ToString(), new Vector2(location.X + 64 - Game1.smallFont.MeasureString(CurrentCharges.ToString()).X, location.Y),
-                           Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
-        }
+        //    var transparency = (float)CurrentCharges / (float)MaxCharges;
+        //    spriteBatch.Draw(Glyph.Value, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(Glyph.Value, 0, 16, 16)),
+        //      Spell.GetColor() * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth);
+        //}
+        //private void DrawCooldown(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
+        //{
+        //    spriteBatch.DrawString(Game1.tinyFont, CurrentCharges.ToString(), new Vector2(location.X + 64 - Game1.smallFont.MeasureString(CurrentCharges.ToString()).X, location.Y),
+        //                   Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
+        //}
 
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
 
-            DrawCooldown(spriteBatch, location, layerDepth);
-            DrawRune(spriteBatch, location, scaleSize, layerDepth);
+            //DrawCooldown(spriteBatch, location, layerDepth);
+            //DrawRune(spriteBatch, location, scaleSize, layerDepth);
 
         }
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
