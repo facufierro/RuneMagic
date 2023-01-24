@@ -17,6 +17,7 @@ using StardewValley.BellsAndWhistles;
 using System.Threading;
 using RuneMagic.assets.Framework;
 using RuneMagic.assets.Framework.Spells;
+using JsonAssets.Data;
 
 namespace RuneMagic
 {
@@ -64,36 +65,7 @@ namespace RuneMagic
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-            //get the number of classes in the RuneMagic.assets.Framework.Spells namespace
-            int numClasses = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Count();
-            //get the names of each class
-            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Select(t => t.Name).ToArray();
-            //register a new spell for each class using classNames
-            for (int i = 0; i < numClasses; i++)
-            {
-                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.assets.Framework.Spells.{classNames[i]}"));
-                JsonAssets.Mod.instance.RegisterObject(ModManifest, new JsonAssets.Data.ObjectData()
-                {
-                    Name = $"Rune of {spell.Name}",
-                    Description = $"{spell.Description}",
-                    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/rune.png"),
-                    Category = JsonAssets.Data.ObjectCategory.Crafting,
-                    CategoryTextOverride = $"{spell.School}",
-                    CategoryColorOverride = spell.GetColor(),
-                    Price = 0,
-                    ContextTags = new List<string>(new[] { "color_red" }),
-                    HideFromShippingCollection = true,
-                });
-
-            }
-
-
-
-
-
-
-
-
+            RegisterRuneMagic(sender, e);
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -195,9 +167,8 @@ namespace RuneMagic
         {
             if (e.Button == SButton.MouseRight)
             {
-                if (Game1.player.CurrentItem is Rune)
+                if (Game1.player.CurrentItem is Rune rune)
                 {
-                    Rune rune = (Rune)Game1.player.CurrentItem;
                     rune.Activate();
 
                 }
@@ -296,6 +267,96 @@ namespace RuneMagic
             data["15065001/n RuneMagicWizardLetter4"] = "";
         }
 
+        private void RegisterRuneMagic(object sender, EventArgs e)
+        {
 
+
+            //register big objects
+            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
+            {
+                Name = $"Runic Anvil",
+                Description = $"Anvil used to carve Runes",
+                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+                Price = 0,
+                Recipe = new BigCraftableRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new BigCraftableIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = true
+
+                }
+            });
+            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
+            {
+                Name = $"Inscription Table",
+                Description = $"Table used to inscribe Scrolls",
+                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+                Price = 0,
+                Recipe = new BigCraftableRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new BigCraftableIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = true
+
+                }
+            });
+            //JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
+            //{
+            //    Name = $"Runic Anvil",
+            //    Description = $"Anvil used to carve Runes",
+            //    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+            //    Price = 0,
+            //    Recipe = new BigCraftableRecipe()
+            //    {
+            //        ResultCount = 1,
+            //        Ingredients =
+            //        {
+            //            new BigCraftableIngredient()
+            //            {
+            //                Object = "Stone",
+            //                Count = 1
+            //            }
+            //        },
+            //        IsDefault = true
+
+            //    }
+            //});
+            //look for spells in the RuneMagic.assets.Framework.Spells namespace
+            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Select(t => t.Name).ToArray();
+            //register a rune for every spell
+            for (int i = 0; i < classNames.Length; i++)
+            {
+                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.assets.Framework.Spells.{classNames[i]}"));
+                JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
+                {
+                    Name = $"Rune of {spell.Name}",
+                    Description = $"{spell.Description}",
+                    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/rune.png"),
+                    Category = ObjectCategory.Crafting,
+                    CategoryTextOverride = $"{spell.School}",
+                    CategoryColorOverride = spell.GetColor(),
+                    Price = 0,
+                    //ContextTags = new List<string>(new[] { "color_red" }),
+                    HideFromShippingCollection = true,
+                });
+
+            }
+
+
+        }
     }
 }

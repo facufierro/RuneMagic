@@ -44,7 +44,6 @@ namespace RuneMagic.assets.Items
             CurrentCharges = MaxCharges;
             MaxCooldown = 1;
             CurrentCooldown = 0;
-            RegenerationRate = 100;
             InitializeSpell();
         }
 
@@ -55,7 +54,7 @@ namespace RuneMagic.assets.Items
                 if (Spell.Cast())
                 {
                     CurrentCharges--;
-                    CurrentCooldown = MaxCooldown;
+                    CurrentCooldown = MaxCooldown * 100;
                 }
 
 
@@ -81,7 +80,7 @@ namespace RuneMagic.assets.Items
         }
         public void UpdateCooldown()
         {
-            // count cooldown
+
             if (CurrentCooldown > 0)
             {
                 CurrentCooldown--;
@@ -111,10 +110,10 @@ namespace RuneMagic.assets.Items
         }
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
         {
-            base.drawWhenHeld(spriteBatch, location, f);
-            var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
-            DrawRune(spriteBatch, location, 1, layerDepth);
-            DrawCooldown(spriteBatch, location, layerDepth);
+            //base.drawWhenHeld(spriteBatch, location, f);
+            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
+            //DrawRune(spriteBatch, location, 1, layerDepth);
+            //DrawCooldown(spriteBatch, location, layerDepth);
         }
         public override bool canBeShipped()
         {

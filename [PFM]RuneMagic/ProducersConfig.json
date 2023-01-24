@@ -1,7 +1,7 @@
 [
 
   {
-    "ProducerName": "Inscription Table", //Name of the producer
+    "ProducerName": "Runic Anvil", //Name of the producer
     "AlternateFrameProducing": false, //If the producer should use the alternate frame when producing.
     "AlternateFrameWhenReady": false, //If the producer should use the alternate frame and ready for harvest.
     "DisableBouncingAnimationWhileWorking": false

@@ -1,10 +1,10 @@
 [
   {
-    "ProducerName": "Inscription Table",
+    "ProducerName": "Runic Anvil",
     "InputIdentifier": "390",
     "InputStack": 1,
-    //"FuelIdentifier": null,
-    //"FuelStack": null,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
     "MinutesUntilReady": 20,
     "OutputIdentifier": "Rune of Displacement",
     "OutputStack": 1,
@@ -12,4 +12,5 @@
       "Ship"
     ]
   }
+
 ]
