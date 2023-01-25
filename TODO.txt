@@ -1,11 +1,9 @@
 ﻿
-High priority
--Add scrolls
-	-Modify Rune.cs to be a new parent class and rename it to MagicItem.cs
-	-Improve item registration code
-	-Make the textures
-		
+High priority		
 -Finish skills (maybe add every school)
+	-Implement skill point bonus (Casting failure rate)
+	-Check if its possible to add more than two professions on level up and if its possible to lock a profession
+	-Implement professions	
 -Finish progression
 
 Low priority
@@ -14,6 +12,7 @@ Low priority
 -Add more magic spells
 
 Maybe
+-Add a Casting system (with animations)
 -Add spellbooks and rune pouches
 -Add magic armor
 -Add potions
