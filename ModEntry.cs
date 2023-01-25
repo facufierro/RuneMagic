@@ -310,109 +310,71 @@ namespace RuneMagic
         private void RegisterRuneMagic(object sender, EventArgs e)
         {
 
-            //JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
-            //{
-            //    Name = $"Rune of Testing",
-            //    Description = $"Rune of Testing Description.",
-            //    Texture = Helper.ModContent.Load<Texture2D>("assets/Items/rune.png"),
-            //    Category = ObjectCategory.Crafting,
-            //    CategoryTextOverride = $"Rune",
-            //    //CategoryColorOverride = spell.GetColor(),
-            //    Price = 0,
-            //    //ContextTags = new List<string>(new[] { "color_red" }),
-            //    HideFromShippingCollection = true,
-            //Recipe = new ObjectRecipe()
-            //{
-            //    ResultCount = 1,
-            //    Ingredients =
-            //    {
-            //        new ObjectIngredient()
-            //        {
-            //            Object = "Stone",
-            //            Count = 1
-            //        }
-            //    },
-            //    IsDefault = true
-
-            //}
-            //});
-
-
-
-
-
-            //JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            //{
-            //    Name = $"Runic Anvil",
-            //    Description = $"Anvil used to carve Runes",
-            //    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
-            //    Price = 0,
-            //Recipe = new BigCraftableRecipe()
-            //{
-            //    ResultCount = 1,
-            //    Ingredients =
-            //        {
-            //            new BigCraftableIngredient()
-            //            {
-            //                Object = "Stone",
-            //                Count = 1
-            //            }
-            //        },
-            //    IsDefault = true
-
-            //}
-            //});
-            //JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            //{
-            //    Name = $"Inscription Table",
-            //    Description = $"Table used to inscribe Scrolls",
-            //    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
-            //    Price = 0,
-            //    Recipe = new BigCraftableRecipe()
-            //    {
-            //        ResultCount = 1,
-            //        Ingredients =
-            //        {
-            //            new BigCraftableIngredient()
-            //            {
-            //                Object = "Stone",
-            //                Count = 1
-            //            }
-            //        },
-            //        IsDefault = true
-
-            //    }
-            //});
-
-
-            //changethe color of the runeTexture to red but only where its white
-
-
-
-
-            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToArray();
-            //register a rune for every spell
-            for (int i = 0; i < classNames.Length; i++)
+            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
             {
-                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{classNames[i]}"));
-                //get a random int from 1 to 5
-                int random = new Random().Next(1, 8);
-                Texture2D runeTexture = Helper.ModContent.Load<Texture2D>($"assets/Items/rune{random}.png");
-                Color[] data = new Color[runeTexture.Width * runeTexture.Height];
-                runeTexture.GetData(data);
+                Name = $"Runic Anvil",
+                Description = $"Anvil used to carve Runes",
+                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+                Price = 0,
+                Recipe = new BigCraftableRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new BigCraftableIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = true
+
+                }
+            });
+            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
+            {
+                Name = $"Inscription Table",
+                Description = $"Table used to inscribe Scrolls",
+                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+                Price = 0,
+                Recipe = new BigCraftableRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new BigCraftableIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = true
+
+                }
+            });
+
+            int glyphIndex = 0;
+            string[] spells = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToArray();
+            for (int i = 0; i < spells.Length; i++)
+            {
+                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{spells[i]}"));
+                if (glyphIndex > 6)
+                    glyphIndex = 0;
+                Texture2D texture = Helper.ModContent.Load<Texture2D>($"assets/Glyphs/glyph-{glyphIndex}.png");
+                Color[] data = new Color[texture.Width * texture.Height];
+                texture.GetData(data);
                 for (int j = 0; j < data.Length; ++j)
                 {
                     if (data[j] == Color.White)
                         data[j] = spell.GetColor();
                 }
-                runeTexture.SetData(data);
-
+                texture.SetData(data);
                 JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
                 {
                     Name = $"Rune of {spell.Name}",
                     Description = $"{spell.Description}",
 
-                    Texture = runeTexture,
+                    Texture = texture,
 
                     Category = ObjectCategory.Crafting,
                     CategoryTextOverride = $"{spell.School}",
@@ -435,10 +397,10 @@ namespace RuneMagic
 
                     }
                 });
-
+                glyphIndex++;
             }
-
-
         }
+
     }
 }
+
