@@ -1,4 +1,5 @@
 ﻿
+using RuneMagic.Magic;
 using StardewValley;
 
 namespace RuneMagic.Spells

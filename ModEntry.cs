@@ -11,6 +11,7 @@ using static SpaceCore.Skills;
 using JsonAssets.Data;
 using RuneMagic.Skills;
 using System.Collections.Generic;
+using RuneMagic.Magic;
 
 namespace RuneMagic
 {
@@ -60,32 +61,10 @@ namespace RuneMagic
                 e.Edit(RegisterMail);
             if (e.Name.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
-
-
-            if (e.NameWithoutLocale.IsEquivalentTo("Maps/springobjects"))
-            {
-                //(384, 4096)
-                Monitor.Log($"{e.NameWithoutLocale}", LogLevel.Alert);
-                e.Edit(asset =>
-                {
-                    var editor = asset.AsImage();
-                    IRawTextureData sourceImage = Helper.ModContent.Load<IRawTextureData>("assets/Glyphs/glyph1.png");
-                    editor.PatchImage(sourceImage, targetArea: new Rectangle(0, 624, 16, 16), patchMode: PatchMode.Overlay);
-                });
-            }
-
-
-            //if (e.NameWithoutLocale.IsEquivalentTo("Data/ObjectInformation"))
-            //{
-            //    e.Edit(asset =>
-            //    {
-            //        asset.AsDictionary<int, string>().Data.Add(3100, "Rune of Testing/0/-300/Basic/Rune of Testing/Rune of Testing Description.");
-            //    });
-            //}
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-            RegisterRuneMagic(sender, e);
+            RegisterNewItems(sender, e);
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
@@ -126,18 +105,19 @@ namespace RuneMagic
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
         {
-            //if the last two digits on e.NewTime are 00
+            //recharge rune every Hour
             if (e.NewTime % 100 == 0)
             {
-                //regenerate runes
                 foreach (var item in Game1.player.Items)
                 {
                     if (item is Rune rune)
                     {
-                        rune.AddCharges(1);
+                        rune.CurrentCharges += 1;
                     }
                 }
             }
+
+
 
         }
         private void OnEventFinished(object sender, EventArgs e)
@@ -155,15 +135,13 @@ namespace RuneMagic
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             //Initialize spells for runes on day start
-            //foreach (Item item in Game1.player.Items)
-            //{
-            //    if (item is Rune rune && rune.Spell == null)
-            //    {
-            //        rune.InitializeSpell();
-            //    }
-            //}
-            //Game1.player.AddCustomSkillExperience(Skill, 2150);
-
+            foreach (Item item in Game1.player.Items)
+            {
+                if (item is Rune rune && rune.Spell == null)
+                {
+                    rune.InitializeSpell();
+                }
+            }
             //Check for wizard letters 
 
             if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
@@ -269,6 +247,7 @@ namespace RuneMagic
                     else
                     {
                         (player.Items[i] as Rune).UpdateCooldown();
+                        (player.Items[i] as Rune).UpdateCharges();
                     }
 
                 }
@@ -306,8 +285,7 @@ namespace RuneMagic
             var data = asset.AsDictionary<string, string>().Data;
             data["15065001/n RuneMagicWizardLetter4"] = "";
         }
-
-        private void RegisterRuneMagic(object sender, EventArgs e)
+        private void RegisterNewItems(object sender, EventArgs e)
         {
 
             JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()

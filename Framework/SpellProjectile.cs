@@ -9,7 +9,7 @@ using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
 
-namespace RuneMagic
+namespace RuneMagic.Magic
 {
     internal class SpellProjectile : Projectile
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RuneMagic.Magic;
 using StardewValley;
 using System;
 using System.Collections.Generic;
