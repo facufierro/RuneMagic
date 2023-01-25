@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic;
 using StardewModdingAPI;
 using StardewValley;
 
 
 
-namespace RuneMagic.assets.Skills
+namespace RuneMagic.Skills
 {
     public class MagicSkill : SpaceCore.Skills.Skill
     {

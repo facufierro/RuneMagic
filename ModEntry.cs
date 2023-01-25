@@ -3,21 +3,14 @@ using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using System;
-using System.IO;
-using Rune = RuneMagic.assets.Items.Rune;
+using Rune = RuneMagic.Items.Rune;
 using System.Linq;
 using Object = StardewValley.Object;
 using Microsoft.Xna.Framework;
-using SpaceCore;
-using RuneMagic.assets.Skills;
 using static SpaceCore.Skills;
-using System.Collections.Generic;
-using StardewValley.Menus;
-using StardewValley.BellsAndWhistles;
-using System.Threading;
-using RuneMagic.assets.Framework;
-using RuneMagic.assets.Framework.Spells;
 using JsonAssets.Data;
+using RuneMagic.Skills;
+using System.Collections.Generic;
 
 namespace RuneMagic
 {
@@ -36,6 +29,7 @@ namespace RuneMagic
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Content.AssetRequested += OnAssetRequested;
+            helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
@@ -61,14 +55,42 @@ namespace RuneMagic
         }
         private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
         {
+            //Monitor.Log($"{e.NameWithoutLocale}", LogLevel.Alert);
             if (e.Name.IsEquivalentTo("Data/Mail"))
                 e.Edit(RegisterMail);
             if (e.Name.IsEquivalentTo("Data/Event"))
                 e.Edit(RegisterEvent);
+
+
+            if (e.NameWithoutLocale.IsEquivalentTo("Maps/springobjects"))
+            {
+                //(384, 4096)
+                Monitor.Log($"{e.NameWithoutLocale}", LogLevel.Alert);
+                e.Edit(asset =>
+                {
+                    var editor = asset.AsImage();
+                    IRawTextureData sourceImage = Helper.ModContent.Load<IRawTextureData>("assets/Glyphs/glyph1.png");
+                    editor.PatchImage(sourceImage, targetArea: new Rectangle(0, 624, 16, 16), patchMode: PatchMode.Overlay);
+                });
+            }
+
+
+            //if (e.NameWithoutLocale.IsEquivalentTo("Data/ObjectInformation"))
+            //{
+            //    e.Edit(asset =>
+            //    {
+            //        asset.AsDictionary<int, string>().Data.Add(3100, "Rune of Testing/0/-300/Basic/Rune of Testing/Rune of Testing Description.");
+            //    });
+            //}
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
             RegisterRuneMagic(sender, e);
+        }
+        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -83,10 +105,23 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            //ManageRunes(Game1.player);
+            ManageRunes(Game1.player);
         }
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
+            var runes = JsonAssetsApi.GetAllObjectIds();
+            //if item added to inventory is a rune
+            if (e.Added.Any())
+            {
+                foreach (var item in e.Added)
+                {
+                    //check if the JsonAssetsApi.GetObjectId(item.Name) is in the runes.keys list
+                    if (runes.ContainsKey(JsonAssetsApi.GetObjectId(item.Name).ToString()))
+                    {
+                        Monitor.Log("Rune added to inventory", LogLevel.Alert);
+                    }
+                }
+            }
 
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
@@ -275,53 +310,62 @@ namespace RuneMagic
         private void RegisterRuneMagic(object sender, EventArgs e)
         {
 
+            //JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
+            //{
+            //    Name = $"Rune of Testing",
+            //    Description = $"Rune of Testing Description.",
+            //    Texture = Helper.ModContent.Load<Texture2D>("assets/Items/rune.png"),
+            //    Category = ObjectCategory.Crafting,
+            //    CategoryTextOverride = $"Rune",
+            //    //CategoryColorOverride = spell.GetColor(),
+            //    Price = 0,
+            //    //ContextTags = new List<string>(new[] { "color_red" }),
+            //    HideFromShippingCollection = true,
+            //Recipe = new ObjectRecipe()
+            //{
+            //    ResultCount = 1,
+            //    Ingredients =
+            //    {
+            //        new ObjectIngredient()
+            //        {
+            //            Object = "Stone",
+            //            Count = 1
+            //        }
+            //    },
+            //    IsDefault = true
 
-            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            {
-                Name = $"Runic Anvil",
-                Description = $"Anvil used to carve Runes",
-                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
-                Price = 0,
-                Recipe = new BigCraftableRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
+            //}
+            //});
 
-                }
-            });
-            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            {
-                Name = $"Inscription Table",
-                Description = $"Table used to inscribe Scrolls",
-                Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
-                Price = 0,
-                Recipe = new BigCraftableRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
 
-                }
-            });
+
+
+
             //JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
             //{
             //    Name = $"Runic Anvil",
             //    Description = $"Anvil used to carve Runes",
+            //    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
+            //    Price = 0,
+            //Recipe = new BigCraftableRecipe()
+            //{
+            //    ResultCount = 1,
+            //    Ingredients =
+            //        {
+            //            new BigCraftableIngredient()
+            //            {
+            //                Object = "Stone",
+            //                Count = 1
+            //            }
+            //        },
+            //    IsDefault = true
+
+            //}
+            //});
+            //JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
+            //{
+            //    Name = $"Inscription Table",
+            //    Description = $"Table used to inscribe Scrolls",
             //    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/big-craftable.png"),
             //    Price = 0,
             //    Recipe = new BigCraftableRecipe()
@@ -339,23 +383,57 @@ namespace RuneMagic
 
             //    }
             //});
-            //look for spells in the RuneMagic.assets.Framework.Spells namespace
-            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.assets.Framework.Spells").Select(t => t.Name).ToArray();
+
+
+            //changethe color of the runeTexture to red but only where its white
+
+
+
+
+            string[] classNames = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToArray();
             //register a rune for every spell
             for (int i = 0; i < classNames.Length; i++)
             {
-                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.assets.Framework.Spells.{classNames[i]}"));
+                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{classNames[i]}"));
+                //get a random int from 1 to 5
+                int random = new Random().Next(1, 8);
+                Texture2D runeTexture = Helper.ModContent.Load<Texture2D>($"assets/Items/rune{random}.png");
+                Color[] data = new Color[runeTexture.Width * runeTexture.Height];
+                runeTexture.GetData(data);
+                for (int j = 0; j < data.Length; ++j)
+                {
+                    if (data[j] == Color.White)
+                        data[j] = spell.GetColor();
+                }
+                runeTexture.SetData(data);
+
                 JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
                 {
                     Name = $"Rune of {spell.Name}",
                     Description = $"{spell.Description}",
-                    Texture = Helper.ModContent.Load<Texture2D>($"assets/Textures/Items/rune.png"),
+
+                    Texture = runeTexture,
+
                     Category = ObjectCategory.Crafting,
                     CategoryTextOverride = $"{spell.School}",
                     CategoryColorOverride = spell.GetColor(),
                     Price = 0,
                     //ContextTags = new List<string>(new[] { "color_red" }),
                     HideFromShippingCollection = true,
+                    Recipe = new ObjectRecipe()
+                    {
+                        ResultCount = 1,
+                        Ingredients =
+                    {
+                        new ObjectIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                        IsDefault = true
+
+                    }
                 });
 
             }

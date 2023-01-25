@@ -1,12 +1,11 @@
-﻿using RuneMagic.assets.Framework;
-using StardewValley;
+﻿using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.assets.Framework.Spells
+namespace RuneMagic.Spells
 {
     public class Teleportation : Spell
     {

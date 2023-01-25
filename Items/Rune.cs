@@ -5,9 +5,8 @@ using System;
 using Object = StardewValley.Object;
 using System.Xml.Serialization;
 using System.Reflection;
-using RuneMagic.assets.Framework;
 
-namespace RuneMagic.assets.Items
+namespace RuneMagic.Items
 {
     [XmlType("Mods_Rune")]
     public class Rune : Object
@@ -22,6 +21,10 @@ namespace RuneMagic.assets.Items
 
         public Rune() : base()
         {
+            MaxCharges = 5;
+            CurrentCharges = MaxCharges;
+            MaxCooldown = 1;
+            CurrentCooldown = 0;
 
         }
         public Rune(int parentSheetIndex, int stack, bool isRecipe = false) : base(parentSheetIndex, stack, isRecipe)
@@ -30,7 +33,7 @@ namespace RuneMagic.assets.Items
             CurrentCharges = MaxCharges;
             MaxCooldown = 1;
             CurrentCooldown = 0;
-            InitializeSpell();
+            //InitializeSpell();
         }
 
         public void Activate()
@@ -51,10 +54,8 @@ namespace RuneMagic.assets.Items
         {
             string spellName = Name[8..];
             spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.assets.Framework.Spells.{spellName}");
+            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
             Spell = (Spell)Activator.CreateInstance(spellType);
-
-
         }
 
         public void AddCharges(int amount)
@@ -86,21 +87,21 @@ namespace RuneMagic.assets.Items
         //                   Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         //}
 
-        public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
-        {
-            base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
+        //public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+        //{
+        //    base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
 
-            //DrawCooldown(spriteBatch, location, layerDepth);
-            //DrawRune(spriteBatch, location, scaleSize, layerDepth);
+        //    //DrawCooldown(spriteBatch, location, layerDepth);
+        //    //DrawRune(spriteBatch, location, scaleSize, layerDepth);
 
-        }
-        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
-        {
-            //base.drawWhenHeld(spriteBatch, location, f);
-            //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
-            //DrawRune(spriteBatch, location, 1, layerDepth);
-            //DrawCooldown(spriteBatch, location, layerDepth);
-        }
+        //}
+        //public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 location, Farmer f)
+        //{
+        //    //base.drawWhenHeld(spriteBatch, location, f);
+        //    //var layerDepth = (float)((f.getStandingY() + 2) / 10000.0 + (double)location.Y / 20000.0) + 0.0001f;
+        //    //DrawRune(spriteBatch, location, 1, layerDepth);
+        //    //DrawCooldown(spriteBatch, location, layerDepth);
+        //}
         public override bool canBeShipped()
         {
             return false;

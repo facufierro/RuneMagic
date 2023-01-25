@@ -5,12 +5,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Remove="assets\Framework\Spells\Abjuration\**" />
-		<Compile Remove="assets\Framework\Spells\Illusion\**" />
-		<EmbeddedResource Remove="assets\Framework\Spells\Abjuration\**" />
-		<EmbeddedResource Remove="assets\Framework\Spells\Illusion\**" />
-		<None Remove="assets\Framework\Spells\Abjuration\**" />
-		<None Remove="assets\Framework\Spells\Illusion\**" />
+		<Compile Remove="assets\Api\**" />
+		<Compile Remove="Spells\Abjuration\**" />
+		<Compile Remove="Spells\Illusion\**" />
+		<EmbeddedResource Remove="assets\Api\**" />
+		<EmbeddedResource Remove="Spells\Abjuration\**" />
+		<EmbeddedResource Remove="Spells\Illusion\**" />
+		<None Remove="assets\Api\**" />
+		<None Remove="Spells\Abjuration\**" />
+		<None Remove="Spells\Illusion\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -22,13 +25,10 @@
 	<ItemGroup>
 		<Reference Include="JsonAssets" HintPath="$(GameModsPath)\JsonAssets\JsonAssets.dll" Private="False" />
 	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="assets\Api\" />
-	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--<Exec Command="robocopy &quot;$(SolutionDir)[JA]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[JA]RuneMagic&quot; /mir&#xD;&#xA;" />-->
-		<!--<Exec Command="robocopy &quot;$(SolutionDir)[PFM]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[PFM]RuneMagic&quot; /mir&#xD;&#xA;" />-->
-		<!--<Exec Command="robocopy &quot;$(SolutionDir)[BC]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[BC]RuneMagic&quot; /mir&#xD;&#xA;" />-->
+		<Exec Command="robocopy &quot;$(SolutionDir)[PFM]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[PFM]RuneMagic&quot; /mir&#xD;&#xA;" />
+		<Exec Command="robocopy &quot;$(SolutionDir)[BC]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[BC]RuneMagic&quot; /mir&#xD;&#xA;" />
 	</Target>
 
 </Project>

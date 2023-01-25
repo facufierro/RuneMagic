@@ -16,7 +16,7 @@ using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.assets.Framework
+namespace RuneMagic
 {
     public enum School
     {

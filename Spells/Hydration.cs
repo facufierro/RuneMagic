@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using RuneMagic.assets.Framework;
 
-namespace RuneMagic.assets.Framework.Spells
+namespace RuneMagic.Spells
 {
     public class Hydration : Spell
     {

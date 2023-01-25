@@ -1,4 +1,4 @@
-﻿namespace RuneMagic.assets.Skills
+﻿namespace RuneMagic.Skills
 {
     public class MagicProfession : SpaceCore.Skills.Skill.Profession
     {
@@ -17,12 +17,12 @@
 
         public override string GetName()
         {
-            return this.Name;
+            return Name;
         }
 
         public override string GetDescription()
         {
-            return this.Description;
+            return Description;
         }
     }
 }

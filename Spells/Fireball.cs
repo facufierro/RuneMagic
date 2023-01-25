@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RuneMagic.assets.Framework;
 
-namespace RuneMagic.assets.Framework.Spells
+namespace RuneMagic.Spells
 {
     public class Fireball : Spell
     {
