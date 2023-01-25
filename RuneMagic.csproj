@@ -26,7 +26,7 @@
 		<Reference Include="JsonAssets" HintPath="$(GameModsPath)\JsonAssets\JsonAssets.dll" Private="False" />
 	</ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<!--<Exec Command="robocopy &quot;$(SolutionDir)[JA]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[JA]RuneMagic&quot; /mir&#xD;&#xA;" />-->
+		<Exec Command="robocopy &quot;$(SolutionDir)[CCS]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[CCS]RuneMagic&quot; /mir&#xD;&#xA;" />
 		<Exec Command="robocopy &quot;$(SolutionDir)[PFM]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[PFM]RuneMagic&quot; /mir&#xD;&#xA;" />
 		<Exec Command="robocopy &quot;$(SolutionDir)[BC]RuneMagic&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[BC]RuneMagic&quot; /mir&#xD;&#xA;" />
 	</Target>

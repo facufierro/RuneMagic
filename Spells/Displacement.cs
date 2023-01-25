@@ -17,9 +17,6 @@ namespace RuneMagic.Spells
             School = School.Alteration;
             Description = "Teleports a the caster a short distance.";
             Glyph = $"assets/Textures/Alteration/Displacement.png";
-
-
-
         }
 
         public override bool Cast()

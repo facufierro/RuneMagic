@@ -1,0 +1,19 @@
+{
+  "CraftingStations": [
+    {
+      "BigCraftable": "Runic Anvil",
+      //"TileData": "StationName",
+      "ExclusiveRecipes": true,
+      "CraftingRecipes": [
+        "Rune of Displacement",
+        "Rune of Fireball",
+        "Rune of Haste",
+        "Rune of Hydration",
+        "Rune of Labor",
+        "Rune of Magic Missile",
+        "Rune of Teleportation"
+      ]
+      //"CookingRecipes": [ "recipe1", "recipe2" ]
+    }
+  ]
+}
