@@ -42,24 +42,39 @@ namespace RuneMagic.Magic
         {
         }
 
-        public Color GetColor()
+        public List<Color> GetColor()
         {
+            List<Color> colors = new List<Color>();
             switch (School)
             {
                 case School.Abjuration:
-                    return Color.LightGray;
+                    colors.Add(Color.Gray);
+                    colors.Add(Color.DarkGray);
+                    return colors;
                 case School.Alteration:
-                    return Color.Blue;
+                    colors.Add(new Color(0, 0, 200));
+                    colors.Add(new Color(0, 0, 175));
+                    return colors;
                 case School.Conjuration:
-                    return Color.Orange;
+                    colors.Add(Color.Orange);
+                    colors.Add(Color.DarkOrange);
+                    return colors;
                 case School.Evocation:
-                    return Color.Purple;
+                    colors.Add(new Color(200, 0, 200));
+                    colors.Add(new Color(175, 0, 175));
+                    return colors;
                 case School.Enchantment:
-                    return Color.Green;
+                    colors.Add(new Color(0, 200, 0));
+                    colors.Add(new Color(0, 175, 0));
+                    return colors;
                 case School.Illusion:
-                    return Color.Yellow;
+                    colors.Add(new Color(200, 0, 0));
+                    colors.Add(new Color(175, 0, 0));
+                    return colors;
                 default:
-                    return Color.White;
+                    colors.Add(Color.Red);
+                    colors.Add(Color.White);
+                    return colors;
             }
         }
 

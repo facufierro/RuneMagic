@@ -16,6 +16,11 @@ namespace RuneMagic.Spells
             Description = "Shoots a fireball.";
             Glyph = "assets/Textures/Alteration/Fireball.png";
 
+
+
+
+
+
         }
 
         public override bool Cast()

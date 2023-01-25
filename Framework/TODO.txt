@@ -1,0 +1,22 @@
+﻿
+High priority
+-Add scrolls
+	-Modify Rune.cs to be a new parent class and rename it to MagicItem.cs
+	-Improve item registration code
+	-Make the textures
+		
+-Finish skills (maybe add every school)
+-Finish progression
+
+Low priority
+-Add magic weapons/altar
+-Improve rune registration code
+-Add more magic spells
+
+Maybe
+-Add spellbooks and rune pouches
+-Add magic armor
+-Add potions
+-Add monsters
+-Add bosses
+
