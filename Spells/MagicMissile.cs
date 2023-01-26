@@ -15,7 +15,6 @@ namespace RuneMagic.Spells
             Name = "Magic Missile";
             School = School.Evocation;
             Description = "Shoots a magic missile";
-            Glyph = "assets/Textures/Alteration/MagicMissile.png";
             ProjectileNumber = 1;
 
         }
@@ -23,7 +22,6 @@ namespace RuneMagic.Spells
         {
             for (int i = 0; i < ProjectileNumber; i++)
                 Game1.currentLocation.projectiles.Add(new SpellProjectile(Game1.player, "magic_missile", 1, 4, 1, 8, 400, 3, true, ""));
-            Game1.playSound("wand");
             return true;
         }
     }

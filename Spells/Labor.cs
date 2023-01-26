@@ -17,7 +17,6 @@ namespace RuneMagic.Spells
             Name = "Labor";
             School = School.Conjuration;
             Description = "Creates a hoe dirt tile at the cursor.";
-            Glyph = "assets/Textures/Alteration/Labor.png";
         }
         public override bool Cast()
         {

@@ -1,21 +1,23 @@
 ﻿
 High priority		
 -Finish skills
-	-Implement skill point bonus (Casting failure rate)
 	-Implement professions	
 -Finish progression
+-Add a Casting system (with animations)
 
 Low priority
 -Add magic weapons/altar
--Improve rune registration code
+-Improve magic item registration code
 -Add more magic spells
+-Add a rune crack system
+-Mod compatibility with MARGO
+
 
 Maybe
--Add a Casting system (with animations)
 -Add spellbooks and rune pouches
 -Add magic armor
 -Add potions
 -Add monsters
 -Add bosses
--Add a rune crack system
+
 

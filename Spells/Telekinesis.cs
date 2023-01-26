@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using RuneMagic.Famework;
-using RuneMagic.Magic;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -10,15 +9,14 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.Spells
 {
-    public class Displacement : Spell
+    public class Telekinesis : Spell
     {
-
-        public Displacement() : base()
+        public Telekinesis() : base()
         {
-            Name = "Displacement";
+            Name = "Telekinesis";
             School = School.Alteration;
             Description = "Teleports a the caster a short distance.";
-            CastingTime = 1;
+            CastingTime = 2;
         }
 
         public override bool Cast()
@@ -38,6 +36,5 @@ namespace RuneMagic.Spells
                 return false;
             }
         }
-
     }
 }

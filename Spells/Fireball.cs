@@ -15,7 +15,6 @@ namespace RuneMagic.Spells
             Name = "Fireball";
             School = School.Evocation;
             Description = "Shoots a fireball.";
-            Glyph = "assets/Textures/Alteration/Fireball.png";
 
 
 

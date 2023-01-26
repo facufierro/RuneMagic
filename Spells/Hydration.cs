@@ -18,7 +18,6 @@ namespace RuneMagic.Spells
             Name = "Hydration";
             School = School.Conjuration;
             Description = "Water a tile at the cursor.";
-            Glyph = "assets/Textures/Alteration/Hydration.png";
         }
         public override bool Cast()
         {

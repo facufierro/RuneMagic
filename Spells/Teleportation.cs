@@ -18,7 +18,6 @@ namespace RuneMagic.Spells
             Name = "Teleportation";
             School = School.Alteration;
             Description = "Teleports the caster to their home.";
-            Glyph = "assets/Textures/Alteration/Teleportation.png";
         }
 
         public override bool Cast()

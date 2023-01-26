@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source;
 using StardewModdingAPI;
 using StardewValley;
 
@@ -16,22 +17,22 @@ namespace RuneMagic.Skills
         /// <summary>The unique ID for the magic skill.</summary>
         public static readonly string MagicSkillId = "mochman.magic_skill";
 
-        /// <summary>The level 5 'potential' profession.</summary>
+        /// <summary>The level 5 'RuneCasterI' profession.</summary>
         public static MagicProfession RuneCasterI;
 
-        /// <summary>The level 10 'prodigy' profession.</summary>
+        /// <summary>The level 10 'RuneCasterII' profession.</summary>
         public static MagicProfession RuneCasterII;
 
-        /// <summary>The level 10 'memory' profession.</summary>
+        /// <summary>The level 10 'RuneCasterIII' profession.</summary>
         public static MagicProfession RuneCasterIII;
 
-        /// <summary>The level 5 'Mana Regen I' profession.</summary>
+        /// <summary>The level 5 'ScribeI' profession.</summary>
         public static MagicProfession ScribeI;
 
-        /// <summary>The level 10 'Mana Regen II' profession.</summary>
+        /// <summary>The level 10 'ScribeII' profession.</summary>
         public static MagicProfession ScribeII;
 
-        /// <summary>The level 10 'Mana Reserve' profession.</summary>
+        /// <summary>The level 10 'ScribeIII' profession.</summary>
         public static MagicProfession ScribeIII;
 
         public MagicSkill()
@@ -46,15 +47,16 @@ namespace RuneMagic.Skills
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_runecaster1_icon.png"),
                 Name = "Novice Rune Caster",
-                Description = "You have learned the basics of casting runes. Your runes recharge 50% faster.",
+                Description = "Your runes recharge 50% faster.",
             };
             ScribeI = new MagicProfession(this, "")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_scribe1_icon.png"),
                 Name = "Novice Scribe",
-                Description = "You have learned the basics of scribing scrolls. When you craft scrolls you have 20% chance of get a duplicate scroll.",
+                Description = "",
             };
             ProfessionsForLevels.Add(new ProfessionPair(5, RuneCasterI, ScribeI));
+            
         }
 
 

@@ -16,16 +16,17 @@ using RuneMagic.Framework;
 using SpaceCore;
 using RuneMagic.Famework;
 
-namespace RuneMagic
+namespace RuneMagic.Source
 {
     public sealed class ModEntry : Mod
     {
         //instance of the Mod class
         public static ModEntry Instance;
         public static MagicSkill MagicSkill;
+        public static PlayerStats PlayerStats;
 
         private JsonAssets.IApi JsonAssetsApi;
-        private SpaceCore.IApi SpaceCoreApi;
+        private IApi SpaceCoreApi;
 
 
 
@@ -55,7 +56,7 @@ namespace RuneMagic
         {
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
-            SpaceCoreApi = Helper.ModRegistry.GetApi<SpaceCore.IApi>("spacechase0.SpaceCore");
+            SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Spell));
 
@@ -93,7 +94,12 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
+
             ManageMagicItems(Game1.player);
+            //if world ready
+            if (Context.IsWorldReady)
+                PlayerStats.CheckCasting(sender, e);
+
         }
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
@@ -179,6 +185,7 @@ namespace RuneMagic
 
             Game1.player.AddCustomSkillExperience(MagicSkill, 3000);
 
+            PlayerStats = new PlayerStats(Game1.player);
 
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
@@ -187,7 +194,7 @@ namespace RuneMagic
             {
                 if (Game1.player.CurrentItem is Rune rune)
                 {
-                    rune.Use();
+                    rune.Activate();
 
                 }
                 else if (Game1.player.CurrentItem is Scroll scroll)

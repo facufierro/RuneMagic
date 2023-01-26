@@ -16,7 +16,6 @@ namespace RuneMagic.Spells
             Name = "Haste";
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
-            Glyph = "assets/Textures/Alteration/Haste.png";
         }
 
         public override bool Cast()

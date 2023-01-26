@@ -34,7 +34,7 @@ namespace RuneMagic.Famework
         public string Name { get; set; }
         public School School { get; set; }
         public string Description { get; set; }
-        public string Glyph { get; set; }
+        public float CastingTime { get; set; }
 
         public abstract bool Cast();
 

@@ -18,6 +18,7 @@ namespace RuneMagic.Framework
         public float GlobalCooldownMax { get; set; }
         public Spell Spell { get; set; }
 
+
         public MagicItem()
         {
 
