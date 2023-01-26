@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using RuneMagic.Magic;
+using RuneMagic.Famework;
 
 namespace RuneMagic.Spells
 {

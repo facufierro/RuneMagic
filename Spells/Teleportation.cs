@@ -1,4 +1,5 @@
-﻿using RuneMagic.Magic;
+﻿using RuneMagic.Famework;
+using RuneMagic.Magic;
 using StardewValley;
 using System;
 using System.Collections.Generic;

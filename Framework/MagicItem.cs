@@ -1,4 +1,5 @@
-﻿using RuneMagic.Magic;
+﻿using RuneMagic.Famework;
+using RuneMagic.Magic;
 using StardewModdingAPI.Enums;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace RuneMagic.Framework
 
         public abstract void InitializeSpell();
         public abstract void Use();
-
+        public abstract bool Fizzle();
         public void UpdateCooldown()
         {
 

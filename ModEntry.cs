@@ -13,7 +13,8 @@ using RuneMagic.Skills;
 using System.Collections.Generic;
 using RuneMagic.Magic;
 using RuneMagic.Framework;
-
+using SpaceCore;
+using RuneMagic.Famework;
 
 namespace RuneMagic
 {
@@ -21,9 +22,11 @@ namespace RuneMagic
     {
         //instance of the Mod class
         public static ModEntry Instance;
+        public static MagicSkill MagicSkill;
+
         private JsonAssets.IApi JsonAssetsApi;
         private SpaceCore.IApi SpaceCoreApi;
-        private static MagicSkill Skill;
+
 
 
 
@@ -43,7 +46,7 @@ namespace RuneMagic
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.TimeChanged += OnTimeChanged;
-            RegisterSkill(Skill = new MagicSkill());
+            RegisterSkill(MagicSkill = new MagicSkill());
 
 
         }
@@ -127,6 +130,10 @@ namespace RuneMagic
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
+            //add the MagicSkill level to the player's modData
+            if (!Game1.player.modData.ContainsKey($"{ModManifest.UniqueID}/CastingFailureChance"))
+                Game1.player.modData[$"{ModManifest.UniqueID}/CastingFailureChance"] = $"{Game1.player.GetCustomSkillLevel(MagicSkill)}";
+
             //Initialize spells for runes on day start
             foreach (Item item in Game1.player.Items)
             {
@@ -170,7 +177,7 @@ namespace RuneMagic
 
             }
 
-
+            Game1.player.AddCustomSkillExperience(MagicSkill, 3000);
 
 
         }

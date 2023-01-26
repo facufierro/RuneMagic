@@ -1,8 +1,7 @@
 ﻿
 High priority		
--Finish skills (maybe add every school)
+-Finish skills
 	-Implement skill point bonus (Casting failure rate)
-	-Check if its possible to add more than two professions on level up and if its possible to lock a profession
 	-Implement professions	
 -Finish progression
 
@@ -18,4 +17,5 @@ Maybe
 -Add potions
 -Add monsters
 -Add bosses
+-Add a rune crack system
 

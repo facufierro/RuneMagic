@@ -1,4 +1,4 @@
-﻿using RuneMagic.Magic;
+﻿using RuneMagic.Famework;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Object = StardewValley.Object;
 
 namespace RuneMagic.Framework
 {
@@ -34,6 +35,19 @@ namespace RuneMagic.Framework
                     GlobalCooldown = GlobalCooldownMax;
                 }
             }
+        }
+        public override bool Fizzle()
+        {
+            int castFailure = Convert.ToInt32(Game1.player.modData[$"{ModEntry.Instance.ModManifest.UniqueID}/CastingFailureChance"]);
+            if (Game1.random.Next(1, 100) < 10 - castFailure)
+            {
+                Game1.player.stamina -= 10;
+                Game1.playSound("Wand");
+                Game1.player.removeItemFromInventory(this);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override void InitializeSpell()

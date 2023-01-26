@@ -5,8 +5,12 @@ using System;
 using Object = StardewValley.Object;
 using System.Xml.Serialization;
 using System.Reflection;
-using RuneMagic.Magic;
 using RuneMagic.Framework;
+using SpaceCore;
+using RuneMagic.Skills;
+using System.Threading;
+using StardewModdingAPI;
+using RuneMagic.Famework;
 
 namespace RuneMagic.Items
 {
@@ -29,7 +33,6 @@ namespace RuneMagic.Items
         {
             ChargesMax = 5;
             Charges = ChargesMax;
-
             InitializeSpell();
         }
 
@@ -37,15 +40,27 @@ namespace RuneMagic.Items
         {
             if (Charges > 0 && GlobalCooldown <= 0 && Spell != null)
             {
-                if (Spell.Cast())
-                {
-                    Charges -= 1;
-                    GlobalCooldown = GlobalCooldownMax;
-                }
-
-
+                if (!Fizzle())
+                    if (Spell.Cast())
+                    {
+                        Charges -= 1;
+                        GlobalCooldown = GlobalCooldownMax;
+                    }
             }
-
+        }
+        public override bool Fizzle()
+        {
+            int castFailure = Convert.ToInt32(Game1.player.modData[$"{ModEntry.Instance.ModManifest.UniqueID}/CastingFailureChance"]);
+            if (Game1.random.Next(1, 100) < 10 - castFailure)
+            {
+                Game1.player.stamina -= 10;
+                Game1.playSound("stoneCrack");
+                Game1.player.removeItemFromInventory(this);
+                Game1.player.addItemToInventory(new Object(390, 1));
+                return true;
+            }
+            else
+                return false;
         }
 
 

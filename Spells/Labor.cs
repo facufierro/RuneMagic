@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RuneMagic.Magic;
+using RuneMagic.Famework;
 
 namespace RuneMagic.Spells
 {

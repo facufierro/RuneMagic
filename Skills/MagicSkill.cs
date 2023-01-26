@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewValley;
@@ -45,13 +46,13 @@ namespace RuneMagic.Skills
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_runecaster1_icon.png"),
                 Name = "Novice Rune Caster",
-                Description = "You have learned the basics of casting runes. You can now cast runes with a 10% chance of failure.",
+                Description = "You have learned the basics of casting runes. Your runes recharge 50% faster.",
             };
             ScribeI = new MagicProfession(this, "")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_scribe1_icon.png"),
                 Name = "Novice Scribe",
-                Description = "You have learned the basics of scribing scrolls. Your scrolls have a 20% chance of not being consumed when used.",
+                Description = "You have learned the basics of scribing scrolls. When you craft scrolls you have 20% chance of get a duplicate scroll.",
             };
             ProfessionsForLevels.Add(new ProfessionPair(5, RuneCasterI, ScribeI));
         }
@@ -75,9 +76,6 @@ namespace RuneMagic.Skills
             return "-" + level + " Chance of Rune Failure";
         }
 
-        public override void DoLevelPerk(int level)
-        {
 
-        }
     }
 }
