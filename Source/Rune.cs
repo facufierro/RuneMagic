@@ -39,7 +39,7 @@ namespace RuneMagic.Items
 
         public override void Use()
         {
-            ModEntry.PlayerStats.MagicItem = this;
+            ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
         }
 
         public override void Activate()

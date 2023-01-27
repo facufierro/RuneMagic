@@ -22,15 +22,10 @@ namespace RuneMagic.Source
     {
         //instance of the Mod class
         public static ModEntry Instance;
-        public static MagicSkill MagicSkill;
-        public static PlayerStats PlayerStats;
+        public static RuneMagic RuneMagic;
 
         private JsonAssets.IApi JsonAssetsApi;
         private IApi SpaceCoreApi;
-
-
-
-
 
         public override void Entry(IModHelper helper)
         {
@@ -47,7 +42,8 @@ namespace RuneMagic.Source
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.TimeChanged += OnTimeChanged;
-            RegisterSkill(MagicSkill = new MagicSkill());
+            RuneMagic = new RuneMagic();
+            RegisterSkill(RuneMagic.PlayerStats.MagicSkill = new MagicSkill());
 
 
         }
@@ -91,7 +87,7 @@ namespace RuneMagic.Source
             ManageMagicItems(Game1.player);
 
             if (Context.IsWorldReady)
-                PlayerStats.CheckCasting(sender, e);
+                RuneMagic.PlayerStats.CheckCasting(sender, e);
 
 
 
@@ -109,10 +105,7 @@ namespace RuneMagic.Source
         {
             if (Game1.CurrentEvent.id == 15065001)
             {
-                Object inscriptionTable = new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table"));
-                Game1.player.Position = new Vector2(7 * Game1.tileSize, 22 * Game1.tileSize);
-                Game1.player.addItemToInventory(inscriptionTable);
-                Game1.player.holdUpItemThenMessage(inscriptionTable);
+                Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 100);
             }
 
 
@@ -120,59 +113,44 @@ namespace RuneMagic.Source
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
 
+            //unlock recipe
+
+            if (!Game1.player.craftingRecipes.ContainsKey("Rune of Displacement") && Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) >= 1)
+            {
+                Game1.player.craftingRecipes.Add("Rune of Displacement", 0);
+            }
+
+
+
+            //Add playerStats to the farmer
+            RuneMagic.Farmer = Game1.player;
 
             //Initialize spells for runes on day start
-            foreach (Item item in Game1.player.Items)
+            foreach (Item item in RuneMagic.Farmer.Items)
             {
                 if (item is Rune rune && rune.Spell == null)
                 {
                     rune.InitializeSpell();
                 }
             }
-            //Check for wizard letters 
-
-            if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
-            {
-                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter1"))
-                {
-                    Game1.player.mailbox.Add("RuneMagicWizardLetter1");
-                }
-
-            }
-            if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 4)
-            {
-                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter2"))
-                {
-                    Game1.player.mailbox.Add("RuneMagicWizardLetter2");
-                }
-
-            }
-            if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 5)
-            {
-                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter3"))
-                {
-                    Game1.player.mailbox.Add("RuneMagicWizardLetter3");
-                }
-
-            }
+            //check wizard letter
             if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6)
             {
-                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter4"))
+                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter"))
                 {
-                    Game1.player.mailbox.Add("RuneMagicWizardLetter4");
+                    Game1.player.mailbox.Add("RuneMagicWizardLetter");
                 }
 
             }
 
-            Game1.player.AddCustomSkillExperience(MagicSkill, 3000);
 
-            PlayerStats = new PlayerStats(Game1.player);
 
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (e.Button == SButton.MouseRight)
             {
+
                 if (Game1.player.CurrentItem is Rune rune)
                 {
                     rune.Use();
@@ -182,6 +160,11 @@ namespace RuneMagic.Source
                 {
                     scroll.Use();
                 }
+            }
+            if (e.Button == SButton.F5)
+            {
+                Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 100);
+
             }
         }
         private void OnWarped(object sender, WarpedEventArgs e)
@@ -240,30 +223,11 @@ namespace RuneMagic.Source
         }
         private void RegisterMail(IAssetData asset)
         {
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter1"] =
-                "Hello @... " +
-                "^^ I have been watching you for a while now, and I have noticed that you have an interest in magic. " +
-                "^ This is for you, friend." +
-                "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssetsApi.GetObjectId("Rune of Magic Missile")} 5 %%";
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter2"] =
-                "My friend... " +
-                "^^ I can sense you have been using the gift I gave you, I hope you enjoy this one." +
-                "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssetsApi.GetObjectId("Rune of Displacement")} 5 %%";
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter3"] =
-                "My dear friend @... " +
-                "^^ I think you will appreciate this. " +
-                "^It is very rare so use it with care." +
-                "^^-M. Rasmodius, Wizard" +
-                $"%item object {JsonAssetsApi.GetObjectId("Rune of Teleportation")} 1 %%";
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter4"] =
-               "My dear friend @... " +
+            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter"] =
+               "@... " +
                "^^ I have something I wish you to have but its too powerful and precious to send it trough mail. " +
                "^Please come pay me a visit when you can." +
                "^^-M. Rasmodius, Wizard";
-
-
         }
         private void RegisterEvent(IAssetData asset)
         {
@@ -307,6 +271,8 @@ namespace RuneMagic.Source
                     Recipe = new ObjectRecipe()
                     {
                         ResultCount = 1,
+                        SkillUnlockName = $"Magic",
+                        SkillUnlockLevel = 1,
                         Ingredients =
                     {
                         new ObjectIngredient()
@@ -315,7 +281,7 @@ namespace RuneMagic.Source
                             Count = 1
                         }
                     },
-                        IsDefault = true
+                        IsDefault = false
 
                     }
 

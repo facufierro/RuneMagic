@@ -41,7 +41,7 @@ namespace RuneMagic.Framework
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
             base.drawWhenHeld(spriteBatch, objectPosition, f);
-            var castingTimer = ModEntry.PlayerStats.CastingTimer;
+            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
             //draw casting timer as a bar on the rune
             if (castingTimer > 0)
             {

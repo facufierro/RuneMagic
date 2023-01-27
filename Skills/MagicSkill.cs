@@ -58,8 +58,6 @@ namespace RuneMagic.Skills
             ProfessionsForLevels.Add(new ProfessionPair(5, RuneCasterI, ScribeI));
 
         }
-
-
         public override string GetName()
         {
             return "Magic";

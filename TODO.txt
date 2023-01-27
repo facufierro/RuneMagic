@@ -1,10 +1,15 @@
 ﻿
 High priority		
+-Make CCS pack with SMAPI
+-Finish progression
+	-Recipes for all the items should be gained at random when lvl up
+	-Add chiseled stones and blank paper 
+	-add a machine to grind gems into magic ink
+	-limit xp per day.
+
 -Finish skills
 	-Implement professions	
--Finish progression
-
-
+	
 Low priority
 -Add magic weapons/altar
 -Improve magic item registration code

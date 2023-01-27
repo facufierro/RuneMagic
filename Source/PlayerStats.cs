@@ -20,43 +20,42 @@ namespace RuneMagic.Source
 {
     public class PlayerStats
     {
-        public Farmer Farmer { get; set; }
-        public int CastingFailureChance { get; set; }
+
+        public MagicSkill MagicSkill { get; set; }
+        public MagicItem ItemHeld { get; set; } = null;
         public int SpellAttack { get; set; }
-        public int MagicSkillLevel { get; set; }
-        public MagicItem MagicItem { get; set; } = null;
+        public int CastingFailureChance { get; set; }
         public bool IsCasting { get; set; } = false;
         public float CastingTimer { get; set; } = 0;
 
         public PlayerStats()
         {
-            MagicSkillLevel = 1;
-            CastingFailureChance = 10 - MagicSkillLevel;
+            CastingFailureChance = 10;
             SpellAttack = 0;
-        }
-        public PlayerStats(Farmer farmer) : this()
-        {
-            Farmer = farmer;
         }
 
         public void CheckCasting(object sender, UpdateTickedEventArgs e)
         {
-            if (MagicItem != null)
+            if (ItemHeld != null)
             {
-                //ModEntry.Instance.Monitor.Log($"{MagicItem.Name}");
+                //ModEntry.Instance.Monitor.Log($"{ItemHeld.Name}");
 
                 IsCasting = true;
-                if (CastingTimer >= Math.Floor(MagicItem.Spell.CastingTime * 60))
+                if (CastingTimer >= Math.Floor(ItemHeld.Spell.CastingTime * 60))
                 {
                     //ModEntry.Instance.Monitor.Log($"{CastingTimer}");
-                    MagicItem.Activate();
-                    MagicItem = null;
+                    ItemHeld.Activate();
+                    ItemHeld = null;
                     IsCasting = false;
                     CastingTimer = 0;
                 }
                 else
                     CastingTimer += 1;
             }
+        }
+        public void LearnRecipes()
+        {
+
         }
     }
 }

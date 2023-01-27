@@ -35,12 +35,14 @@ namespace RuneMagic.Famework
         public School School { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
+        public float Level { get; set; }
 
         public abstract bool Cast();
 
         public Spell()
         {
             CastingTime = 0.5f;
+            Level = 1;
         }
 
         public List<Color> GetColor()
