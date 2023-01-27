@@ -17,6 +17,7 @@ Low priority
 -Mod compatibility with MARGO
 -Add interfaces
 -add sounds
+-Add configuration menu
 
 Maybe
 -Add spellbooks and rune pouches

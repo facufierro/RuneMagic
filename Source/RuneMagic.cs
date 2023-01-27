@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 
 using System.Threading.Tasks;
+using static SpaceCore.Skills;
 
 namespace RuneMagic.Source
 {
@@ -214,6 +215,59 @@ namespace RuneMagic.Source
                     IsDefault = true
 
                 }
+            });
+        }
+        public void JARegisterOtherObjects()
+        {
+            Texture2D texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/blank_rune.png");
+            JsonAssets.Mod.instance.RegisterObject(ModEntry.Instance.ModManifest, new ObjectData()
+            {
+                Name = $"Blank Rune",
+                Description = $"A stone carved and ready for making runes.",
+                Texture = texture,
+                Category = ObjectCategory.Crafting,
+                Price = 0,
+                HideFromShippingCollection = true,
+                Recipe = new ObjectRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new ObjectIngredient()
+                        {
+                            Object = "Stone",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = false
+
+                }
+
+            });
+            texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/blank_scroll.png");
+            JsonAssets.Mod.instance.RegisterObject(ModEntry.Instance.ModManifest, new ObjectData()
+            {
+                Name = $"Blank Scroll",
+                Description = $"A peace of parchment for inscribing scrolls",
+                Texture = texture,
+                Category = ObjectCategory.Crafting,
+                Price = 0,
+                HideFromShippingCollection = true,
+                Recipe = new ObjectRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients =
+                    {
+                        new ObjectIngredient()
+                        {
+                            Object = "Fiber",
+                            Count = 1
+                        }
+                    },
+                    IsDefault = false
+
+                }
+
             });
         }
         public void CCSRegister()

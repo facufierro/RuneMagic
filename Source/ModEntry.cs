@@ -72,10 +72,10 @@ namespace RuneMagic.Source
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-
             RuneMagic.JARegisterCraftingStations();
             RuneMagic.JARegisterRunes();
             RuneMagic.JARegisterScrolls();
+            RuneMagic.JARegisterOtherObjects();
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
