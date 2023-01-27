@@ -112,9 +112,14 @@ namespace RuneMagic.Source
                     {
                         new ObjectIngredient()
                         {
-                            Object = "Stone",
+                            Object = "Blank Rune",
                             Count = 1
-                        }
+                        },
+                        new ObjectIngredient()
+                        {
+                            Object = "Magic Dust",
+                            Count = 5
+                        },
                     },
                         IsDefault = false
 
@@ -158,11 +163,16 @@ namespace RuneMagic.Source
                         ResultCount = 1,
                         Ingredients =
                     {
+                       new ObjectIngredient()
+                        {
+                            Object = "Blank Scroll",
+                            Count = 1
+                        },
                         new ObjectIngredient()
                         {
-                            Object = "Stone",
-                            Count = 1
-                        }
+                            Object = "Magic Dust",
+                            Count = 5
+                        },
                     },
                         IsDefault = false
 
@@ -172,83 +182,30 @@ namespace RuneMagic.Source
 
             }
         }
-        public void JARegisterCraftingStations()
+        public void JARegisterCraftingStation(string name, string description, string texturePath, List<BigCraftableIngredient> ingredients)
         {
             JsonAssets.Mod.instance.RegisterBigCraftable(ModEntry.Instance.ModManifest, new BigCraftableData()
             {
-                Name = $"Runic Anvil",
-                Description = $"Anvil used to carve Runes",
-                Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/big-craftable.png"),
+                Name = $"{name}",
+                Description = $"{description}",
+                Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"{texturePath}"),
                 Price = 0,
                 Recipe = new BigCraftableRecipe()
                 {
                     ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
-
-                }
-            });
-            JsonAssets.Mod.instance.RegisterBigCraftable(ModEntry.Instance.ModManifest, new BigCraftableData()
-            {
-                Name = $"Inscription Table",
-                Description = $"Table used to inscribe Scrolls",
-                Texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/big-craftable.png"),
-                Price = 0,
-                Recipe = new BigCraftableRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
-
-                }
-            });
-        }
-        public void JARegisterOtherObjects()
-        {
-            Texture2D texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/blank_rune.png");
-            JsonAssets.Mod.instance.RegisterObject(ModEntry.Instance.ModManifest, new ObjectData()
-            {
-                Name = $"Blank Rune",
-                Description = $"A stone carved and ready for making runes.",
-                Texture = texture,
-                Category = ObjectCategory.Crafting,
-                Price = 0,
-                HideFromShippingCollection = true,
-                Recipe = new ObjectRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new ObjectIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
+                    Ingredients = ingredients,
                     IsDefault = false
-
                 }
-
             });
-            texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/blank_scroll.png");
+
+        }
+        public void JARegisterObject(string name, string description, string texturePath, List<ObjectIngredient> ingredients)
+        {
+            Texture2D texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"{texturePath}");
             JsonAssets.Mod.instance.RegisterObject(ModEntry.Instance.ModManifest, new ObjectData()
             {
-                Name = $"Blank Scroll",
-                Description = $"A peace of parchment for inscribing scrolls",
+                Name = $"{name}",
+                Description = $"{description}",
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 Price = 0,
@@ -256,14 +213,7 @@ namespace RuneMagic.Source
                 Recipe = new ObjectRecipe()
                 {
                     ResultCount = 1,
-                    Ingredients =
-                    {
-                        new ObjectIngredient()
-                        {
-                            Object = "Fiber",
-                            Count = 1
-                        }
-                    },
+                    Ingredients = ingredients,
                     IsDefault = false
 
                 }

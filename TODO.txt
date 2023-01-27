@@ -5,7 +5,8 @@ High priority
 	-add a machine to grind gems into magic ink
 	-add xp to the player on casting spells
 	-limit xp per day.
-
+	-Add runic staff
+	
 -Finish skills
 	-Implement professions	
 	

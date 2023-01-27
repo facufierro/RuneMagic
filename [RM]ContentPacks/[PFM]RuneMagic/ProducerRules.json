@@ -1,13 +1,91 @@
 [
   {
     "ProducerName": "Magic Grinder",
-    "InputIdentifier": "390",
+    "InputIdentifier": "Amethyst",
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 20,
-    "OutputIdentifier": "Rune of Displacement",
+    "MinutesUntilReady": 60,
+    "OutputIdentifier": "Magic Dust",
     "OutputStack": 1,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Topaz",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 60,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 1,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Aquamarine",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 80,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 3,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Jade",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 80,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 3,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Emerald",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 100,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 5,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Ruby",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 100,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 5,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Diamond",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 120,
+    "OutputIdentifier": "Magic Dust",
+    "OutputStack": 10,
     "Sounds": [
       "Ship"
     ]

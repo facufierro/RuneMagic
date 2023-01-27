@@ -61,12 +61,23 @@ namespace RuneMagic.Source
 
             foreach (var spell in ModEntry.RuneMagic.SpellList)
             {
-                if (level == spell.Level)
+                if (level >= spell.Level)
                 {
-                    recipes.Add($"You have learned how to inscribe the {spell.Name} Glyph!");
-                    ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
-                    ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
+                    if (level >= 1)
+                    {
+                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Runic Anvil"))
+                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Runic Anvil", 0);
+                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Inscription Table"))
+                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Inscription Table", 0);
+                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Magic Grinder"))
+                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Magic Grinder", 0);
+                    }
+                    if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
+                        ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
+                    if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
+                        ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
                 }
+
             }
             return recipes;
         }

@@ -72,10 +72,20 @@ namespace RuneMagic.Source
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-            RuneMagic.JARegisterCraftingStations();
+            RuneMagic.JARegisterCraftingStation("Runic Anvil", "An anvil marked with strange runes.", "assets/Items/big-craftable.png",
+                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, });
+            RuneMagic.JARegisterCraftingStation("Inscription Table", "A table marked with strange runes.", "assets/Items/big-craftable.png",
+                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, });
+            RuneMagic.JARegisterCraftingStation("Magic Grinder", "It's used to produce magic dust for glyphs.", "assets/Items/big-craftable.png",
+                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, });
             RuneMagic.JARegisterRunes();
             RuneMagic.JARegisterScrolls();
-            RuneMagic.JARegisterOtherObjects();
+            RuneMagic.JARegisterObject("Blank Rune", "A stone carved and prepared to carve runes in it.", "assets/Items/blank_rune.png",
+                new() { new ObjectIngredient() { Object = "Stone", Count = 1 } });
+            RuneMagic.JARegisterObject("Blank Scroll", "A peace of parchment ready for inscribing", "assets/Items/blank_scroll.png",
+                new() { new ObjectIngredient() { Object = "Fiber", Count = 1 } });
+            RuneMagic.JARegisterObject("Magic Dust", "Magically processed dust obtained from Gems", "assets/Items/magic_dust.png",
+                new() { new ObjectIngredient() { Object = "Fiber", Count = 1 } });
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {

@@ -67,15 +67,36 @@ namespace RuneMagic.Skills
 
         public override List<string> GetExtraLevelUpInfo(int level)
         {
-            List<string> info = new List<string> { $"-{level}% Chance of Casting Failure", $"+{level}% Chance of Casting Failure" };
-            
-            info.Concat(ModEntry.RuneMagic.PlayerStats.LearnRecipes(level));
+
+            string lvl1Info = "";
+            if (level == 1)
+                lvl1Info = "The wizard has taught you the basics of magic inscription";
+            List<string> info = new List<string> {
+                $"{lvl1Info}",
+                $"-{level}% Chance of Casting Failure",
+                $"+{level}% Casting Speed",
+                $"You have gained access to the following spells:",
+                };
+            string spellList = "";
+            foreach (var spell in ModEntry.RuneMagic.SpellList)
+            {
+                if (spell.Level == level)
+                {
+                    //set spellList to spellList + spell.Name  and add a comma if it's not the last spell in the list
+                    spellList = spellList + spell.Name + (spellList == "" ? "" : ", ");
+
+
+                }
+            }
+            //remove the last comma from spellList
+            spellList = spellList.TrimEnd(new char[] { ',', ' ' });
+            info.Add($" {spellList}");
             return info;
         }
 
         public override string GetSkillPageHoverText(int level)
         {
-            return $"-{level}% Chance of Casting Failure" + Environment.NewLine + $"+{level}% Chance of Casting Failure";
+            return $"-{level}% Chance of Casting Failure" + Environment.NewLine + $"+{level}% Casting Speed";
 
         }
 
