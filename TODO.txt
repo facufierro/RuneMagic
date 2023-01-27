@@ -3,7 +3,7 @@ High priority
 -Finish skills
 	-Implement professions	
 -Finish progression
--Add a Casting system (with animations)
+
 
 Low priority
 -Add magic weapons/altar
@@ -11,7 +11,8 @@ Low priority
 -Add more magic spells
 -Add a rune crack system
 -Mod compatibility with MARGO
-
+-Add interfaces
+-add sounds
 
 Maybe
 -Add spellbooks and rune pouches
@@ -19,5 +20,5 @@ Maybe
 -Add potions
 -Add monsters
 -Add bosses
-
+-Animations for the  player
 

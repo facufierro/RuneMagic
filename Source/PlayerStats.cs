@@ -18,17 +18,15 @@ using RuneMagic.Items;
 
 namespace RuneMagic.Source
 {
-    public class PlayerStats : Farmer
+    public class PlayerStats
     {
         public Farmer Farmer { get; set; }
         public int CastingFailureChance { get; set; }
         public int SpellAttack { get; set; }
         public int MagicSkillLevel { get; set; }
-        public Rune RuneBeingUsed { get; set; }
+        public MagicItem MagicItem { get; set; } = null;
         public bool IsCasting { get; set; } = false;
-
-
-        int timeCasted = 0;
+        public float CastingTimer { get; set; } = 0;
 
         public PlayerStats()
         {
@@ -39,31 +37,27 @@ namespace RuneMagic.Source
         public PlayerStats(Farmer farmer) : this()
         {
             Farmer = farmer;
-
         }
+
         public void CheckCasting(object sender, UpdateTickedEventArgs e)
         {
-
-            if (RuneBeingUsed != null)
+            if (MagicItem != null)
             {
+                //ModEntry.Instance.Monitor.Log($"{MagicItem.Name}");
 
-                ModEntry.Instance.Monitor.Log($"Time Spent: {timeCasted}");
-                ModEntry.Instance.Monitor.Log($"Finish: {RuneBeingUsed.Spell.CastingTime}");
-
-
-                if (timeCasted == RuneBeingUsed.Spell.CastingTime * 60)
+                IsCasting = true;
+                if (CastingTimer >= Math.Floor(MagicItem.Spell.CastingTime * 60))
                 {
-                    RuneBeingUsed.Use();
-                    RuneBeingUsed = null;
-                    timeCasted = 0;
+                    //ModEntry.Instance.Monitor.Log($"{CastingTimer}");
+                    MagicItem.Activate();
+                    MagicItem = null;
+                    IsCasting = false;
+                    CastingTimer = 0;
                 }
-                timeCasted++;
+                else
+                    CastingTimer += 1;
             }
-
         }
-
-
-
     }
 }
 

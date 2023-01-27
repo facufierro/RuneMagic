@@ -56,7 +56,7 @@ namespace RuneMagic.Skills
                 Description = "",
             };
             ProfessionsForLevels.Add(new ProfessionPair(5, RuneCasterI, ScribeI));
-            
+
         }
 
 
@@ -69,13 +69,13 @@ namespace RuneMagic.Skills
         {
             return new()
             {
-                "-1% Chance of Rune Failure",
+                "-1% Chance of Casting Failure",
             };
         }
 
         public override string GetSkillPageHoverText(int level)
         {
-            return "-" + level + " Chance of Rune Failure";
+            return "-" + level + " Chance of Casting Failure";
         }
 
 

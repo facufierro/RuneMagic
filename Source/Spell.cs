@@ -40,6 +40,7 @@ namespace RuneMagic.Famework
 
         public Spell()
         {
+            CastingTime = 0.5f;
         }
 
         public List<Color> GetColor()

@@ -9,12 +9,12 @@ using Object = StardewValley.Object;
 using Microsoft.Xna.Framework;
 using static SpaceCore.Skills;
 using JsonAssets.Data;
-using RuneMagic.Skills;
 using System.Collections.Generic;
 using RuneMagic.Magic;
 using RuneMagic.Framework;
 using SpaceCore;
 using RuneMagic.Famework;
+using RuneMagic.Skills;
 
 namespace RuneMagic.Source
 {
@@ -83,39 +83,22 @@ namespace RuneMagic.Source
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
-            //remove spells from runes
-            foreach (var item in Game1.player.Items)
-            {
-                if (item is Rune rune)
-                {
-                    rune.Spell = null;
-                }
-            }
+
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
 
             ManageMagicItems(Game1.player);
-            //if world ready
+
             if (Context.IsWorldReady)
                 PlayerStats.CheckCasting(sender, e);
+
+
 
         }
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
-            var runes = JsonAssetsApi.GetAllObjectIds();
-            //if item added to inventory is a rune
-            if (e.Added.Any())
-            {
-                foreach (var item in e.Added)
-                {
-                    //check if the JsonAssetsApi.GetObjectId(item.Name) is in the runes.keys list
-                    if (runes.ContainsKey(JsonAssetsApi.GetObjectId(item.Name).ToString()))
-                    {
-                        Monitor.Log("Rune added to inventory", LogLevel.Alert);
-                    }
-                }
-            }
+
 
         }
         private void OnTimeChanged(object sender, TimeChangedEventArgs e)
@@ -136,9 +119,7 @@ namespace RuneMagic.Source
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            //add the MagicSkill level to the player's modData
-            if (!Game1.player.modData.ContainsKey($"{ModManifest.UniqueID}/CastingFailureChance"))
-                Game1.player.modData[$"{ModManifest.UniqueID}/CastingFailureChance"] = $"{Game1.player.GetCustomSkillLevel(MagicSkill)}";
+
 
             //Initialize spells for runes on day start
             foreach (Item item in Game1.player.Items)
@@ -194,7 +175,7 @@ namespace RuneMagic.Source
             {
                 if (Game1.player.CurrentItem is Rune rune)
                 {
-                    rune.Activate();
+                    rune.Use();
 
                 }
                 else if (Game1.player.CurrentItem is Scroll scroll)

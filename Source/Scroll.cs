@@ -19,28 +19,32 @@ namespace RuneMagic.Framework
         public Scroll()
           : base()
         {
+            InitializeSpell();
 
         }
-        public Scroll(int parentSheetIndex, int stack)
-            : base(parentSheetIndex, stack)
+        public Scroll(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             InitializeSpell();
+
         }
-        public override void Use()
+        public override void Activate()
         {
-            if (GlobalCooldown <= 0 && Spell != null)
+            if (Spell != null)
             {
                 if (Spell.Cast())
                 {
                     Game1.player.removeItemFromInventory(ParentSheetIndex);
-                    GlobalCooldown = GlobalCooldownMax;
                 }
             }
         }
+        public override void Use()
+        {
+            ModEntry.PlayerStats.MagicItem = this;
+        }
         public override bool Fizzle()
         {
-            int castFailure = Convert.ToInt32(Game1.player.modData[$"{ModEntry.Instance.ModManifest.UniqueID}/CastingFailureChance"]);
-            if (Game1.random.Next(1, 100) < 10 - castFailure)
+
+            if (Game1.random.Next(1, 100) < 0)
             {
                 Game1.player.stamina -= 10;
                 Game1.playSound("Wand");
