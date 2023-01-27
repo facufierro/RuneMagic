@@ -30,6 +30,9 @@ namespace RuneMagic.Source
         public override void Entry(IModHelper helper)
         {
             Instance = this;
+            RuneMagic = new RuneMagic();
+            RuneMagic.CCSRegister();
+
 
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.Content.AssetRequested += OnAssetRequested;
@@ -42,7 +45,7 @@ namespace RuneMagic.Source
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.TimeChanged += OnTimeChanged;
-            RuneMagic = new RuneMagic();
+
             RegisterSkill(RuneMagic.PlayerStats.MagicSkill = new MagicSkill());
 
 
@@ -62,15 +65,16 @@ namespace RuneMagic.Source
         {
             //Monitor.Log($"{e.NameWithoutLocale}", LogLevel.Alert);
             if (e.Name.IsEquivalentTo("Data/Mail"))
-                e.Edit(RegisterMail);
+                e.Edit(RuneMagic.RegisterMail);
             if (e.Name.IsEquivalentTo("Data/Event"))
-                e.Edit(RegisterEvent);
+                e.Edit(RuneMagic.RegisterEvent);
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-            RegisterMagicCraftingStations();
-            RegisterRunes();
-            RegisterScrolls();
+            RuneMagic.RegisterSpells();
+            RuneMagic.JARegisterCraftingStations();
+            RuneMagic.JARegisterRunes();
+            RuneMagic.JARegisterScrolls();
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
@@ -83,14 +87,9 @@ namespace RuneMagic.Source
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-
-            ManageMagicItems(Game1.player);
-
+            RuneMagic.ManageMagicItems(Game1.player, JsonAssetsApi);
             if (Context.IsWorldReady)
                 RuneMagic.PlayerStats.CheckCasting(sender, e);
-
-
-
         }
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
@@ -200,189 +199,6 @@ namespace RuneMagic.Source
             }
         }
 
-        private void ManageMagicItems(Farmer player)
-        {
-            if (Context.IsWorldReady)
-                for (int i = 0; i < player.Items.Count; i++)
-                {
-                    var inventory = player.Items;
-                    List<string> itemsFromPack = new List<string>(JsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
-
-                    if (inventory[i] is not MagicItem and not null)
-                    {
-                        if (itemsFromPack.Contains(inventory[i].Name))
-                        {
-                            if (inventory[i].Name.Contains("Rune of "))
-                                player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                            if (inventory[i].Name.Contains(" Scroll"))
-                                player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                        }
-                    }
-
-                }
-        }
-        private void RegisterMail(IAssetData asset)
-        {
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter"] =
-               "@... " +
-               "^^ I have something I wish you to have but its too powerful and precious to send it trough mail. " +
-               "^Please come pay me a visit when you can." +
-               "^^-M. Rasmodius, Wizard";
-        }
-        private void RegisterEvent(IAssetData asset)
-        {
-            var data = asset.AsDictionary<string, string>().Data;
-            data["15065001/n RuneMagicWizardLetter4"] = "";
-        }
-        private void RegisterRunes()
-        {
-            int index = 0;
-
-            var spells = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToList();
-
-            for (int i = 0; i < spells.Count(); i++)
-            {
-                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{spells[i]}"));
-                int textureCount = System.IO.Directory.GetFiles(@$"{Helper.DirectoryPath}/assets/Runes").Length;
-                if (index > textureCount)
-                    index = 0;
-                Texture2D texture = Helper.ModContent.Load<Texture2D>($"assets/Runes/rune-{index}.png");
-                Color[] data = new Color[texture.Width * texture.Height];
-                texture.GetData(data);
-                for (int j = 0; j < data.Length; ++j)
-                {
-                    if (data[j] == Color.White)
-                        data[j] = spell.GetColor()[0];
-                    if (data[j] == Color.Black)
-                        data[j] = spell.GetColor()[1];
-                }
-                texture.SetData(data);
-
-                JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
-                {
-                    Name = $"Rune of {spell.Name}",
-                    Description = $"{spell.Description}",
-                    Texture = texture,
-                    Category = ObjectCategory.Crafting,
-                    CategoryTextOverride = $"{spell.School}",
-                    CategoryColorOverride = spell.GetColor()[1],
-                    Price = 0,
-                    HideFromShippingCollection = true,
-                    Recipe = new ObjectRecipe()
-                    {
-                        ResultCount = 1,
-                        SkillUnlockName = $"Magic",
-                        SkillUnlockLevel = 1,
-                        Ingredients =
-                    {
-                        new ObjectIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                        IsDefault = false
-
-                    }
-
-                });
-                index++;
-
-            }
-        }
-        private void RegisterScrolls()
-        {
-            var spells = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToList();
-            for (int i = 0; i < spells.Count(); i++)
-            {
-                Spell spell = (Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{spells[i]}"));
-                int textureCount = System.IO.Directory.GetFiles(@$"{Helper.DirectoryPath}/assets/Scrolls").Length;
-                Texture2D texture = Helper.ModContent.Load<Texture2D>($"assets/Scrolls/scroll-0.png");
-                Color[] data = new Color[texture.Width * texture.Height];
-                texture.GetData(data);
-                for (int j = 0; j < data.Length; ++j)
-                {
-                    if (data[j] == Color.White)
-                        data[j] = spell.GetColor()[0];
-                    if (data[j] == Color.Black)
-                        data[j] = spell.GetColor()[1];
-                }
-                texture.SetData(data);
-
-                JsonAssets.Mod.instance.RegisterObject(ModManifest, new ObjectData()
-                {
-                    Name = $"{spell.Name} Scroll",
-                    Description = $"{spell.Description}",
-                    Texture = texture,
-                    Category = ObjectCategory.Crafting,
-                    CategoryTextOverride = $"{spell.School}",
-                    CategoryColorOverride = spell.GetColor()[1],
-                    Price = 0,
-                    HideFromShippingCollection = true,
-                    Recipe = new ObjectRecipe()
-                    {
-                        ResultCount = 1,
-                        Ingredients =
-                    {
-                        new ObjectIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                        IsDefault = true
-
-                    }
-
-                });
-
-            }
-        }
-        private void RegisterMagicCraftingStations()
-        {
-            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            {
-                Name = $"Runic Anvil",
-                Description = $"Anvil used to carve Runes",
-                Texture = Helper.ModContent.Load<Texture2D>($"assets/Items/big-craftable.png"),
-                Price = 0,
-                Recipe = new BigCraftableRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
-
-                }
-            });
-            JsonAssets.Mod.instance.RegisterBigCraftable(ModManifest, new BigCraftableData()
-            {
-                Name = $"Inscription Table",
-                Description = $"Table used to inscribe Scrolls",
-                Texture = Helper.ModContent.Load<Texture2D>($"assets/Items/big-craftable.png"),
-                Price = 0,
-                Recipe = new BigCraftableRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients =
-                    {
-                        new BigCraftableIngredient()
-                        {
-                            Object = "Stone",
-                            Count = 1
-                        }
-                    },
-                    IsDefault = true
-
-                }
-            });
-        }
     }
 }
 

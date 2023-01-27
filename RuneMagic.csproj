@@ -6,6 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="4.1.0" />
 	</ItemGroup>
 
@@ -19,7 +20,7 @@
 
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="robocopy &quot;$(SolutionDir)[RM]ContentPacks&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[RM]ContentPacks&quot; /mir&#xD;&#xA;" />
+		<!--<Exec Command="robocopy &quot;$(SolutionDir)[RM]ContentPacks&quot; &quot;D:\Games\Steam\steamapps\common\Stardew Valley\Mods\[RM]ContentPacks&quot; /mir&#xD;&#xA;" />-->
 	</Target>
 
 </Project>

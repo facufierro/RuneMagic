@@ -26,4 +26,4 @@ Maybe
 -Add monsters
 -Add bosses
 -Animations for the  player
-
+-Add Rituals and rituals altar
