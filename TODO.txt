@@ -1,9 +1,9 @@
 ﻿
 High priority		
 -Finish progression
-	-Recipes for all the items should be gained at random when lvl up
 	-Add chiseled stones and blank paper 
 	-add a machine to grind gems into magic ink
+	-add xp to the player on casting spells
 	-limit xp per day.
 
 -Finish skills
@@ -26,3 +26,4 @@ Maybe
 -Add bosses
 -Animations for the  player
 -Add Rituals and rituals altar
+-add casting interrupt
