@@ -18,6 +18,7 @@ namespace RuneMagic.Spells
             Name = "Teleportation";
             School = School.Alteration;
             Description = "Teleports the caster to their home.";
+            Level = 4;
         }
 
         public override bool Cast()

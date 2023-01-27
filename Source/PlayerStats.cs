@@ -15,6 +15,7 @@ using RuneMagic.Source;
 using StardewModdingAPI.Events;
 using System.Runtime.InteropServices;
 using RuneMagic.Items;
+using System.Collections.Generic;
 
 namespace RuneMagic.Source
 {
@@ -53,9 +54,21 @@ namespace RuneMagic.Source
                     CastingTimer += 1;
             }
         }
-        public void LearnRecipes()
-        {
 
+        public List<string> LearnRecipes(int level)
+        {
+            List<string> recipes = new List<string>();
+
+            foreach (var spell in ModEntry.RuneMagic.SpellList)
+            {
+                if (level == spell.Level)
+                {
+                    recipes.Add($"You have learned how to inscribe the {spell.Name} Glyph!");
+                    ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
+                    ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
+                }
+            }
+            return recipes;
         }
     }
 }

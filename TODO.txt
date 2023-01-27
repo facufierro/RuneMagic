@@ -1,6 +1,5 @@
 ﻿
 High priority		
--Make CCS pack with SMAPI
 -Finish progression
 	-Recipes for all the items should be gained at random when lvl up
 	-Add chiseled stones and blank paper 

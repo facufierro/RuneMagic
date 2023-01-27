@@ -16,7 +16,7 @@ namespace RuneMagic.Spells
             Name = "Telekinesis";
             School = School.Alteration;
             Description = "Teleports a the caster a short distance.";
-
+            Level = 2;
         }
 
         public override bool Cast()

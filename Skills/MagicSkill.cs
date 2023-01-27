@@ -65,10 +65,8 @@ namespace RuneMagic.Skills
 
         public override List<string> GetExtraLevelUpInfo(int level)
         {
-            return new()
-            {
-                "-1% Chance of Casting Failure",
-            };
+
+            return ModEntry.RuneMagic.PlayerStats.LearnRecipes(level);
         }
 
         public override string GetSkillPageHoverText(int level)

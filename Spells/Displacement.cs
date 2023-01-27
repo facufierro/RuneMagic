@@ -18,7 +18,7 @@ namespace RuneMagic.Spells
             Name = "Displacement";
             School = School.Alteration;
             Description = "Teleports a the caster a short distance.";
-            CastingTime = 1;
+            Level = 3;
         }
 
         public override bool Cast()

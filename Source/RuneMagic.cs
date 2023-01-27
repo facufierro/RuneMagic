@@ -125,7 +125,6 @@ namespace RuneMagic.Source
             }
 
         }
-
         public void JARegisterScrolls()
         {
             var spells = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToList();
@@ -164,7 +163,7 @@ namespace RuneMagic.Source
                             Count = 1
                         }
                     },
-                        IsDefault = true
+                        IsDefault = false
 
                     }
 
@@ -217,20 +216,19 @@ namespace RuneMagic.Source
                 }
             });
         }
-
         public void CCSRegister()
         {
-            var spells = typeof(ModEntry).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToList();
-            var runeRecipes = new List<string>();
-            foreach (var spell in spells)
-            {
-                runeRecipes.Add($"Rune of {spell}");
-            }
 
+            var runeRecipes = new List<string>();
             var scrollRecipes = new List<string>();
-            foreach (var spell in spells)
+            foreach (var spell in SpellList)
             {
-                scrollRecipes.Add($"{spell} Scroll");
+                if (spell.Name.Contains("_"))
+                {
+                    spell.Name.Replace("_", " ");
+                }
+                runeRecipes.Add($"Rune of {spell.Name}");
+                scrollRecipes.Add($"{spell.Name} Scroll");
             }
 
             var craftingStations = new List<Dictionary<string, object>> {

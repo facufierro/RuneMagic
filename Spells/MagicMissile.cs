@@ -15,6 +15,7 @@ namespace RuneMagic.Spells
             Name = "Magic Missile";
             School = School.Evocation;
             Description = "Shoots a magic missile";
+            Level = 1;
             ProjectileNumber = 1;
 
         }

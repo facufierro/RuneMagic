@@ -31,6 +31,7 @@ namespace RuneMagic.Source
         {
             Instance = this;
             RuneMagic = new RuneMagic();
+            RuneMagic.RegisterSpells();
             RuneMagic.CCSRegister();
 
 
@@ -71,7 +72,7 @@ namespace RuneMagic.Source
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
-            RuneMagic.RegisterSpells();
+
             RuneMagic.JARegisterCraftingStations();
             RuneMagic.JARegisterRunes();
             RuneMagic.JARegisterScrolls();
@@ -111,20 +112,10 @@ namespace RuneMagic.Source
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-
-            //unlock recipe
-
-            if (!Game1.player.craftingRecipes.ContainsKey("Rune of Displacement") && Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) >= 1)
-            {
-                Game1.player.craftingRecipes.Add("Rune of Displacement", 0);
-            }
-
-
-
             //Add playerStats to the farmer
             RuneMagic.Farmer = Game1.player;
 
-            //Initialize spells for runes on day start
+
             foreach (Item item in RuneMagic.Farmer.Items)
             {
                 if (item is Rune rune && rune.Spell == null)
@@ -133,11 +124,11 @@ namespace RuneMagic.Source
                 }
             }
             //check wizard letter
-            if (Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6)
+            if (RuneMagic.Farmer.getFriendshipHeartLevelForNPC("Wizard") >= 6)
             {
-                if (!Game1.player.mailReceived.Contains("RuneMagicWizardLetter"))
+                if (!RuneMagic.Farmer.mailReceived.Contains("RuneMagicWizardLetter"))
                 {
-                    Game1.player.mailbox.Add("RuneMagicWizardLetter");
+                    RuneMagic.Farmer.mailbox.Add("RuneMagicWizardLetter");
                 }
 
             }
