@@ -49,6 +49,7 @@ namespace RuneMagic.Items
                 if (!Fizzle())
                     if (Spell.Cast())
                     {
+                        ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
                         Charges -= 1;
                     }
             }

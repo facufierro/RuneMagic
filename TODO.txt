@@ -1,8 +1,6 @@
 ﻿
 High priority		
 -Finish progression
-	-Add chiseled stones and blank paper 
-	-add a machine to grind gems into magic ink
 	-add xp to the player on casting spells
 	-limit xp per day.
 	-Add runic staff

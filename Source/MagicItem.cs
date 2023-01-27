@@ -52,7 +52,7 @@ namespace RuneMagic.Framework
                 var castingTimerWidth = barWidth * castingTimerPercent;
 
 
-                ModEntry.Instance.Monitor.Log($"{castingTimer}/{castingTimerMax} = {castingTimerPercent}", LogLevel.Alert);
+                //ModEntry.Instance.Monitor.Log($"{castingTimer}/{castingTimerMax} = {castingTimerPercent}", LogLevel.Alert);
                 spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 160, (int)castingTimerWidth, barHeight), Color.DarkBlue);
             }
         }

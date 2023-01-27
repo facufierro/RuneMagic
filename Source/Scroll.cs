@@ -1,5 +1,6 @@
 ﻿using RuneMagic.Famework;
 using RuneMagic.Source;
+using SpaceCore;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,9 @@ namespace RuneMagic.Framework
 {
     public class Scroll : MagicItem
     {
-
-
-        public Scroll()
-          : base()
+        public Scroll() : base()
         {
             InitializeSpell();
-
         }
         public Scroll(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
@@ -33,7 +30,8 @@ namespace RuneMagic.Framework
             {
                 if (Spell.Cast())
                 {
-                    Game1.player.removeItemFromInventory(ParentSheetIndex);
+                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                    Game1.player.removeItemFromInventory(this);
                 }
             }
         }

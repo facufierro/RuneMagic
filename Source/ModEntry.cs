@@ -41,6 +41,7 @@ namespace RuneMagic.Source
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
+            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.InventoryChanged += OnInventoryChanged;
@@ -81,26 +82,56 @@ namespace RuneMagic.Source
             RuneMagic.JARegisterRunes();
             RuneMagic.JARegisterScrolls();
             RuneMagic.JARegisterObject("Blank Rune", "A stone carved and prepared to carve runes in it.", "assets/Items/blank_rune.png",
-                new() { new ObjectIngredient() { Object = "Stone", Count = 1 } });
-            RuneMagic.JARegisterObject("Blank Scroll", "A peace of parchment ready for inscribing", "assets/Items/blank_scroll.png",
-                new() { new ObjectIngredient() { Object = "Fiber", Count = 1 } });
-            RuneMagic.JARegisterObject("Magic Dust", "Magically processed dust obtained from Gems", "assets/Items/magic_dust.png",
-                new() { new ObjectIngredient() { Object = "Fiber", Count = 1 } });
+                 new ObjectRecipe()
+                 {
+                     ResultCount = 1,
+                     Ingredients = new List<ObjectIngredient>() {
+                     new ObjectIngredient() { Object = "Stone", Count = 1 }, },
+                     IsDefault = true
+                 });
+            RuneMagic.JARegisterObject("Blank Parchment", "A peace of parchment ready for inscribing", "assets/Items/blank_parchment.png",
+                new ObjectRecipe()
+                {
+                    ResultCount = 1,
+                    Ingredients = new List<ObjectIngredient>() {
+                     new ObjectIngredient() { Object = "Fiber", Count = 1 }, },
+                    IsDefault = true
+                });
+            RuneMagic.JARegisterObject("Magic Dust", "Magically processed dust obtained from Gems", "assets/Items/magic_dust.png", null);
+        }
+        private void OnBlankSave(object sender, EventArgs e)
+        {
+
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-
-
+            //Add playerStats to the farmer
+            RuneMagic.Farmer = Game1.player;
+            //add magic dust to the inventory of the player
+            RuneMagic.Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
+            foreach (var item in RuneMagic.Farmer.Items)
+            {
+                if (item is MagicItem)
+                    (item as MagicItem).Spell = null;
+                //
+
+
+
+            }
 
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             RuneMagic.ManageMagicItems(Game1.player, JsonAssetsApi);
             if (Context.IsWorldReady)
+            {
                 RuneMagic.PlayerStats.CheckCasting(sender, e);
+                //Monitor.Log(RuneMagic.Farmer.GetCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill).ToString(), LogLevel.Alert);
+            }
+
         }
         private void OnInventoryChanged(object sender, InventoryChangedEventArgs e)
         {
@@ -122,8 +153,13 @@ namespace RuneMagic.Source
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            //Add playerStats to the farmer
-            RuneMagic.Farmer = Game1.player;
+
+
+
+            //add "Magic Dust" to the player's inventory
+
+
+
 
 
             foreach (Item item in RuneMagic.Farmer.Items)

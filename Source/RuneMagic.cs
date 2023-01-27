@@ -121,7 +121,7 @@ namespace RuneMagic.Source
                             Count = 5
                         },
                     },
-                        IsDefault = false
+                        IsDefault = true
 
 
 
@@ -165,7 +165,7 @@ namespace RuneMagic.Source
                     {
                        new ObjectIngredient()
                         {
-                            Object = "Blank Scroll",
+                            Object = "Blank Parchment",
                             Count = 1
                         },
                         new ObjectIngredient()
@@ -174,7 +174,7 @@ namespace RuneMagic.Source
                             Count = 5
                         },
                     },
-                        IsDefault = false
+                        IsDefault = true
 
                     }
 
@@ -194,13 +194,14 @@ namespace RuneMagic.Source
                 {
                     ResultCount = 1,
                     Ingredients = ingredients,
-                    IsDefault = false
+                    IsDefault = true
                 }
             });
 
         }
-        public void JARegisterObject(string name, string description, string texturePath, List<ObjectIngredient> ingredients)
+        public void JARegisterObject(string name, string description, string texturePath, ObjectRecipe recipe)
         {
+
             Texture2D texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"{texturePath}");
             JsonAssets.Mod.instance.RegisterObject(ModEntry.Instance.ModManifest, new ObjectData()
             {
@@ -210,42 +211,36 @@ namespace RuneMagic.Source
                 Category = ObjectCategory.Crafting,
                 Price = 0,
                 HideFromShippingCollection = true,
-                Recipe = new ObjectRecipe()
-                {
-                    ResultCount = 1,
-                    Ingredients = ingredients,
-                    IsDefault = false
-
-                }
+                Recipe = recipe
 
             });
         }
         public void CCSRegister()
         {
 
-            var runeRecipes = new List<string>();
-            var scrollRecipes = new List<string>();
-            foreach (var spell in SpellList)
-            {
-                if (spell.Name.Contains("_"))
-                {
-                    spell.Name.Replace("_", " ");
-                }
-                runeRecipes.Add($"Rune of {spell.Name}");
-                scrollRecipes.Add($"{spell.Name} Scroll");
-            }
+            //var runeRecipes = new List<string>();
+            //var scrollRecipes = new List<string>();
+            //foreach (var spell in SpellList)
+            //{
+            //    if (spell.Name.Contains("_"))
+            //    {
+            //        spell.Name.Replace("_", " ");
+            //    }
+            //    runeRecipes.Add($"Rune of {spell.Name}");
+            //    scrollRecipes.Add($"{spell.Name} Scroll");
+            //}
 
-            var craftingStations = new List<Dictionary<string, object>> {
-                new Dictionary<string, object> { { "BigCraftable", "Runic Anvil" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", runeRecipes } },
-                new Dictionary<string, object> { { "BigCraftable", "Inscription Table" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", scrollRecipes } } };
+            //var craftingStations = new List<Dictionary<string, object>> {
+            //    new Dictionary<string, object> { { "BigCraftable", "Runic Anvil" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", runeRecipes } },
+            //    new Dictionary<string, object> { { "BigCraftable", "Inscription Table" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", scrollRecipes } } };
 
-            var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
+            //var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
 
-            string rootPath = Path.Combine(ModEntry.Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
-            string fileName = "content.json";
-            string fullPath = Path.Combine(rootPath, fileName);
+            //string rootPath = Path.Combine(ModEntry.Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
+            //string fileName = "content.json";
+            //string fullPath = Path.Combine(rootPath, fileName);
 
-            File.WriteAllText(fullPath, json);
+            //File.WriteAllText(fullPath, json);
 
 
         }
