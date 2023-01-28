@@ -23,7 +23,8 @@ namespace RuneMagic.Source
     {
 
         public MagicSkill MagicSkill { get; set; }
-        public MagicItem ItemHeld { get; set; } = null;
+        public IMagicItem ItemHeld { get; set; } = null;
+        public Spell SelectedSpell { get; set; }
         public int SpellAttack { get; set; }
         public int CastingFailureChance { get; set; }
         public bool IsCasting { get; set; } = false;
@@ -37,14 +38,11 @@ namespace RuneMagic.Source
 
         public void CheckCasting(object sender, UpdateTickedEventArgs e)
         {
-            if (ItemHeld != null)
+            if (ItemHeld is not null)
             {
-                //ModEntry.Instance.Monitor.Log($"{ItemHeld.Name}");
-
                 IsCasting = true;
                 if (CastingTimer >= Math.Floor(ItemHeld.Spell.CastingTime * 60))
                 {
-                    //ModEntry.Instance.Monitor.Log($"{CastingTimer}");
                     ItemHeld.Activate();
                     ItemHeld = null;
                     IsCasting = false;
@@ -53,8 +51,8 @@ namespace RuneMagic.Source
                 else
                     CastingTimer += 1;
             }
-        }
 
+        }
         public List<string> LearnRecipes(int level)
         {
             List<string> recipes = new List<string>();

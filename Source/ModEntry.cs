@@ -15,6 +15,7 @@ using RuneMagic.Framework;
 using SpaceCore;
 using RuneMagic.Famework;
 using RuneMagic.Skills;
+using StardewValley.Tools;
 
 namespace RuneMagic.Source
 {
@@ -98,6 +99,9 @@ namespace RuneMagic.Source
                     IsDefault = true
                 });
             RuneMagic.JARegisterObject("Magic Dust", "Magically processed dust obtained from Gems", "assets/Items/magic_dust.png", null);
+            RuneMagic.JARegisterWeapon("Runic Staff", "Runic Staff description.", "assets/Items/runic_staff.png");
+
+
         }
         private void OnBlankSave(object sender, EventArgs e)
         {
@@ -109,13 +113,16 @@ namespace RuneMagic.Source
             RuneMagic.Farmer = Game1.player;
             //add magic dust to the inventory of the player
             RuneMagic.Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+
+
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
             foreach (var item in RuneMagic.Farmer.Items)
             {
-                if (item is MagicItem)
-                    (item as MagicItem).Spell = null;
+                if (item is IMagicItem)
+                    (item as IMagicItem).Spell = null;
                 //
 
 
@@ -155,8 +162,10 @@ namespace RuneMagic.Source
         {
 
 
+            var runicStaff = new RuneWeapon(JsonAssetsApi.GetWeaponId("Runic Staff"));
+            RuneMagic.Farmer.addItemToInventory(runicStaff);
 
-            //add "Magic Dust" to the player's inventory
+
 
 
 
@@ -184,24 +193,18 @@ namespace RuneMagic.Source
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (e.Button == SButton.MouseRight)
+            if (e.Button == SButton.R)
             {
 
-                if (Game1.player.CurrentItem is Rune rune)
+                if (Game1.player.CurrentItem is IMagicItem magicItem)
                 {
-                    rune.Use();
+                    magicItem.Use();
+                    //print to console the item Type
+                    Monitor.Log(magicItem.GetType().ToString(), LogLevel.Alert);
 
                 }
-                else if (Game1.player.CurrentItem is Scroll scroll)
-                {
-                    scroll.Use();
-                }
             }
-            if (e.Button == SButton.F5)
-            {
-                Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 100);
 
-            }
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {

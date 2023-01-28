@@ -1,10 +1,7 @@
 ﻿
 High priority		
 -Finish progression
-	-add xp to the player on casting spells
-	-limit xp per day.
-	-Add runic staff
-	
+	-Add runic staff	
 -Finish skills
 	-Implement professions	
 	

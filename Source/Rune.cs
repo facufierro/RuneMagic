@@ -16,11 +16,12 @@ using RuneMagic.Source;
 namespace RuneMagic.Items
 {
     [XmlType("Mods_Rune")]
-    public class Rune : MagicItem
+    public class Rune : Object, IMagicItem
     {
 
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
+        public Spell Spell { get; set; }
 
         public Rune() : base()
         {
@@ -36,26 +37,27 @@ namespace RuneMagic.Items
 
         }
 
-
-        public override void Use()
+        public void InitializeSpell()
         {
-            ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
-        }
 
-        public override void Activate()
+            string spellName = Name[8..];
+            spellName = spellName.Replace(" ", "");
+            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
+            Spell = (Spell)Activator.CreateInstance(spellType);
+
+        }
+        public void Activate()
         {
             if (Charges > 0 && Spell != null)
             {
-                if (!Fizzle())
-                    if (Spell.Cast())
-                    {
-                        ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
-                        Charges -= 1;
-                    }
+
             }
         }
-
-        public override bool Fizzle()
+        public virtual void Use()
+        {
+            ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
+        }
+        public bool Fizzle()
         {
 
             if (Game1.random.Next(1, 100) < 0)
@@ -69,14 +71,18 @@ namespace RuneMagic.Items
             else
                 return false;
         }
-        public override void InitializeSpell()
+        public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-
-            string spellName = Name[8..];
-            spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
-            Spell = (Spell)Activator.CreateInstance(spellType);
-
+            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+            if (castingTimer > 0)
+            {
+                var castingTimerMax = Spell.CastingTime * 60;
+                var castingTimerPercent = castingTimer / castingTimerMax;
+                var barWidth = 60;
+                var barHeight = 6;
+                var castingTimerWidth = barWidth * castingTimerPercent;
+                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 160, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+            }
         }
         public void UpdateCharges()
         {
@@ -85,22 +91,22 @@ namespace RuneMagic.Items
                 Charges += 0.0005f;
             }
         }
-
-
-        private void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
+        public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
-            var charges = Math.Floor(Charges).ToString();
-            spriteBatch.DrawString(Game1.tinyFont, charges, new Vector2(location.X + 64 - Game1.smallFont.MeasureString(charges).X, location.Y),
+            spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.smallFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
-
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
 
             DrawCharges(spriteBatch, location, layerDepth);
         }
-
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        {
+            base.drawWhenHeld(spriteBatch, objectPosition, f);
+            DrawCastbar(spriteBatch, objectPosition, f);
+        }
         public override bool canBeShipped()
         {
             return false;

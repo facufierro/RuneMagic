@@ -1,6 +1,19 @@
 [
   {
     "ProducerName": "Magic Grinder",
+    "InputIdentifier": "Stone",
+    "InputStack": 1,
+    //"FuelIdentifier": "390",
+    //"FuelStack": 1,
+    "MinutesUntilReady": 60,
+    "OutputIdentifier": "Runic Staff",
+    "OutputStack": 1,
+    "Sounds": [
+      "Ship"
+    ]
+  },
+  {
+    "ProducerName": "Magic Grinder",
     "InputIdentifier": "Amethyst",
     "InputStack": 1,
     //"FuelIdentifier": "390",

@@ -8,11 +8,12 @@ using RuneMagic.Items;
 using SpaceShared.APIs;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
+using System.Threading;
 using System.Threading.Tasks;
 using static SpaceCore.Skills;
 
@@ -34,9 +35,10 @@ namespace RuneMagic.Source
                 for (int i = 0; i < player.Items.Count; i++)
                 {
                     var inventory = player.Items;
-                    List<string> itemsFromPack = new List<string>(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
+                    List<string> itemsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
 
-                    if (inventory[i] is not MagicItem and not null)
+
+                    if (inventory[i] is not IMagicItem and not null)
                     {
                         if (itemsFromPack.Contains(inventory[i].Name))
                         {
@@ -44,10 +46,19 @@ namespace RuneMagic.Source
                                 player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
                             if (inventory[i].Name.Contains(" Scroll"))
                                 player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
+                            if (inventory[i].Name.Contains("Runic Staff"))
+                            {
+                                player.Items[i] = new RuneWeapon(inventory[i].ParentSheetIndex);
+                                ModEntry.Instance.Monitor.Log($"{player.Items[i].ParentSheetIndex} {player.Items[i].Name} {player.Items[i].GetType()}");
+
+
+                            }
+
                         }
                     }
 
                 }
+            //print to console held item Name, parentSheetIndex and Type
         }
         public void RegisterMail(IAssetData asset)
         {
@@ -197,7 +208,6 @@ namespace RuneMagic.Source
                     IsDefault = true
                 }
             });
-
         }
         public void JARegisterObject(string name, string description, string texturePath, ObjectRecipe recipe)
         {
@@ -213,6 +223,26 @@ namespace RuneMagic.Source
                 HideFromShippingCollection = true,
                 Recipe = recipe
 
+            });
+        }
+        public void JARegisterWeapon(string name, string description, string texturePath)
+        {
+
+            Texture2D texture = ModEntry.Instance.Helper.ModContent.Load<Texture2D>($"{texturePath}");
+            JsonAssets.Mod.instance.RegisterWeapon(ModEntry.Instance.ModManifest, new WeaponData()
+            {
+                Name = $"{name}",
+                Description = $"{description}",
+                Texture = texture,
+                Type = WeaponType.Club,
+                MinimumDamage = 6,
+                MaximumDamage = 12,
+                Knockback = 0,
+                Speed = -1,
+                Accuracy = 100,
+                Defense = 100,
+                CritChance = 0.04,
+                ExtraSwingArea = 1
             });
         }
         public void CCSRegister()

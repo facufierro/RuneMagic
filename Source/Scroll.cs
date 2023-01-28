@@ -1,4 +1,6 @@
-﻿using RuneMagic.Famework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Famework;
 using RuneMagic.Source;
 using SpaceCore;
 using StardewValley;
@@ -13,8 +15,10 @@ using Object = StardewValley.Object;
 
 namespace RuneMagic.Framework
 {
-    public class Scroll : MagicItem
+    public class Scroll : Object, IMagicItem
     {
+        public Spell Spell { get; set; }
+
         public Scroll() : base()
         {
             InitializeSpell();
@@ -24,46 +28,66 @@ namespace RuneMagic.Framework
             InitializeSpell();
 
         }
-        public override void Activate()
+
+        public void InitializeSpell()
         {
-            if (Spell != null)
-            {
-                if (Spell.Cast())
-                {
-                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
-                    Game1.player.removeItemFromInventory(this);
-                }
-            }
+            //set spellName to Name without " Scroll" at the end
+
+            string spellName = Name[0..^7];
+            spellName = spellName.Replace(" ", "");
+            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
+            Spell = (Spell)Activator.CreateInstance(spellType);
+
         }
-        public override void Use()
+        public void Use()
         {
             ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
         }
-        public override bool Fizzle()
+        public void Activate()
+        {
+            if (!Fizzle())
+                if (Spell.Cast())
+                {
+                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                }
+
+        }
+        public bool Fizzle()
         {
 
             if (Game1.random.Next(1, 100) < 0)
             {
                 Game1.player.stamina -= 10;
-                Game1.playSound("Wand");
-                Game1.player.removeItemFromInventory(this);
+                Game1.playSound("stoneCrack");
+                Game1.player.removeItemFromInventory((Item)this);
+                Game1.player.addItemToInventory(new Object(390, 1));
                 return true;
             }
             else
                 return false;
         }
-
-        public override void InitializeSpell()
+        public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            //remove " Scroll" from the name
-            string spellName = Name[0..^7];
-            spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
-            Spell = (Spell)Activator.CreateInstance(spellType);
+            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+            if (castingTimer > 0)
+            {
+                var castingTimerMax = Spell.CastingTime * 60;
+                var castingTimerPercent = castingTimer / castingTimerMax;
+                var barWidth = 60;
+                var barHeight = 6;
+                var castingTimerWidth = barWidth * castingTimerPercent;
+                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 160, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+            }
         }
+
         public override int maximumStackSize()
         {
             return 10;
+        }
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        {
+            base.drawWhenHeld(spriteBatch, objectPosition, f);
+            DrawCastbar(spriteBatch, objectPosition, f);
         }
     }
 }
