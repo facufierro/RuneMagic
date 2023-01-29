@@ -22,7 +22,7 @@ namespace RuneMagic.Items
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
         public Spell Spell { get; set; }
-
+        int timer = 0;
         public Rune() : base()
         {
             ChargesMax = 5;
@@ -73,11 +73,15 @@ namespace RuneMagic.Items
             else
                 return false;
         }
-        public void UpdateCharges()
+        public void Update()
         {
             if (Charges < ChargesMax)
             {
-                Charges += 0.0005f;
+                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runecaster))
+                    Charges += 0.0010f;
+                else
+                    Charges += 0.0005f;
+                timer++;
             }
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)

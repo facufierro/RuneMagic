@@ -19,23 +19,12 @@ namespace RuneMagic.Skills
         /// <summary>The unique ID for the magic skill.</summary>
         public static readonly string MagicSkillId = "fierro.rune_magic.skill";
 
-        /// <summary>The level 5 'RunicAffinity' profession.</summary>
-        public static MagicProfession RunicAffinity;
-
-        /// <summary>The level 10 'RunicManipulation' profession.</summary>
-        public static MagicProfession RunicManipulation;
-
-        /// <summary>The level 10 'RuneMastery' profession.</summary>
-        public static MagicProfession RuneMastery;
-
-        /// <summary>The level 5 'ArcaneScribing' profession.</summary>
-        public static MagicProfession ArcaneScribing;
-
-        /// <summary>The level 10 'ScrollAugmentation' profession.</summary>
-        public static MagicProfession ScrollAugmentation;
-
-        /// <summary>The level 10 'ScrollMastery' profession.</summary>
-        public static MagicProfession ScrollMastery;
+        public static MagicProfession Runecaster;
+        public static MagicProfession Scribe;
+        public static MagicProfession Runekeeper;
+        public static MagicProfession Loremaster;
+        public static MagicProfession Runemaster;
+        public static MagicProfession Sage;
 
         public MagicSkill()
             : base(MagicSkillId)
@@ -45,47 +34,47 @@ namespace RuneMagic.Skills
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = Color.DarkBlue;
 
-            RunicAffinity = new MagicProfession(this, "fierro.rune_magic.runic_affinity")
+            Runecaster = new MagicProfession(this, "fierro.rune_magic.runecaster")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/runic_affinity-icon.png"),
-                Name = "Runic Affinity",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Runecaster",
                 Description = "Your runes recharge 50% faster.",
             };
-            ArcaneScribing = new MagicProfession(this, "fierro.rune_magic.arcane_scribing")
+            Scribe = new MagicProfession(this, "fierro.rune_magic.scribe")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/arcane_scribing-icon.png"),
-                Name = "Arcane Scribing",
-                Description = "Scroll casting time is reduced by 20%.",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Scribe",
+                Description = "Scroll casting time is reduced by 50%.",
             };
-            ProfessionsForLevels.Add(new ProfessionPair(5, RunicAffinity, ArcaneScribing));
+            ProfessionsForLevels.Add(new ProfessionPair(5, Runecaster, Scribe));
 
-            RunicManipulation = new MagicProfession(this, "fierro.rune_magic.runic_manipulation")
+            Runekeeper = new MagicProfession(this, "fierro.rune_magic.runekeeper")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/runic_manipulation-icon.png"),
-                Name = "RunicManipulation",
-                Description = "Your runes recharge 50% faster.",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Runekeeper",
+                Description = "Your runes have 10 charges instead of 5.",
             };
-            ScrollAugmentation = new MagicProfession(this, "fierro.rune_magic.scroll_augmentation")
+            Loremaster = new MagicProfession(this, "fierro.rune_magic.loremaster")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/scroll_augmentation-icon.png"),
-                Name = "Novice Scribe",
-                Description = "Scroll casting time is reduced by 20%.",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Loremaster",
+                Description = "The caster has 20% chance to not consume a scroll when casting."
             };
-            ProfessionsForLevels.Add(new ProfessionPair(10, RunicManipulation, ArcaneScribing));
+            ProfessionsForLevels.Add(new ProfessionPair(10, Runekeeper, Loremaster));
 
-            RuneMastery = new MagicProfession(this, "fierro.rune_magic.rune_mastery")
+            Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/rune_mastery-icon.png"),
-                Name = "RunicManipulation",
-                Description = "Your runes recharge 50% faster.",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Runemaster",
+                Description = "The caster reflects damage while casting runes."
             };
-            ScrollMastery = new MagicProfession(this, "fierro.rune_magic.scroll_mastery")
+            Sage = new MagicProfession(this, "fierro.rune_magic.sage")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/scroll_mastery-icon.png"),
-                Name = "Novice Scribe",
-                Description = "Scroll casting time is reduced by 20%.",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Sage",
+                Description = "The caster can walk while casting.",
             };
-            ProfessionsForLevels.Add(new ProfessionPair(10, RunicManipulation, ArcaneScribing));
+            ProfessionsForLevels.Add(new ProfessionPair(10, Runemaster, Sage));
         }
         public override string GetName()
         {

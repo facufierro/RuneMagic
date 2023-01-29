@@ -39,10 +39,15 @@ namespace RuneMagic.Source
 
         public void CheckCasting(object sender, UpdateTickedEventArgs e)
         {
+
+
             if (ItemHeld is not null)
             {
+                var castingTime = ItemHeld.Spell.CastingTime;
+                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
+                    castingTime *= 0.5f;
                 IsCasting = true;
-                if (CastingTimer >= Math.Floor(ItemHeld.Spell.CastingTime * 60))
+                if (CastingTimer >= Math.Floor(castingTime * 60))
                 {
                     ItemHeld.Activate();
                     ItemHeld = null;
@@ -54,9 +59,10 @@ namespace RuneMagic.Source
             }
 
         }
-        public List<string> LearnRecipes(int level)
+        public void LearnRecipes()
         {
-            List<string> recipes = new List<string>();
+
+            var level = ModEntry.RuneMagic.Farmer.GetCustomSkillLevel(MagicSkill);
 
             foreach (var spell in ModEntry.RuneMagic.SpellList)
             {
@@ -70,6 +76,11 @@ namespace RuneMagic.Source
                             ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Inscription Table", 0);
                         if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Magic Grinder"))
                             ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Magic Grinder", 0);
+                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Rune"))
+                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Blank Rune", 0);
+                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Parchment"))
+                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Blank Parchment", 0);
+
                     }
                     if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
                         ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
@@ -78,7 +89,6 @@ namespace RuneMagic.Source
                 }
 
             }
-            return recipes;
         }
     }
 }

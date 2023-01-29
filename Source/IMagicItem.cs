@@ -29,6 +29,7 @@ namespace RuneMagic.Framework
         public void Use();
         public void Activate();
         public bool Fizzle();
+        public void Update();
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f);
     }
 }

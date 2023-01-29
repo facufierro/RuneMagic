@@ -39,7 +39,6 @@ namespace RuneMagic.Source
                     var inventory = player.Items;
                     List<string> itemsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
 
-
                     if (inventory[i] is not IMagicItem and not null)
                     {
                         if (itemsFromPack.Contains(inventory[i].Name))
@@ -51,12 +50,15 @@ namespace RuneMagic.Source
                             if (inventory[i].Name.Contains("Runic Staff"))
                             {
                                 player.Items[i] = new MagicWeapon(inventory[i].ParentSheetIndex);
-
                             }
                         }
 
                     }
-                    //print to console held item Name, parentSheetIndex and Type
+                    if (inventory[i] is IMagicItem magicItem)
+                    {
+                        magicItem.Update();
+                    }
+
                 }
         }
         public void WizardEvent(GameLocation location)
@@ -80,7 +82,6 @@ namespace RuneMagic.Source
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
                 Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-
                 Farmer.addItemToInventory(new MagicWeapon(ModEntry.Instance.JsonAssetsApi.GetWeaponId("Runic Staff")));
 
                 PlayerStats.MagicLearned = true;
@@ -235,7 +236,6 @@ namespace RuneMagic.Source
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = recipe
-
             });
         }
         public void JARegisterWeapon(string name, string description, string texturePath)
@@ -261,29 +261,29 @@ namespace RuneMagic.Source
         public void CCSRegister()
         {
 
-            //var runeRecipes = new List<string>();
-            //var scrollRecipes = new List<string>();
-            //foreach (var spell in SpellList)
-            //{
-            //    if (spell.Name.Contains("_"))
-            //    {
-            //        spell.Name.Replace("_", " ");
-            //    }
-            //    runeRecipes.Add($"Rune of {spell.Name}");
-            //    scrollRecipes.Add($"{spell.Name} Scroll");
-            //}
+            var runeRecipes = new List<string>();
+            var scrollRecipes = new List<string>();
+            foreach (var spell in SpellList)
+            {
+                if (spell.Name.Contains("_"))
+                {
+                    spell.Name.Replace("_", " ");
+                }
+                runeRecipes.Add($"Rune of {spell.Name}");
+                scrollRecipes.Add($"{spell.Name} Scroll");
+            }
 
-            //var craftingStations = new List<Dictionary<string, object>> {
-            //    new Dictionary<string, object> { { "BigCraftable", "Runic Anvil" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", runeRecipes } },
-            //    new Dictionary<string, object> { { "BigCraftable", "Inscription Table" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", scrollRecipes } } };
+            var craftingStations = new List<Dictionary<string, object>> {
+                new Dictionary<string, object> { { "BigCraftable", "Runic Anvil" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", runeRecipes } },
+                new Dictionary<string, object> { { "BigCraftable", "Inscription Table" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", scrollRecipes } } };
 
-            //var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
 
-            //string rootPath = Path.Combine(ModEntry.Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
-            //string fileName = "content.json";
-            //string fullPath = Path.Combine(rootPath, fileName);
+            string rootPath = Path.Combine(ModEntry.Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
+            string fileName = "content.json";
+            string fullPath = Path.Combine(rootPath, fileName);
 
-            //File.WriteAllText(fullPath, json);
+            File.WriteAllText(fullPath, json);
 
 
         }

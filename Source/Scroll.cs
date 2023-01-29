@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RuneMagic.Famework;
+using RuneMagic.Skills;
 using RuneMagic.Source;
 using SpaceCore;
 using StardewValley;
@@ -54,6 +55,7 @@ namespace RuneMagic.Framework
                 }
 
         }
+        public void Update() { }
         public bool Fizzle()
         {
 
@@ -70,26 +72,25 @@ namespace RuneMagic.Framework
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
-            if (castingTimer > 0)
+            //draw a cast bar below the item in the inventory if the player is casting and make the bar always the size of the item width and 5 pixels high, but make it scale with the casting time
+            if (ModEntry.RuneMagic.PlayerStats.IsCasting)
             {
-                var castingTimerMax = Spell.CastingTime * 60;
-                var castingTimerPercent = castingTimer / castingTimerMax;
-                var barWidth = 60;
-                var barHeight = 6;
-                var castingTimerWidth = barWidth * castingTimerPercent;
-                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 160, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+                var castingTime = Spell.CastingTime;
+                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && this is Scroll)
+                    castingTime *= 0.5f;
+                var castbarWidth = (int)(ModEntry.RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
+                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
             }
         }
-
         public override int maximumStackSize()
         {
             return 10;
         }
-        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
-            base.drawWhenHeld(spriteBatch, objectPosition, f);
-            DrawCastbar(spriteBatch, objectPosition, f);
+            base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
+            DrawCastbar(spriteBatch, location, Game1.player);
         }
+
     }
 }

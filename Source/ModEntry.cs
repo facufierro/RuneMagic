@@ -48,6 +48,7 @@ namespace RuneMagic.Source
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
+
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
             SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
@@ -72,7 +73,7 @@ namespace RuneMagic.Source
                      ResultCount = 1,
                      Ingredients = new List<ObjectIngredient>() {
                      new ObjectIngredient() { Object = "Stone", Count = 1 }, },
-                     IsDefault = true
+                     IsDefault = false
                  });
             RuneMagic.JARegisterObject("Blank Parchment", "A peace of parchment ready for inscribing", "assets/Items/blank_parchment.png",
                 new ObjectRecipe()
@@ -80,17 +81,16 @@ namespace RuneMagic.Source
                     ResultCount = 1,
                     Ingredients = new List<ObjectIngredient>() {
                      new ObjectIngredient() { Object = "Fiber", Count = 1 }, },
-                    IsDefault = true
+                    IsDefault = false
                 });
             RuneMagic.JARegisterObject("Magic Dust", "Magically processed dust obtained from Gems", "assets/Items/magic_dust.png", null);
             RuneMagic.JARegisterWeapon("Runic Staff", "Runic Staff description.", "assets/Items/runic_staff.png");
-
-
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
             RuneMagic.Farmer = Game1.player;
             RuneMagic.Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -108,6 +108,7 @@ namespace RuneMagic.Source
             {
                 RuneMagic.PlayerStats.CheckCasting(sender, e);
             }
+
         }
         private void OnEventFinished(object sender, EventArgs e)
         {
@@ -118,6 +119,7 @@ namespace RuneMagic.Source
         }
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
+            RuneMagic.PlayerStats.LearnRecipes();
             foreach (Item item in RuneMagic.Farmer.Items)
             {
                 if (item is IMagicItem magicItem && magicItem.Spell == null)
@@ -136,6 +138,14 @@ namespace RuneMagic.Source
                     magicItem.Use();
                 }
             }
+            if (e.Button == SButton.F5)
+            {
+                RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 100);
+                Monitor.Log(RuneMagic.Farmer.GetCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill).ToString());
+            }
+
+
+
         }
         private void OnWarped(object sender, WarpedEventArgs e)
         {
