@@ -48,10 +48,12 @@ namespace RuneMagic.Items
         }
         public void Activate()
         {
-            if (Charges > 0 && Spell != null)
-            {
-
-            }
+            if (!Fizzle())
+                if (Spell.Cast() && Charges > 0)
+                {
+                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                    Charges--;
+                }
         }
         public virtual void Use()
         {
@@ -71,19 +73,6 @@ namespace RuneMagic.Items
             else
                 return false;
         }
-        public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
-        {
-            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
-            if (castingTimer > 0)
-            {
-                var castingTimerMax = Spell.CastingTime * 60;
-                var castingTimerPercent = castingTimer / castingTimerMax;
-                var barWidth = 60;
-                var barHeight = 6;
-                var castingTimerWidth = barWidth * castingTimerPercent;
-                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 160, (int)castingTimerWidth, barHeight), Color.DarkBlue);
-            }
-        }
         public void UpdateCharges()
         {
             if (Charges < ChargesMax)
@@ -91,21 +80,33 @@ namespace RuneMagic.Items
                 Charges += 0.0005f;
             }
         }
+        public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        {
+            if (f.CurrentItem == this)
+            {
+                var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+                if (castingTimer > 0)
+                {
+                    var castingTimerMax = Spell.CastingTime * 60;
+                    var castingTimerPercent = castingTimer / castingTimerMax;
+                    var barWidth = 60;
+                    var barHeight = 6;
+                    var castingTimerWidth = barWidth * castingTimerPercent;
+                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + ((64 - barWidth) / 2), (int)objectPosition.Y + 64 - barHeight, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+                }
+            }
+
+        }
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
-            spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.smallFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y),
+            spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
-
             DrawCharges(spriteBatch, location, layerDepth);
-        }
-        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
-        {
-            base.drawWhenHeld(spriteBatch, objectPosition, f);
-            DrawCastbar(spriteBatch, objectPosition, f);
+            DrawCastbar(spriteBatch, location, Game1.player);
         }
         public override bool canBeShipped()
         {

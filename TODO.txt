@@ -1,12 +1,11 @@
 ﻿
 High priority		
--Finish progression
-	-Add runic staff	
+
 -Finish skills
 	-Implement professions	
 	
 Low priority
--Add magic weapons/altar
+-Add magic weapons
 -Improve magic item registration code
 -Add more magic spells
 -Add a rune crack system

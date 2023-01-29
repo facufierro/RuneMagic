@@ -16,27 +16,27 @@ using StardewValley.Tools;
 
 namespace RuneMagic.Source
 {
-    public class RuneWeapon : MeleeWeapon, IMagicItem
+    [XmlType("Mods_MagicWeapon")]
+    public class MagicWeapon : MeleeWeapon, IMagicItem
     {
         public Spell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
 
-        public RuneWeapon() { }
-        public RuneWeapon(int parentSheetIndex) : base(parentSheetIndex)
+        public MagicWeapon()
         {
-            ChargesMax = 5;
+
+        }
+        public MagicWeapon(int parentSheetIndex) : base(parentSheetIndex)
+        {
+            ChargesMax = 20;
             Charges = ChargesMax;
             InitializeSpell();
         }
 
-
-
         public void InitializeSpell()
         {
-
             Spell = new Spells.MagicMissile();
-
         }
         public void Use()
         {
@@ -45,9 +45,10 @@ namespace RuneMagic.Source
         public void Activate()
         {
             if (!Fizzle())
-                if (Spell.Cast())
+                if (Spell.Cast() && Charges > 0)
                 {
                     ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                    Charges--;
                 }
 
         }
@@ -67,23 +68,26 @@ namespace RuneMagic.Source
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
-            if (castingTimer > 0)
+            if (f.CurrentItem == this)
             {
-                var castingTimerMax = Spell.CastingTime * 60;
-                var castingTimerPercent = castingTimer / castingTimerMax;
-                var barWidth = 60;
-                var barHeight = 6;
-                var castingTimerWidth = barWidth * castingTimerPercent;
-                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + ((64 - barWidth) / 2), (int)objectPosition.Y + 64 - barHeight, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+                var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+                if (castingTimer > 0)
+                {
+                    var castingTimerMax = Spell.CastingTime * 60;
+                    var castingTimerPercent = castingTimer / castingTimerMax;
+                    var barWidth = 60;
+                    var barHeight = 6;
+                    var castingTimerWidth = barWidth * castingTimerPercent;
+                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + ((64 - barWidth) / 2), (int)objectPosition.Y + 64 - barHeight, (int)castingTimerWidth, barHeight), Color.DarkBlue);
+                }
             }
+
         }
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
             spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
-
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);

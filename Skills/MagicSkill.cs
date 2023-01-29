@@ -19,23 +19,23 @@ namespace RuneMagic.Skills
         /// <summary>The unique ID for the magic skill.</summary>
         public static readonly string MagicSkillId = "fierro.rune_magic.skill";
 
-        /// <summary>The level 5 'RuneCasterI' profession.</summary>
-        public static MagicProfession RuneCasterI;
+        /// <summary>The level 5 'RunicAffinity' profession.</summary>
+        public static MagicProfession RunicAffinity;
 
-        /// <summary>The level 10 'RuneCasterII' profession.</summary>
-        public static MagicProfession RuneCasterII;
+        /// <summary>The level 10 'RunicManipulation' profession.</summary>
+        public static MagicProfession RunicManipulation;
 
-        /// <summary>The level 10 'RuneCasterIII' profession.</summary>
-        public static MagicProfession RuneCasterIII;
+        /// <summary>The level 10 'RuneMastery' profession.</summary>
+        public static MagicProfession RuneMastery;
 
-        /// <summary>The level 5 'ScribeI' profession.</summary>
-        public static MagicProfession ScribeI;
+        /// <summary>The level 5 'ArcaneScribing' profession.</summary>
+        public static MagicProfession ArcaneScribing;
 
-        /// <summary>The level 10 'ScribeII' profession.</summary>
-        public static MagicProfession ScribeII;
+        /// <summary>The level 10 'ScrollAugmentation' profession.</summary>
+        public static MagicProfession ScrollAugmentation;
 
-        /// <summary>The level 10 'ScribeIII' profession.</summary>
-        public static MagicProfession ScribeIII;
+        /// <summary>The level 10 'ScrollMastery' profession.</summary>
+        public static MagicProfession ScrollMastery;
 
         public MagicSkill()
             : base(MagicSkillId)
@@ -45,20 +45,47 @@ namespace RuneMagic.Skills
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = Color.DarkBlue;
 
-            RuneCasterI = new MagicProfession(this, "fierro.rune_magic.runecaster_1")
+            RunicAffinity = new MagicProfession(this, "fierro.rune_magic.runic_affinity")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_runecaster1_icon.png"),
-                Name = "Novice Rune Caster",
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/runic_affinity-icon.png"),
+                Name = "Runic Affinity",
                 Description = "Your runes recharge 50% faster.",
             };
-            ScribeI = new MagicProfession(this, "fierro.rune_magic.scribe_1")
+            ArcaneScribing = new MagicProfession(this, "fierro.rune_magic.arcane_scribing")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/profession_scribe1_icon.png"),
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/arcane_scribing-icon.png"),
+                Name = "Arcane Scribing",
+                Description = "Scroll casting time is reduced by 20%.",
+            };
+            ProfessionsForLevels.Add(new ProfessionPair(5, RunicAffinity, ArcaneScribing));
+
+            RunicManipulation = new MagicProfession(this, "fierro.rune_magic.runic_manipulation")
+            {
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/runic_manipulation-icon.png"),
+                Name = "RunicManipulation",
+                Description = "Your runes recharge 50% faster.",
+            };
+            ScrollAugmentation = new MagicProfession(this, "fierro.rune_magic.scroll_augmentation")
+            {
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/scroll_augmentation-icon.png"),
                 Name = "Novice Scribe",
                 Description = "Scroll casting time is reduced by 20%.",
             };
-            ProfessionsForLevels.Add(new ProfessionPair(5, RuneCasterI, ScribeI));
+            ProfessionsForLevels.Add(new ProfessionPair(10, RunicManipulation, ArcaneScribing));
 
+            RuneMastery = new MagicProfession(this, "fierro.rune_magic.rune_mastery")
+            {
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/rune_mastery-icon.png"),
+                Name = "RunicManipulation",
+                Description = "Your runes recharge 50% faster.",
+            };
+            ScrollMastery = new MagicProfession(this, "fierro.rune_magic.scroll_mastery")
+            {
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/scroll_mastery-icon.png"),
+                Name = "Novice Scribe",
+                Description = "Scroll casting time is reduced by 20%.",
+            };
+            ProfessionsForLevels.Add(new ProfessionPair(10, RunicManipulation, ArcaneScribing));
         }
         public override string GetName()
         {
@@ -68,15 +95,17 @@ namespace RuneMagic.Skills
         public override List<string> GetExtraLevelUpInfo(int level)
         {
 
-            string lvl1Info = "";
+            List<string> info = new List<string>();
             if (level == 1)
-                lvl1Info = "The wizard has taught you the basics of magic inscription";
-            List<string> info = new List<string> {
-                $"{lvl1Info}",
-                $"-{level}% Chance of Casting Failure",
-                $"+{level}% Casting Speed",
-                $"You have gained access to the following spells:",
-                };
+                info = new List<string>(){
+                $"The wizard has taught you the basics of magic." };
+            else
+                info = new List<string>(){
+                $"You now have {level}% less chance of Casting Failure",
+                $"and {level}% Casting Speed"};
+
+            info.Add($"You have gained access to the following spells:");
+
             string spellList = "";
             foreach (var spell in ModEntry.RuneMagic.SpellList)
             {

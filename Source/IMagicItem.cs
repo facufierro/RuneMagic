@@ -19,6 +19,8 @@ using Object = StardewValley.Object;
 
 namespace RuneMagic.Framework
 {
+
+
     public interface IMagicItem
     {
         public Spell Spell { get; set; }

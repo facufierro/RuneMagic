@@ -23,6 +23,7 @@ namespace RuneMagic.Source
     {
 
         public MagicSkill MagicSkill { get; set; }
+        public bool MagicLearned { get; set; } = false;
         public IMagicItem ItemHeld { get; set; } = null;
         public Spell SelectedSpell { get; set; }
         public int SpellAttack { get; set; }

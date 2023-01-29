@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using RuneMagic.Famework;
 using RuneMagic.Framework;
 using RuneMagic.Items;
+using RuneMagic.Skills;
+using SpaceCore;
 using SpaceShared.APIs;
 using StardewModdingAPI;
 using StardewValley;
@@ -48,30 +50,41 @@ namespace RuneMagic.Source
                                 player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
                             if (inventory[i].Name.Contains("Runic Staff"))
                             {
-                                player.Items[i] = new RuneWeapon(inventory[i].ParentSheetIndex);
-                                ModEntry.Instance.Monitor.Log($"{player.Items[i].ParentSheetIndex} {player.Items[i].Name} {player.Items[i].GetType()}");
-
+                                player.Items[i] = new MagicWeapon(inventory[i].ParentSheetIndex);
 
                             }
-
                         }
-                    }
 
+                    }
+                    //print to console held item Name, parentSheetIndex and Type
                 }
-            //print to console held item Name, parentSheetIndex and Type
         }
-        public void RegisterMail(IAssetData asset)
+        public void WizardEvent(GameLocation location)
         {
-            asset.AsDictionary<string, string>().Data["RuneMagicWizardLetter"] =
-               "@... " +
-               "^^ I have something I wish you to have but its too powerful and precious to send it trough mail. " +
-               "^Please come pay me a visit when you can." +
-               "^^-M. Rasmodius, Wizard";
-        }
-        public void RegisterEvent(IAssetData asset)
-        {
-            var data = asset.AsDictionary<string, string>().Data;
-            data["15065001/n RuneMagicWizardLetter4"] = "";
+            ModEntry.Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
+            if (location.Name == "WizardHouse" && Farmer.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)
+            {
+                var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                       $"/speak Wizard \"@! Come in my friend, come in...\"" +
+                       $"/pause 400" +
+                       $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
+                       $"/move farmer 0 -6 0 true" +
+                       $"/pause 2000" +
+                       $"/speak Wizard \"What do you think about this? Beautiful, isn't it?\"" +
+                       $"/pause 500" +
+                       $"/speak Wizard \"It's a Magic Staff.\"" +
+                       $"/pause 500" +
+                       $"/speak Wizard \"It is a gift for you...\"" +
+                       $"/pause 1000" +
+                       $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
+                       $"/end";
+                location.startEvent(new Event(eventString, 15065001));
+                Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+
+                Farmer.addItemToInventory(new MagicWeapon(ModEntry.Instance.JsonAssetsApi.GetWeaponId("Runic Staff")));
+
+                PlayerStats.MagicLearned = true;
+            }
         }
         public void RegisterSpells()
         {
@@ -132,7 +145,7 @@ namespace RuneMagic.Source
                             Count = 5
                         },
                     },
-                        IsDefault = true
+                        IsDefault = false
 
 
 
@@ -185,7 +198,7 @@ namespace RuneMagic.Source
                             Count = 5
                         },
                     },
-                        IsDefault = true
+                        IsDefault = false
 
                     }
 
@@ -205,7 +218,7 @@ namespace RuneMagic.Source
                 {
                     ResultCount = 1,
                     Ingredients = ingredients,
-                    IsDefault = true
+                    IsDefault = false
                 }
             });
         }
@@ -283,3 +296,4 @@ namespace RuneMagic.Source
         }
     }
 }
+

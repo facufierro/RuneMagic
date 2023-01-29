@@ -17,7 +17,7 @@ namespace RuneMagic.Spells
             Name = "Labor";
             School = School.Conjuration;
             Description = "Creates a hoe dirt tile at the cursor.";
-            Level = 4;
+            Level = 1;
 
         }
         public override bool Cast()

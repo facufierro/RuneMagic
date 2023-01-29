@@ -18,7 +18,7 @@ namespace RuneMagic.Spells
             Name = "Hydration";
             School = School.Conjuration;
             Description = "Water a tile at the cursor.";
-            Level = 4;
+            Level = 1;
         }
         public override bool Cast()
         {

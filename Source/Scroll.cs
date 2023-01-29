@@ -11,10 +11,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
 namespace RuneMagic.Framework
 {
+    [XmlType("Mods_Scroll")]
     public class Scroll : Object, IMagicItem
     {
         public Spell Spell { get; set; }
