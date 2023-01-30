@@ -1,6 +1,4 @@
-﻿
-
-using JsonAssets.Data;
+﻿using JsonAssets.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -118,7 +116,10 @@ namespace RuneMagic
         {
             Farmer = Game1.player;
             Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
-
+            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
+            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
+            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Inscription Table"), 1));
+            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Runic Anvil"), 1));
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {

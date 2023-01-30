@@ -32,7 +32,7 @@ namespace RuneMagic.Source
 
             string spellName = Name[0..^7];
             spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
+            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Source.Spells.{spellName}");
             Spell = (Spell)Activator.CreateInstance(spellType);
 
         }
@@ -45,20 +45,25 @@ namespace RuneMagic.Source
             if (!Fizzle())
                 if (Spell.Cast())
                 {
+                    //remove an item stack from this object if Farmer doesnt have Lorekeeper profession and if it does give it a 20% chance of not consuming the scroll
+                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
+                        Stack--;
+                    if (Stack <= 0)
+                        RuneMagic.Farmer.removeItemFromInventory((Item)this);
 
                 }
-
         }
+
         public void Update() { }
         public bool Fizzle()
         {
 
             if (Game1.random.Next(1, 100) < 0)
             {
-                Game1.player.stamina -= 10;
+                RuneMagic.Farmer.stamina -= 10;
                 Game1.playSound("stoneCrack");
-                Game1.player.removeItemFromInventory((Item)this);
-                Game1.player.addItemToInventory(new Object(390, 1));
+                RuneMagic.Farmer.removeItemFromInventory((Item)this);
+                RuneMagic.Farmer.addItemToInventory(new Object(390, 1));
                 return true;
             }
             else

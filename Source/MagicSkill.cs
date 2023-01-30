@@ -60,7 +60,7 @@ namespace RuneMagic.Source
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Lorekeeper",
-                Description = "The caster has 20% chance to not consume a scroll when casting.NOT IMPLEMENTED"
+                Description = "The caster has 20% chance to not consume a scroll when casting."
             };
             Professions.Add(Lorekeeper);
             Sage = new MagicProfession(this, "fierro.rune_magic.sage")
