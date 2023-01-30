@@ -1,18 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceCore;
 using StardewValley;
 using System;
-using Object = StardewValley.Object;
-using System.Xml.Serialization;
 using System.Reflection;
-using RuneMagic.Framework;
-using SpaceCore;
-using System.Threading;
-using StardewModdingAPI;
-using RuneMagic.Famework;
-using RuneMagic.Source;
+using System.Xml.Serialization;
+using Object = StardewValley.Object;
 
-namespace RuneMagic.Items
+namespace RuneMagic.Source
 {
     [XmlType("Mods_Rune")]
     public class Rune : Object, IMagicItem
@@ -23,7 +18,7 @@ namespace RuneMagic.Items
         public Spell Spell { get; set; }
         public Rune() : base()
         {
-            if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -32,7 +27,7 @@ namespace RuneMagic.Items
         }
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -55,13 +50,13 @@ namespace RuneMagic.Items
             if (!Fizzle())
                 if (Spell.Cast() && Charges > 0)
                 {
-                    Source.RuneMagic.Farmer.AddCustomSkillExperience(Source.RuneMagic.PlayerStats.MagicSkill, 5);
+                    RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     Charges--;
                 }
         }
         public virtual void Use()
         {
-            Source.RuneMagic.PlayerStats.ItemHeld = this;
+            RuneMagic.PlayerStats.ItemHeld = this;
 
         }
         public bool Fizzle()
@@ -82,7 +77,7 @@ namespace RuneMagic.Items
         {
             if (Charges < ChargesMax)
             {
-                if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
+                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
                     Charges += 0.0010f;
                 else
                     Charges += 0.0005f;
@@ -96,7 +91,7 @@ namespace RuneMagic.Items
         {
             if (f.CurrentItem == this)
             {
-                var castingTimer = Source.RuneMagic.PlayerStats.CastingTimer;
+                var castingTimer = RuneMagic.PlayerStats.CastingTimer;
                 if (castingTimer > 0)
                 {
                     var castingTimerMax = Spell.CastingTime * 60;

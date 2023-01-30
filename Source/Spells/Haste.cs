@@ -1,13 +1,7 @@
-﻿using RuneMagic.Famework;
-using RuneMagic.Magic;
+﻿
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RuneMagic.Spells
+namespace RuneMagic.Source.Spells
 {
     public class Haste : Spell
     {

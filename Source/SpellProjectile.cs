@@ -1,16 +1,12 @@
-﻿using System;
-using System.Threading;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Netcode;
-using RuneMagic.Source;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.Magic
+namespace RuneMagic.Source
 {
     internal class SpellProjectile : Projectile
     {
@@ -40,7 +36,7 @@ namespace RuneMagic.Magic
         private bool seekTarget = false;
         private double creationTime;
 
-        private static readonly Random Rand = new();
+        private static readonly System.Random Rand = new();
 
         /*********
         ** Public methods
@@ -68,8 +64,8 @@ namespace RuneMagic.Magic
             position.X += Source.GetBoundingBox().Width;
             position.Y += Source.GetBoundingBox().Height;
             damagesMonsters.Value = true;
-            Texture = RuneMagic.Source.RuneMagic.Instance.Helper.ModContent.Load<Texture2D>($"assets/Spells/{spellTexture}.png");
-            TextureId.Value = RuneMagic.Source.RuneMagic.Instance.Helper.ModContent.GetInternalAssetName($"assets/Spells/{spellTexture}.png").BaseName;
+            Texture = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>($"assets/Spells/{spellTexture}.png");
+            TextureId.Value = RuneMagic.Instance.Helper.ModContent.GetInternalAssetName($"assets/Spells/{spellTexture}.png").BaseName;
 
             CursorPosition.Value = new Vector2(Game1.getMousePosition().X + Game1.viewport.X + Game1.tileSize, Game1.getMousePosition().Y + Game1.viewport.Y + Game1.tileSize);
             RandomCursorPosition.Value = new Vector2(CursorPosition.X + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread), CursorPosition.Y + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread));

@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
-using StardewValley;
-
-
+using System;
+using System.Collections.Generic;
+using static SpaceCore.Skills;
 
 namespace RuneMagic.Source
 {
-    public class MagicSkill : SpaceCore.Skills.Skill
+    public class MagicSkill : Skill
     {
-        /*********
-        ** Accessors
-        *********/
         public static readonly string MagicSkillId = "fierro.rune_magic.skill";
         public static MagicProfession Scribe;
         public static MagicProfession Lorekeeper;
@@ -22,7 +15,6 @@ namespace RuneMagic.Source
         public static MagicProfession Runesmith;
         public static MagicProfession Runelord;
         public static MagicProfession Runemaster;
-
 
         public MagicSkill()
             : base(MagicSkillId)

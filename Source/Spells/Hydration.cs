@@ -1,15 +1,10 @@
-﻿using StardewValley.TerrainFeatures;
-using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using RuneMagic.Magic;
-using RuneMagic.Famework;
+﻿
 
-namespace RuneMagic.Spells
+
+using StardewValley;
+using StardewValley.TerrainFeatures;
+
+namespace RuneMagic.Source.Spells
 {
     public class Hydration : Spell
     {

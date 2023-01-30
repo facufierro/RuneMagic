@@ -1,22 +1,18 @@
-﻿using Microsoft.Xna.Framework;
-using RuneMagic.Famework;
+﻿
+using Microsoft.Xna.Framework;
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RuneMagic.Spells
+namespace RuneMagic.Source.Spells
 {
-    public class Telekinesis : Spell
+    public class Displacement : Spell
     {
-        public Telekinesis() : base()
+
+        public Displacement() : base()
         {
-            Name = "Telekinesis";
+            Name = "Displacement";
             School = School.Alteration;
             Description = "Teleports a the caster a short distance.";
-            Level = 1;
+            Level = 3;
         }
 
         public override bool Cast()
@@ -36,5 +32,6 @@ namespace RuneMagic.Spells
                 return false;
             }
         }
+
     }
 }

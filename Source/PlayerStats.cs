@@ -1,19 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using StardewValley;
-using System;
-using Object = StardewValley.Object;
-using System.Xml.Serialization;
-using System.Reflection;
-using RuneMagic.Framework;
+﻿
 using SpaceCore;
-using System.Threading;
-using StardewModdingAPI;
-using RuneMagic.Famework;
 using StardewModdingAPI.Events;
-using System.Runtime.InteropServices;
-using RuneMagic.Items;
-using System.Collections.Generic;
+using System;
 
 namespace RuneMagic.Source
 {
@@ -23,11 +11,11 @@ namespace RuneMagic.Source
         public MagicSkill MagicSkill { get; set; }
         public bool MagicLearned { get; set; } = false;
         public IMagicItem ItemHeld { get; set; } = null;
-        public Spell SelectedSpell { get; set; }
-        public int SpellAttack { get; set; }
-        public int CastingFailureChance { get; set; }
+        public Spell SelectedSpell { get; set; } = null;
         public bool IsCasting { get; set; } = false;
         public float CastingTimer { get; set; } = 0;
+        public int SpellAttack { get; set; }
+        public int CastingFailureChance { get; set; }
 
         public PlayerStats()
         {

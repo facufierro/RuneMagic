@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework;
-using RuneMagic.Source;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
-using StardewValley;
-using StardewValley.Characters;
-using StardewValley.Monsters;
-using StardewValley.Projectiles;
-using StardewValley.TerrainFeatures;
+﻿
 
-namespace RuneMagic.Famework
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
+namespace RuneMagic.Source
 {
     public enum School
     {

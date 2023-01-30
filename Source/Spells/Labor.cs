@@ -1,14 +1,8 @@
-﻿using StardewValley.TerrainFeatures;
+﻿
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RuneMagic.Magic;
-using RuneMagic.Famework;
+using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.Spells
+namespace RuneMagic.Source.Spells
 {
     public class Labor : Spell
     {

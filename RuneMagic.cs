@@ -1,40 +1,32 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿
+
+using JsonAssets.Data;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using RuneMagic.Source;
+using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using System;
-using Rune = RuneMagic.Items.Rune;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Object = StardewValley.Object;
-using Microsoft.Xna.Framework;
-using static SpaceCore.Skills;
-using JsonAssets.Data;
-using System.Collections.Generic;
-using RuneMagic.Magic;
-using RuneMagic.Framework;
-using SpaceCore;
-using RuneMagic.Famework;
-using StardewValley.Tools;
-using StardewValley.Locations;
-using StardewValley.Monsters;
-using xTile.Dimensions;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
-using Newtonsoft.Json;
-using System.IO;
-using System.Reflection;
 
-namespace RuneMagic.Source
+namespace RuneMagic
 {
     public sealed class RuneMagic : Mod
     {
 
-        public static RuneMagic Instance { get; private set; }
+        public static RuneMagic Instance;
         public static PlayerStats PlayerStats = new();
-        public static Farmer Farmer { get; set; } = Game1.player;
-        public static List<Spell> Spells { get; set; }
+        public static Farmer Farmer;
+        public static List<Spell> Spells;
 
         public JsonAssets.IApi JsonAssetsApi;
-        public IApi SpaceCoreApi;
+        public SpaceCore.IApi SpaceCoreApi;
 
         public override void Entry(IModHelper helper)
         {
@@ -50,17 +42,16 @@ namespace RuneMagic.Source
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
-            RegisterSkill(PlayerStats.MagicSkill = new MagicSkill());
-
+            PlayerStats.MagicSkill = new MagicSkill();
+            Skills.RegisterSkill(PlayerStats.MagicSkill);
         }
 
         //Event Handlers
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
-            SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
+            SpaceCoreApi = Helper.ModRegistry.GetApi<SpaceCore.IApi>("spacechase0.SpaceCore");
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
@@ -190,16 +181,16 @@ namespace RuneMagic.Source
         }
 
         //Registering Methods
-        public void RegisterSpells()
+        public static void RegisterSpells()
         {
-            var spells = typeof(RuneMagic).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Spells").Select(t => t.Name).ToList();
+            var spells = typeof(RuneMagic).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Source.Spells").Select(t => t.Name).ToList();
             Spells = new List<Spell>();
             for (int i = 0; i < spells.Count; i++)
             {
-                Spells.Add((Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Spells.{spells[i]}")));
+                Spells.Add((Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Source.Spells.{spells[i]}")));
             }
         }
-        public void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club)
+        public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club)
         {
             if (dataType == typeof(ObjectData))
             {
@@ -263,7 +254,7 @@ namespace RuneMagic.Source
                     ExtraSwingArea = 1
                 });
         }
-        public void RegisterCustomCraftingStations()
+        public static void RegisterCustomCraftingStations()
         {
 
             var runeRecipes = new List<string>() { "Blank Rune" };
@@ -294,7 +285,7 @@ namespace RuneMagic.Source
         }
 
         //Game Management Methods
-        public void ManageMagicItems(Farmer player, JsonAssets.IApi jsonAssetsApi)
+        public static void ManageMagicItems(Farmer player, JsonAssets.IApi jsonAssetsApi)
         {
             if (Context.IsWorldReady)
                 for (int i = 0; i < player.Items.Count; i++)
@@ -324,7 +315,7 @@ namespace RuneMagic.Source
 
                 }
         }
-        public void WizardEvent(GameLocation location)
+        public static void WizardEvent(GameLocation location)
         {
             RuneMagic.Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
             if (location.Name == "WizardHouse" && Farmer.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RuneMagic.Famework;
-using RuneMagic.Magic;
+﻿
 
-namespace RuneMagic.Spells
+namespace RuneMagic.Source.Spells
 {
     public class Fireball : Spell
     {
@@ -17,15 +11,11 @@ namespace RuneMagic.Spells
             Description = "Shoots a fireball.";
             Level = 1;
 
-
-
-
-
         }
 
         public override bool Cast()
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }

@@ -1,23 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Famework;
-using RuneMagic.Magic;
-using RuneMagic.Source;
-using SpaceCore;
-using StardewModdingAPI;
-using StardewModdingAPI.Enums;
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using xTile;
-using Object = StardewValley.Object;
 
-namespace RuneMagic.Framework
+namespace RuneMagic.Source
 {
 
 

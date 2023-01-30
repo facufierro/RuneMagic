@@ -1,20 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Famework;
-using RuneMagic.Source;
 using SpaceCore;
 using StardewValley;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
-namespace RuneMagic.Framework
+namespace RuneMagic.Source
 {
     [XmlType("Mods_Scroll")]
     public class Scroll : Object, IMagicItem
@@ -43,14 +38,14 @@ namespace RuneMagic.Framework
         }
         public void Use()
         {
-            Source.RuneMagic.PlayerStats.ItemHeld = this;
+            RuneMagic.PlayerStats.ItemHeld = this;
         }
         public void Activate()
         {
             if (!Fizzle())
                 if (Spell.Cast())
                 {
-                    Source.RuneMagic.Farmer.AddCustomSkillExperience(Source.RuneMagic.PlayerStats.MagicSkill, 5);
+
                 }
 
         }
@@ -72,12 +67,12 @@ namespace RuneMagic.Framework
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
             //draw a cast bar below the item in the inventory if the player is casting and make the bar always the size of the item width and 5 pixels high, but make it scale with the casting time
-            if (Source.RuneMagic.PlayerStats.IsCasting)
+            if (RuneMagic.PlayerStats.IsCasting)
             {
                 var castingTime = Spell.CastingTime;
-                if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && this is Scroll)
+                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && this is Scroll)
                     castingTime *= 0.5f;
-                var castbarWidth = (int)(Source.RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
+                var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
                 spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
             }
         }

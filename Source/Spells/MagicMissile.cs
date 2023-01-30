@@ -1,9 +1,8 @@
 ﻿
-using RuneMagic.Famework;
-using RuneMagic.Magic;
+
 using StardewValley;
 
-namespace RuneMagic.Spells
+namespace RuneMagic.Source.Spells
 {
     public class MagicMissile : Spell
     {
