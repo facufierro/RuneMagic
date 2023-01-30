@@ -36,6 +36,7 @@ namespace RuneMagic.Famework
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public float Level { get; set; }
+        public Vector2 Target { get; set; }
 
         public abstract bool Cast();
 
@@ -81,6 +82,7 @@ namespace RuneMagic.Famework
                     return colors;
             }
         }
+
 
     }
 }

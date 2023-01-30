@@ -16,15 +16,14 @@ namespace RuneMagic.Skills
         /*********
         ** Accessors
         *********/
-        /// <summary>The unique ID for the magic skill.</summary>
         public static readonly string MagicSkillId = "fierro.rune_magic.skill";
-
-        public static MagicProfession Runecaster;
         public static MagicProfession Scribe;
-        public static MagicProfession Runekeeper;
-        public static MagicProfession Loremaster;
-        public static MagicProfession Runemaster;
+        public static MagicProfession Lorekeeper;
         public static MagicProfession Sage;
+        public static MagicProfession Runesmith;
+        public static MagicProfession Runelord;
+        public static MagicProfession Runemaster;
+
 
         public MagicSkill()
             : base(MagicSkillId)
@@ -34,47 +33,54 @@ namespace RuneMagic.Skills
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = Color.DarkBlue;
 
-            Runecaster = new MagicProfession(this, "fierro.rune_magic.runecaster")
+            Runesmith = new MagicProfession(this, "fierro.rune_magic.runesmith")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
-                Name = "Runecaster",
+                Name = "Runesmith",
                 Description = "Your runes recharge 50% faster.",
             };
+            Professions.Add(Runesmith);
             Scribe = new MagicProfession(this, "fierro.rune_magic.scribe")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Scribe",
                 Description = "Scroll casting time is reduced by 50%.",
             };
-            ProfessionsForLevels.Add(new ProfessionPair(5, Runecaster, Scribe));
+            Professions.Add(Scribe);
+            ProfessionsForLevels.Add(new ProfessionPair(5, Runesmith, Scribe));
 
-            Runekeeper = new MagicProfession(this, "fierro.rune_magic.runekeeper")
+            Runelord = new MagicProfession(this, "fierro.rune_magic.runelord")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
-                Name = "Runekeeper",
-                Description = "Your runes have 10 charges instead of 5.",
+                Name = "Runelord",
+                Description = "When you craft a rune it has 10 charges instead of 5.",
             };
-            Loremaster = new MagicProfession(this, "fierro.rune_magic.loremaster")
-            {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
-                Name = "Loremaster",
-                Description = "The caster has 20% chance to not consume a scroll when casting."
-            };
-            ProfessionsForLevels.Add(new ProfessionPair(10, Runekeeper, Loremaster));
-
+            Professions.Add(Runelord);
             Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runemaster",
-                Description = "The caster reflects damage while casting runes."
+                Description = "The caster reflects damage while casting runes.NOT IMPLEMENTED"
             };
+            Professions.Add(Runemaster);
+            ProfessionsForLevels.Add(new ProfessionPair(10, Runelord, Runemaster, Runesmith));
+
+            Lorekeeper = new MagicProfession(this, "fierro.rune_magic.lorekeeper")
+            {
+                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Name = "Lorekeeper",
+                Description = "The caster has 20% chance to not consume a scroll when casting.NOT IMPLEMENTED"
+            };
+            Professions.Add(Lorekeeper);
             Sage = new MagicProfession(this, "fierro.rune_magic.sage")
             {
                 Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Sage",
-                Description = "The caster can walk while casting.",
+                Description = "The caster can walk while casting.NOT IMPLEMENTED",
             };
-            ProfessionsForLevels.Add(new ProfessionPair(10, Runemaster, Sage));
+            Professions.Add(Sage);
+            ProfessionsForLevels.Add(new ProfessionPair(10, Lorekeeper, Sage, Scribe));
+
         }
         public override string GetName()
         {

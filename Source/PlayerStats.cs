@@ -39,10 +39,10 @@ namespace RuneMagic.Source
 
         public void CheckCasting(object sender, UpdateTickedEventArgs e)
         {
-
-
             if (ItemHeld is not null)
             {
+
+                ModEntry.RuneMagic.Farmer.CanMove = false;
                 var castingTime = ItemHeld.Spell.CastingTime;
                 if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
                     castingTime *= 0.5f;
@@ -53,9 +53,11 @@ namespace RuneMagic.Source
                     ItemHeld = null;
                     IsCasting = false;
                     CastingTimer = 0;
+                    ModEntry.RuneMagic.Farmer.CanMove = true;
                 }
                 else
                     CastingTimer += 1;
+
             }
 
         }

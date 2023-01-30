@@ -56,8 +56,12 @@ namespace RuneMagic.Source
         {
             if (Charges < ChargesMax)
             {
-                Charges += 0.0005f;
+                Charges += 0.0010f;
             }
+            if (Charges > ChargesMax)
+                Charges = ChargesMax;
+            if (Charges < 0)
+                Charges = 0;
         }
         public bool Fizzle()
         {

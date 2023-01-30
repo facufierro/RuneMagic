@@ -17,6 +17,9 @@ using RuneMagic.Famework;
 using RuneMagic.Skills;
 using StardewValley.Tools;
 using StardewValley.Locations;
+using StardewValley.Monsters;
+using xTile.Dimensions;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace RuneMagic.Source
 {
@@ -44,6 +47,7 @@ namespace RuneMagic.Source
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
             RegisterSkill(RuneMagic.PlayerStats.MagicSkill = new MagicSkill());
+
         }
 
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
@@ -140,7 +144,7 @@ namespace RuneMagic.Source
             }
             if (e.Button == SButton.F5)
             {
-                RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 100);
+                RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 15000);
                 Monitor.Log(RuneMagic.Farmer.GetCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill).ToString());
             }
 

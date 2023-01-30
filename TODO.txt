@@ -2,6 +2,7 @@
 High priority		
 
 -Finish skills
+	-disable movement while casting
 	-Implement professions	
 	
 Low priority
@@ -23,3 +24,4 @@ Maybe
 -Animations for the  player
 -Add Rituals and rituals altar
 -add casting interrupt
+-add channeling mechanic

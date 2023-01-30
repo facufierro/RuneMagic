@@ -22,16 +22,21 @@ namespace RuneMagic.Items
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
         public Spell Spell { get; set; }
-        int timer = 0;
         public Rune() : base()
         {
-            ChargesMax = 5;
+            if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+                ChargesMax = 10;
+            else
+                ChargesMax = 5;
             Charges = ChargesMax;
             InitializeSpell();
         }
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            ChargesMax = 5;
+            if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+                ChargesMax = 10;
+            else
+                ChargesMax = 5;
             Charges = ChargesMax;
             InitializeSpell();
 
@@ -58,6 +63,7 @@ namespace RuneMagic.Items
         public virtual void Use()
         {
             ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
+
         }
         public bool Fizzle()
         {
@@ -77,12 +83,15 @@ namespace RuneMagic.Items
         {
             if (Charges < ChargesMax)
             {
-                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runecaster))
+                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
                     Charges += 0.0010f;
                 else
                     Charges += 0.0005f;
-                timer++;
             }
+            if (Charges > ChargesMax)
+                Charges = ChargesMax;
+            if (Charges < 0)
+                Charges = 0;
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
@@ -106,11 +115,14 @@ namespace RuneMagic.Items
             spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
+
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
             DrawCharges(spriteBatch, location, layerDepth);
             DrawCastbar(spriteBatch, location, Game1.player);
+
+
         }
         public override bool canBeShipped()
         {
