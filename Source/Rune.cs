@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using System.Reflection;
 using RuneMagic.Framework;
 using SpaceCore;
-using RuneMagic.Skills;
 using System.Threading;
 using StardewModdingAPI;
 using RuneMagic.Famework;
@@ -24,7 +23,7 @@ namespace RuneMagic.Items
         public Spell Spell { get; set; }
         public Rune() : base()
         {
-            if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -33,7 +32,7 @@ namespace RuneMagic.Items
         }
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -56,13 +55,13 @@ namespace RuneMagic.Items
             if (!Fizzle())
                 if (Spell.Cast() && Charges > 0)
                 {
-                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                    Source.RuneMagic.Farmer.AddCustomSkillExperience(Source.RuneMagic.PlayerStats.MagicSkill, 5);
                     Charges--;
                 }
         }
         public virtual void Use()
         {
-            ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
+            Source.RuneMagic.PlayerStats.ItemHeld = this;
 
         }
         public bool Fizzle()
@@ -83,7 +82,7 @@ namespace RuneMagic.Items
         {
             if (Charges < ChargesMax)
             {
-                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
+                if (Source.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
                     Charges += 0.0010f;
                 else
                     Charges += 0.0005f;
@@ -97,7 +96,7 @@ namespace RuneMagic.Items
         {
             if (f.CurrentItem == this)
             {
-                var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+                var castingTimer = Source.RuneMagic.PlayerStats.CastingTimer;
                 if (castingTimer > 0)
                 {
                     var castingTimerMax = Spell.CastingTime * 60;

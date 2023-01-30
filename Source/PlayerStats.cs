@@ -7,11 +7,9 @@ using System.Xml.Serialization;
 using System.Reflection;
 using RuneMagic.Framework;
 using SpaceCore;
-using RuneMagic.Skills;
 using System.Threading;
 using StardewModdingAPI;
 using RuneMagic.Famework;
-using RuneMagic.Source;
 using StardewModdingAPI.Events;
 using System.Runtime.InteropServices;
 using RuneMagic.Items;
@@ -42,9 +40,9 @@ namespace RuneMagic.Source
             if (ItemHeld is not null)
             {
 
-                ModEntry.RuneMagic.Farmer.CanMove = false;
+                RuneMagic.Farmer.CanMove = false;
                 var castingTime = ItemHeld.Spell.CastingTime;
-                if (ModEntry.RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
+                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
                     castingTime *= 0.5f;
                 IsCasting = true;
                 if (CastingTimer >= Math.Floor(castingTime * 60))
@@ -53,7 +51,7 @@ namespace RuneMagic.Source
                     ItemHeld = null;
                     IsCasting = false;
                     CastingTimer = 0;
-                    ModEntry.RuneMagic.Farmer.CanMove = true;
+                    RuneMagic.Farmer.CanMove = true;
                 }
                 else
                     CastingTimer += 1;
@@ -64,30 +62,30 @@ namespace RuneMagic.Source
         public void LearnRecipes()
         {
 
-            var level = ModEntry.RuneMagic.Farmer.GetCustomSkillLevel(MagicSkill);
+            var level = RuneMagic.Farmer.GetCustomSkillLevel(MagicSkill);
 
-            foreach (var spell in ModEntry.RuneMagic.SpellList)
+            foreach (var spell in RuneMagic.Spells)
             {
                 if (level >= spell.Level)
                 {
                     if (level >= 1)
                     {
-                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Runic Anvil"))
-                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Runic Anvil", 0);
-                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Inscription Table"))
-                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Inscription Table", 0);
-                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Magic Grinder"))
-                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Magic Grinder", 0);
-                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Rune"))
-                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Blank Rune", 0);
-                        if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Parchment"))
-                            ModEntry.RuneMagic.Farmer.craftingRecipes.Add("Blank Parchment", 0);
+                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Runic Anvil"))
+                            RuneMagic.Farmer.craftingRecipes.Add("Runic Anvil", 0);
+                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Inscription Table"))
+                            RuneMagic.Farmer.craftingRecipes.Add("Inscription Table", 0);
+                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Magic Grinder"))
+                            RuneMagic.Farmer.craftingRecipes.Add("Magic Grinder", 0);
+                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Rune"))
+                            RuneMagic.Farmer.craftingRecipes.Add("Blank Rune", 0);
+                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Parchment"))
+                            RuneMagic.Farmer.craftingRecipes.Add("Blank Parchment", 0);
 
                     }
-                    if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
-                        ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
-                    if (!ModEntry.RuneMagic.Farmer.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
-                        ModEntry.RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
+                    if (!RuneMagic.Farmer.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
+                        RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
+                    if (!RuneMagic.Farmer.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
+                        RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
                 }
 
             }

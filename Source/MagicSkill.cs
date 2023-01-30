@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Source;
 using StardewModdingAPI;
 using StardewValley;
 
 
 
-namespace RuneMagic.Skills
+namespace RuneMagic.Source
 {
     public class MagicSkill : SpaceCore.Skills.Skill
     {
@@ -28,21 +27,21 @@ namespace RuneMagic.Skills
         public MagicSkill()
             : base(MagicSkillId)
         {
-            Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_magic_icon.png");
-            SkillsPageIcon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_page_magic_icon.png");
+            Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_magic_icon.png");
+            SkillsPageIcon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_page_magic_icon.png");
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = Color.DarkBlue;
 
             Runesmith = new MagicProfession(this, "fierro.rune_magic.runesmith")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runesmith",
                 Description = "Your runes recharge 50% faster.",
             };
             Professions.Add(Runesmith);
             Scribe = new MagicProfession(this, "fierro.rune_magic.scribe")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Scribe",
                 Description = "Scroll casting time is reduced by 50%.",
             };
@@ -51,14 +50,14 @@ namespace RuneMagic.Skills
 
             Runelord = new MagicProfession(this, "fierro.rune_magic.runelord")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runelord",
                 Description = "When you craft a rune it has 10 charges instead of 5.",
             };
             Professions.Add(Runelord);
             Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runemaster",
                 Description = "The caster reflects damage while casting runes.NOT IMPLEMENTED"
             };
@@ -67,14 +66,14 @@ namespace RuneMagic.Skills
 
             Lorekeeper = new MagicProfession(this, "fierro.rune_magic.lorekeeper")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Lorekeeper",
                 Description = "The caster has 20% chance to not consume a scroll when casting.NOT IMPLEMENTED"
             };
             Professions.Add(Lorekeeper);
             Sage = new MagicProfession(this, "fierro.rune_magic.sage")
             {
-                Icon = ModEntry.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Sage",
                 Description = "The caster can walk while casting.NOT IMPLEMENTED",
             };
@@ -102,7 +101,7 @@ namespace RuneMagic.Skills
             info.Add($"You have gained access to the following spells:");
 
             string spellList = "";
-            foreach (var spell in ModEntry.RuneMagic.SpellList)
+            foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Level == level)
                 {

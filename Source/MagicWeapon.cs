@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using System.Reflection;
 using RuneMagic.Framework;
 using SpaceCore;
-using RuneMagic.Skills;
 using System.Threading;
 using StardewModdingAPI;
 using RuneMagic.Famework;
@@ -40,14 +39,14 @@ namespace RuneMagic.Source
         }
         public void Use()
         {
-            ModEntry.RuneMagic.PlayerStats.ItemHeld = this;
+            RuneMagic.PlayerStats.ItemHeld = this;
         }
         public void Activate()
         {
             if (!Fizzle())
                 if (Spell.Cast() && Charges > 0)
                 {
-                    ModEntry.RuneMagic.Farmer.AddCustomSkillExperience(ModEntry.RuneMagic.PlayerStats.MagicSkill, 5);
+                    RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     Charges--;
                 }
 
@@ -81,7 +80,7 @@ namespace RuneMagic.Source
         {
             if (f.CurrentItem == this)
             {
-                var castingTimer = ModEntry.RuneMagic.PlayerStats.CastingTimer;
+                var castingTimer = RuneMagic.PlayerStats.CastingTimer;
                 if (castingTimer > 0)
                 {
                     var castingTimerMax = Spell.CastingTime * 60;
