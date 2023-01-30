@@ -72,20 +72,12 @@ namespace RuneMagic.Source
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (f.CurrentItem == this)
+            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.PlayerStats.ItemHeld == this)
             {
-                var castingTimer = RuneMagic.PlayerStats.CastingTimer;
-                if (castingTimer > 0)
-                {
-                    var castingTimerMax = Spell.CastingTime * 60;
-                    var castingTimerPercent = castingTimer / castingTimerMax;
-                    var barWidth = 60;
-                    var barHeight = 6;
-                    var castingTimerWidth = barWidth * castingTimerPercent;
-                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + ((64 - barWidth) / 2), (int)objectPosition.Y + 64 - barHeight, (int)castingTimerWidth, barHeight), Color.DarkBlue);
-                }
+                var castingTime = Spell.CastingTime;
+                var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
+                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
             }
-
         }
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {

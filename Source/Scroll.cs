@@ -71,8 +71,7 @@ namespace RuneMagic.Source
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            //draw a cast bar below the item in the inventory if the player is casting and make the bar always the size of the item width and 5 pixels high, but make it scale with the casting time
-            if (RuneMagic.PlayerStats.IsCasting)
+            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.PlayerStats.ItemHeld == this)
             {
                 var castingTime = Spell.CastingTime;
                 if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && this is Scroll)
