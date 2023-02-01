@@ -10,7 +10,7 @@ namespace RuneMagic.Source.Spells
             Name = "Haste";
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
-            Level = 1;
+            Level = 2;
         }
 
         public override bool Cast()

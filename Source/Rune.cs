@@ -12,10 +12,10 @@ namespace RuneMagic.Source
     [XmlType("Mods_Rune")]
     public class Rune : Object, IMagicItem
     {
-
+        public Spell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
-        public Spell Spell { get; set; }
+
         public Rune() : base()
         {
             if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
@@ -41,8 +41,18 @@ namespace RuneMagic.Source
 
             string spellName = Name[8..];
             spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Spells.{spellName}");
-            Spell = (Spell)Activator.CreateInstance(spellType);
+            foreach (var spell in RuneMagic.Spells)
+            {
+                if (spell.Name == spellName)
+                {
+                    Spell = spell;
+                    break;
+                }
+            }
+        }
+        public virtual void Use()
+        {
+            RuneMagic.PlayerStats.ItemHeld = this;
 
         }
         public void Activate()
@@ -53,11 +63,6 @@ namespace RuneMagic.Source
                     RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     Charges--;
                 }
-        }
-        public virtual void Use()
-        {
-            RuneMagic.PlayerStats.ItemHeld = this;
-
         }
         public bool Fizzle()
         {

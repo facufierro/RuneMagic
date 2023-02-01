@@ -32,8 +32,14 @@ namespace RuneMagic.Source
 
             string spellName = Name[0..^7];
             spellName = spellName.Replace(" ", "");
-            Type spellType = Assembly.GetExecutingAssembly().GetType($"RuneMagic.Source.Spells.{spellName}");
-            Spell = (Spell)Activator.CreateInstance(spellType);
+            foreach (var spell in RuneMagic.Spells)
+            {
+                if (spell.Name == spellName)
+                {
+                    Spell = spell;
+                    break;
+                }
+            }
 
         }
         public void Use()
@@ -49,7 +55,7 @@ namespace RuneMagic.Source
                     if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
                         Stack--;
                     if (Stack <= 0)
-                        RuneMagic.Farmer.removeItemFromInventory((Item)this);
+                        RuneMagic.Farmer.removeItemFromInventory(this);
 
                 }
         }

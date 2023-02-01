@@ -4,10 +4,9 @@ using StardewValley;
 
 namespace RuneMagic.Source
 {
-
-
     public interface IMagicItem
     {
+        public string Name { get; set; }
         public Spell Spell { get; set; }
 
         public void InitializeSpell();

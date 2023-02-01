@@ -7,10 +7,13 @@ using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using Object = StardewValley.Object;
 
 namespace RuneMagic
@@ -23,8 +26,8 @@ namespace RuneMagic
         public static Farmer Farmer;
         public static List<Spell> Spells;
 
-        public JsonAssets.IApi JsonAssetsApi;
-        public SpaceCore.IApi SpaceCoreApi;
+        public static JsonAssets.IApi JsonAssetsApi;
+        public static SpaceCore.IApi SpaceCoreApi;
 
         public override void Entry(IModHelper helper)
         {
@@ -37,6 +40,7 @@ namespace RuneMagic
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
+            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
@@ -110,16 +114,20 @@ namespace RuneMagic
                 new() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, });
             RegisterJasonAssets(typeof(ObjectData), "Magic Dust", "Magically processed dust obtained from Gems", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/magic_dust.png"), null);
             //Register Weapons
-            RegisterJasonAssets(typeof(WeaponData), "Runic Staff", "Runic Staff description.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/runic_staff.png"), null, WeaponType.Club);
+            RegisterJasonAssets(typeof(WeaponData), "Apprentice Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/apprentice_staff.png"));
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
+        {
+            Farmer = Game1.player;
+
+        }
+        private void OnBlankSave(object sender, EventArgs e)
         {
             Farmer = Game1.player;
             Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
             Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
             Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Inscription Table"), 1));
-            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Runic Anvil"), 1));
+            Farmer.addItemToInventory(new Object(390, 2));
         }
         private void OnSaving(object sender, SavingEventArgs e)
         {
@@ -132,9 +140,10 @@ namespace RuneMagic
         }
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            ManageMagicItems(Game1.player, JsonAssetsApi);
+
             if (Context.IsWorldReady)
             {
+                ManageMagicItems(Game1.player, JsonAssetsApi);
                 PlayerStats.CheckCasting(sender, e);
             }
 
@@ -156,21 +165,27 @@ namespace RuneMagic
                     magicItem.InitializeSpell();
                 }
             }
+
+
         }
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (e.Button == SButton.R)
+            if (Context.IsWorldReady)
             {
-
-                if (Farmer.CurrentItem is IMagicItem magicItem)
+                if (e.Button == SButton.R)
                 {
-                    magicItem.Use();
+
+                    if (Farmer.CurrentItem is IMagicItem magicItem)
+                    {
+                        magicItem.Use();
+                    }
                 }
-            }
-            if (e.Button == SButton.F5)
-            {
-                Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                Monitor.Log(Farmer.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                if (e.Button == SButton.F5)
+                {
+                    Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
+                    Monitor.Log(Farmer.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                }
+
             }
 
 
@@ -248,11 +263,22 @@ namespace RuneMagic
                     MinimumDamage = 6,
                     MaximumDamage = 12,
                     Knockback = 0,
-                    Speed = -1,
+                    Speed = -20,
                     Accuracy = 100,
-                    Defense = 100,
+                    Defense = 1,
                     CritChance = 0.04,
-                    ExtraSwingArea = 1
+                    CritMultiplier = 1.5,
+                    ExtraSwingArea = 0,
+                    CanPurchase = true,
+                    CanTrash = true,
+                    MineDropVar = 2,
+                    MineDropMinimumLevel = 1,
+                    PurchaseFrom = "Marlon",
+                    PurchasePrice = 10,
+                    PurchaseRequirements = null
+
+
+
                 });
         }
         public static void RegisterCustomCraftingStations()
@@ -292,22 +318,22 @@ namespace RuneMagic
                 for (int i = 0; i < player.Items.Count; i++)
                 {
                     var inventory = player.Items;
-                    List<string> itemsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
+                    List<string> objectsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
+                    List<string> weaponsFromPack = new(jsonAssetsApi.GetAllWeaponsFromContentPack("fierro.rune_magic"));
 
                     if (inventory[i] is not IMagicItem and not null)
                     {
-                        if (itemsFromPack.Contains(inventory[i].Name))
+                        if (objectsFromPack.Contains(inventory[i].Name))
                         {
                             if (inventory[i].Name.Contains("Rune of "))
                                 player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
                             if (inventory[i].Name.Contains(" Scroll"))
                                 player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                            if (inventory[i].Name.Contains("Runic Staff"))
-                            {
-                                player.Items[i] = new MagicWeapon(inventory[i].ParentSheetIndex);
-                            }
                         }
-
+                        if (weaponsFromPack.Contains(inventory[i].Name))
+                        {
+                            player.Items[i] = new MagicWeapon(JsonAssetsApi.GetWeaponId(inventory[i].Name));
+                        }
                     }
                     if (inventory[i] is IMagicItem magicItem)
                     {
@@ -318,7 +344,7 @@ namespace RuneMagic
         }
         public static void WizardEvent(GameLocation location)
         {
-            RuneMagic.Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
+            Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
             if (location.Name == "WizardHouse" && Farmer.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
@@ -337,8 +363,7 @@ namespace RuneMagic
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
                 Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                Farmer.addItemToInventory(new MagicWeapon(RuneMagic.Instance.JsonAssetsApi.GetWeaponId("Runic Staff")));
-
+                Farmer.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
                 PlayerStats.MagicLearned = true;
             }
         }

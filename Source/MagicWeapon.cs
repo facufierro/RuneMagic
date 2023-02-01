@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Tools;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
-using Object = StardewValley.Object;
+
 
 namespace RuneMagic.Source
 {
@@ -16,9 +18,11 @@ namespace RuneMagic.Source
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
 
-        public MagicWeapon()
+        public MagicWeapon() : base()
         {
-
+            ChargesMax = 20;
+            Charges = ChargesMax;
+            InitializeSpell();
         }
         public MagicWeapon(int parentSheetIndex) : base(parentSheetIndex)
         {
@@ -29,7 +33,18 @@ namespace RuneMagic.Source
 
         public void InitializeSpell()
         {
-            Spell = new Spells.MagicMissile();
+            List<Spell> apprenticeSpells = new List<Spell>();
+
+            foreach (var spell in RuneMagic.Spells)
+            {
+                if (spell.Level == 1 || spell.Level == 2)
+                    apprenticeSpells.Add(spell);
+            }
+            if (Name.Contains("Apprentice"))
+            {
+                Spell = apprenticeSpells[new Random().Next(apprenticeSpells.Count)];
+                description += $" Looks like it contains the {Spell.Name} spell.";
+            }
         }
         public void Use()
         {
@@ -37,14 +52,15 @@ namespace RuneMagic.Source
         }
         public void Activate()
         {
-            if (!Fizzle())
-                if (Spell.Cast() && Charges > 0)
-                {
-                    RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
-                    Charges--;
-                }
+            if (Spell.Cast() && Charges > 0)
+            {
+                RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
+                Charges--;
+            }
 
         }
+        public bool Fizzle()
+        { return false; }
         public void Update()
         {
             if (Charges < ChargesMax)
@@ -56,20 +72,7 @@ namespace RuneMagic.Source
             if (Charges < 0)
                 Charges = 0;
         }
-        public bool Fizzle()
-        {
 
-            if (Game1.random.Next(1, 100) < 0)
-            {
-                Game1.player.stamina -= 10;
-                Game1.playSound("stoneCrack");
-                Game1.player.removeItemFromInventory((Item)this);
-                Game1.player.addItemToInventory(new Object(390, 1));
-                return true;
-            }
-            else
-                return false;
-        }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
             if (RuneMagic.PlayerStats.IsCasting && RuneMagic.PlayerStats.ItemHeld == this)
@@ -88,7 +91,7 @@ namespace RuneMagic.Source
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
             DrawCharges(spriteBatch, location, layerDepth);
-            DrawCastbar(spriteBatch, location, Game1.player);
+            DrawCastbar(spriteBatch, location, RuneMagic.Farmer);
         }
     }
 }
