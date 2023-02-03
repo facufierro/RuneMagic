@@ -34,15 +34,31 @@ namespace RuneMagic.Source
         public void InitializeSpell()
         {
             List<Spell> apprenticeSpells = new List<Spell>();
-
+            List<Spell> adeptSpells = new List<Spell>();
+            List<Spell> masterSpells = new List<Spell>();
             foreach (var spell in RuneMagic.Spells)
             {
-                if (spell.Level == 1 || spell.Level == 2)
+                if (spell.Level >= 1 && spell.Level <= 2)
                     apprenticeSpells.Add(spell);
+                if (spell.Level >= 3 && spell.Level <= 4)
+                    apprenticeSpells.Add(spell);
+                if (spell.Level >= 5 && spell.Level <= 6)
+                    apprenticeSpells.Add(spell);
+
             }
             if (Name.Contains("Apprentice"))
             {
                 Spell = apprenticeSpells[new Random().Next(apprenticeSpells.Count)];
+                description += $" Looks like it contains the {Spell.Name} spell.";
+            }
+            if (Name.Contains("Adept"))
+            {
+                Spell = adeptSpells[new Random().Next(apprenticeSpells.Count)];
+                description += $" Looks like it contains the {Spell.Name} spell.";
+            }
+            if (Name.Contains("Master"))
+            {
+                Spell = masterSpells[new Random().Next(apprenticeSpells.Count)];
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
         }

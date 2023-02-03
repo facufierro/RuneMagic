@@ -114,7 +114,10 @@ namespace RuneMagic.Source
                 new() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, });
             RegisterJasonAssets(typeof(ObjectData), "Magic Dust", "Magically processed dust obtained from Gems", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/magic_dust.png"), null);
             //Register Weapons
-            RegisterJasonAssets(typeof(WeaponData), "Apprentice Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/apprentice_staff.png"));
+            RegisterJasonAssets(typeof(WeaponData), "Apprentice Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/apprentice_staff.png"), null, WeaponType.Club, 10);
+            RegisterJasonAssets(typeof(WeaponData), "Adept Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/adept_staff.png"), null, WeaponType.Club, 80);
+            RegisterJasonAssets(typeof(WeaponData), "Master Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/master_staff.png"), null, WeaponType.Club, 120);
+
         }
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
@@ -222,7 +225,7 @@ namespace RuneMagic.Source
                 Spells.Add((Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Source.Spells.{spells[i]}")));
             }
         }
-        public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club)
+        public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)
         {
             if (dataType == typeof(ObjectData))
             {
@@ -287,11 +290,9 @@ namespace RuneMagic.Source
                     ExtraSwingArea = 0,
                     CanPurchase = true,
                     CanTrash = true,
-                    MineDropVar = 2,
-                    MineDropMinimumLevel = 1,
-                    PurchaseFrom = "Marlon",
-                    PurchasePrice = 10,
-                    PurchaseRequirements = null
+                    MineDropVar = mineDropVar,
+                    MineDropMinimumLevel = 10,
+
 
 
 
