@@ -1,6 +1,7 @@
 ﻿using JsonAssets.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using RuneMagic.Source;
 using SpaceCore;
@@ -144,7 +145,10 @@ namespace RuneMagic
             if (Context.IsWorldReady)
             {
                 ManageMagicItems(Game1.player, JsonAssetsApi);
-                PlayerStats.CheckCasting(sender, e);
+                PlayerStats.Cast(Farmer.CurrentItem as IMagicItem);
+
+
+
             }
 
         }
@@ -175,18 +179,6 @@ namespace RuneMagic
                 //if shift+R is pressed
 
 
-                if (e.IsDown(SButton.R))
-                {
-                    if (Farmer.CurrentItem is IMagicItem magicItem)
-                    {
-                        magicItem.Use();
-                    }
-                }
-
-                if (e.Button == SButton.T)
-                {
-                    PlayerStats.runeMasterActive = true;
-                }
                 if (e.Button == SButton.F5)
                 {
                     Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);

@@ -24,10 +24,7 @@ namespace RuneMagic.Source
         public School School { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
-        public float IsUsable { get; set; }
-        public float Circle { get; set; }
         public int Level { get; set; }
-        public Vector2 Target { get; set; }
 
         public abstract bool Cast();
 
@@ -35,7 +32,7 @@ namespace RuneMagic.Source
         {
 
             CastingTime = 1f;
-            Circle = 1;
+            Level = 1;
 
         }
 

@@ -36,15 +36,14 @@ namespace RuneMagic.Source
             {
                 if (spell.Name == spellName)
                 {
+
                     Spell = spell;
+                    if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe))
+                        Spell.CastingTime *= 0.8f;
                     break;
                 }
             }
 
-        }
-        public void Use()
-        {
-            RuneMagic.PlayerStats.ItemHeld = this;
         }
         public void Activate()
         {
@@ -58,7 +57,6 @@ namespace RuneMagic.Source
 
             }
         }
-
         public void Update() { }
         public bool Fizzle()
         {
@@ -66,14 +64,19 @@ namespace RuneMagic.Source
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.PlayerStats.ItemHeld == this)
+            //draw a castbar on the item if isCasting is true taking into account that if player has Scribe profession the castbar is 50% shorter
+            if (RuneMagic.PlayerStats.IsCasting)
             {
-                var castingTime = Spell.CastingTime;
-                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && this is Scroll)
-                    castingTime *= 0.5f;
-                var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
-                spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
+                if (RuneMagic.PlayerStats.IsCasting && RuneMagic.Farmer.CurrentItem == this)
+                {
+                    var castingTime = Spell.CastingTime;
+                    var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
+                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
+                }
+
             }
+
+
         }
         public override int maximumStackSize()
         {

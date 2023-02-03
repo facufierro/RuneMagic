@@ -1,7 +1,11 @@
 ﻿
+using Microsoft.Xna.Framework.Input;
 using SpaceCore;
 using StardewModdingAPI.Events;
+using StardewValley;
+using StardewValley.Monsters;
 using System;
+using System.Threading;
 
 namespace RuneMagic.Source
 {
@@ -10,51 +14,51 @@ namespace RuneMagic.Source
 
         public MagicSkill MagicSkill { get; set; }
         public bool MagicLearned { get; set; } = false;
-        public IMagicItem ItemHeld { get; set; } = null;
-        public Spell SelectedSpell { get; set; } = null;
         public bool IsCasting { get; set; } = false;
         public float CastingTimer { get; set; } = 0;
         public int SpellAttack { get; set; }
         public int CastingFailureChance { get; set; }
-        public bool runeMasterActive { get; set; } = false;
+
 
         public PlayerStats()
         {
             CastingFailureChance = 12;
             SpellAttack = 0;
         }
-
-        public void CheckCasting(object sender, UpdateTickedEventArgs e)
+        public void Cast(IMagicItem item)
         {
-            if (ItemHeld is not null)
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (RuneMagic.Farmer.CurrentItem is IMagicItem)
             {
+                if (keyboardState.IsKeyDown(Keys.R))
+                {
 
-                if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && ItemHeld is Scroll)
-                    RuneMagic.Farmer.CanMove = false;
-                else if (ItemHeld is not Scroll)
-                    RuneMagic.Farmer.CanMove = false;
-                var castingTime = ItemHeld.Spell.CastingTime;
-                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runemaster) && ItemHeld is Rune && (ItemHeld as Rune).Charges >= 3 && runeMasterActive)
-                {
-                    castingTime = 0;
-                    (ItemHeld as Rune).Charges -= 2;
-                    runeMasterActive = false;
-                }
-                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
-                    castingTime *= 0.5f;
-                IsCasting = true;
-                if (CastingTimer >= Math.Floor(castingTime * 60))
-                {
-                    ItemHeld.Activate();
-                    ItemHeld = null;
-                    IsCasting = false;
-                    CastingTimer = 0;
-                    RuneMagic.Farmer.CanMove = true;
+                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && ItemHeld is Scroll)
+                        RuneMagic.Farmer.CanMove = false;
+                    else if (ItemHeld is not Scroll)
+                        RuneMagic.Farmer.CanMove = false;
+
+
+                    IsCasting = true;
+                    if (CastingTimer >= Math.Floor(item.Spell.CastingTime * 60))
+                    {
+                        item.Activate();
+                        CastingTimer = 0;
+                        IsCasting = false;
+                        RuneMagic.Farmer.CanMove = true;
+                    }
+                    else
+                        CastingTimer += 1;
                 }
                 else
-                    CastingTimer += 1;
-
+                {
+                    CastingTimer = 0;
+                    IsCasting = false;
+                    RuneMagic.Farmer.CanMove = true;
+                }
             }
+
+
 
         }
         public void LearnRecipes()

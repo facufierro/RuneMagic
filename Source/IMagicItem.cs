@@ -10,7 +10,6 @@ namespace RuneMagic.Source
         public Spell Spell { get; set; }
 
         public void InitializeSpell();
-        public void Use();
         public void Activate();
         public bool Fizzle();
         public void Update();

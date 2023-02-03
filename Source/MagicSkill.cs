@@ -35,7 +35,7 @@ namespace RuneMagic.Source
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Scribe",
-                Description = "Scroll casting time is reduced by 50%.",
+                Description = "Scroll casting time is reduced by 20%.",
             };
             Professions.Add(Scribe);
             ProfessionsForLevels.Add(new ProfessionPair(5, Runesmith, Scribe));
