@@ -19,7 +19,7 @@ namespace RuneMagic.Source
         public Rune() : base()
         {
             if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 10;
+                ChargesMax = 30;
             else
                 ChargesMax = 5;
             Charges = ChargesMax;
@@ -28,7 +28,7 @@ namespace RuneMagic.Source
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 10;
+                ChargesMax = 30;
             else
                 ChargesMax = 5;
             Charges = ChargesMax;
@@ -113,7 +113,12 @@ namespace RuneMagic.Source
             DrawCharges(spriteBatch, location, layerDepth);
             DrawCastbar(spriteBatch, location, Game1.player);
 
+            if (RuneMagic.PlayerStats.runeMasterActive)
+            {
+                spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 400, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
 
+
+            }
         }
         public override bool canBeShipped()
         {

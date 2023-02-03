@@ -1,4 +1,5 @@
 ﻿
+using SpaceCore;
 using StardewValley;
 
 namespace RuneMagic.Source.Spells
@@ -10,17 +11,22 @@ namespace RuneMagic.Source.Spells
             Name = "Haste";
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
-            Level = 2;
+            Level = 3;
         }
 
         public override bool Cast()
         {
-            //check displayed buff by source
 
+            if (Game1.buffsDisplay.hasBuff(2))
+            {
+                return false;
+            }
+            else
+            {
+                Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 10, "Glyph of Haste", "Glyph of Haste"));
+                return true;
+            }
 
-
-            Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 10, "Glyph of Haste", "Glyph of Haste"));
-            return true;
         }
 
     }

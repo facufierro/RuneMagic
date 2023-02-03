@@ -172,13 +172,20 @@ namespace RuneMagic
         {
             if (Context.IsWorldReady)
             {
-                if (e.Button == SButton.R)
-                {
+                //if shift+R is pressed
 
+
+                if (e.IsDown(SButton.R))
+                {
                     if (Farmer.CurrentItem is IMagicItem magicItem)
                     {
                         magicItem.Use();
                     }
+                }
+
+                if (e.Button == SButton.T)
+                {
+                    PlayerStats.runeMasterActive = true;
                 }
                 if (e.Button == SButton.F5)
                 {
@@ -338,7 +345,9 @@ namespace RuneMagic
                     if (inventory[i] is IMagicItem magicItem)
                     {
                         magicItem.Update();
+
                     }
+
 
                 }
         }

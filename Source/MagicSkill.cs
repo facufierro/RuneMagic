@@ -51,7 +51,8 @@ namespace RuneMagic.Source
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runemaster",
-                Description = "The caster reflects damage while casting runes.NOT IMPLEMENTED"
+                Description = "The caster can spend 3 charges of a rune to make it instant cast."
+
             };
             Professions.Add(Runemaster);
             ProfessionsForLevels.Add(new ProfessionPair(10, Runelord, Runemaster, Runesmith));
@@ -67,7 +68,7 @@ namespace RuneMagic.Source
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Sage",
-                Description = "The caster can walk while casting.NOT IMPLEMENTED",
+                Description = "The caster can walk while casting.",
             };
             Professions.Add(Sage);
             ProfessionsForLevels.Add(new ProfessionPair(10, Lorekeeper, Sage, Scribe));

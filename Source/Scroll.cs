@@ -48,32 +48,21 @@ namespace RuneMagic.Source
         }
         public void Activate()
         {
-            if (!Fizzle())
-                if (Spell.Cast())
-                {
-                    //remove an item stack from this object if Farmer doesnt have Lorekeeper profession and if it does give it a 20% chance of not consuming the scroll
-                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
-                        Stack--;
-                    if (Stack <= 0)
-                        RuneMagic.Farmer.removeItemFromInventory(this);
+            if (Spell.Cast())
+            {
+                //remove an item stack from this object if Farmer doesnt have Lorekeeper profession and if it does give it a 20% chance of not consuming the scroll
+                if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
+                    Stack--;
+                if (Stack <= 0)
+                    RuneMagic.Farmer.removeItemFromInventory(this);
 
-                }
+            }
         }
 
         public void Update() { }
         public bool Fizzle()
         {
-
-            if (Game1.random.Next(1, 100) < 0)
-            {
-                RuneMagic.Farmer.stamina -= 10;
-                Game1.playSound("stoneCrack");
-                RuneMagic.Farmer.removeItemFromInventory((Item)this);
-                RuneMagic.Farmer.addItemToInventory(new Object(390, 1));
-                return true;
-            }
-            else
-                return false;
+            return false;
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {

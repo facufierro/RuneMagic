@@ -1,6 +1,7 @@
 ﻿
 
 
+using SpaceCore;
 using StardewValley;
 using StardewValley.TerrainFeatures;
 
@@ -22,6 +23,7 @@ namespace RuneMagic.Source.Spells
             {
                 HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[Cursor];
                 dirt.state.Value = HoeDirt.watered;
+
                 return true;
             }
             else

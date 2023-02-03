@@ -1,6 +1,10 @@
 ﻿
 using Microsoft.Xna.Framework;
+using SpaceCore;
 using StardewValley;
+using System.Collections.Generic;
+using xTile.Dimensions;
+using xTile.Tiles;
 
 namespace RuneMagic.Source.Spells
 {
@@ -11,20 +15,20 @@ namespace RuneMagic.Source.Spells
         {
             Name = "Displacement";
             School = School.Alteration;
-            Description = "Teleports a the caster a short distance.";
-            Level = 3;
+            Description = "Teleports a the caster to a target location.";
+            Level = 4;
         }
 
         public override bool Cast()
         {
-            var cursor = Game1.currentCursorTile;
-            Vector2 direction = cursor - Game1.player.getTileLocation();
-            direction.Normalize();
-            Vector2 destination = Game1.player.getTileLocation() + direction * 5;
-
-            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(destination))
+            //get cursor tile position
+            var cursorTile = Game1.currentCursorTile;
+            //teleport player to cursor tile if it is walkable
+            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(cursorTile))
             {
-                Game1.player.Position = destination * Game1.tileSize;
+                RuneMagic.Farmer.Position = new Vector2(cursorTile.X * Game1.tileSize, cursorTile.Y * Game1.tileSize);
+
+
                 return true;
             }
             else
@@ -32,6 +36,5 @@ namespace RuneMagic.Source.Spells
                 return false;
             }
         }
-
     }
 }

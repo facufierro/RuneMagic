@@ -16,10 +16,11 @@ namespace RuneMagic.Source
         public float CastingTimer { get; set; } = 0;
         public int SpellAttack { get; set; }
         public int CastingFailureChance { get; set; }
+        public bool runeMasterActive { get; set; } = false;
 
         public PlayerStats()
         {
-            CastingFailureChance = 10;
+            CastingFailureChance = 12;
             SpellAttack = 0;
         }
 
@@ -28,8 +29,17 @@ namespace RuneMagic.Source
             if (ItemHeld is not null)
             {
 
-                RuneMagic.Farmer.CanMove = false;
+                if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && ItemHeld is Scroll)
+                    RuneMagic.Farmer.CanMove = false;
+                else if (ItemHeld is not Scroll)
+                    RuneMagic.Farmer.CanMove = false;
                 var castingTime = ItemHeld.Spell.CastingTime;
+                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runemaster) && ItemHeld is Rune && (ItemHeld as Rune).Charges >= 3 && runeMasterActive)
+                {
+                    castingTime = 0;
+                    (ItemHeld as Rune).Charges -= 2;
+                    runeMasterActive = false;
+                }
                 if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe) && ItemHeld is Scroll)
                     castingTime *= 0.5f;
                 IsCasting = true;

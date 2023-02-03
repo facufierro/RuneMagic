@@ -7,8 +7,8 @@ namespace RuneMagic.Source.Spells
         {
             Name = "Telekinesis";
             School = School.Alteration;
-            Description = "Teleports a the caster a short distance.";
-            Level = 1;
+            Description = "You gain the ability to move or manipulate creatures or objects by thought.";
+            Level = 5;
         }
 
         public override bool Cast()
