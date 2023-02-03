@@ -15,7 +15,7 @@ namespace RuneMagic.Source
     public class Scroll : Object, IMagicItem
     {
         public Spell Spell { get; set; }
-
+        public float Charges { get; set; }
         public Scroll() : base()
         {
             InitializeSpell();

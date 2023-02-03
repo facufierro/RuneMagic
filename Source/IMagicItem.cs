@@ -8,7 +8,7 @@ namespace RuneMagic.Source
     {
         public string Name { get; set; }
         public Spell Spell { get; set; }
-
+        public float Charges { get; set; }
         public void InitializeSpell();
         public void Activate();
         public bool Fizzle();

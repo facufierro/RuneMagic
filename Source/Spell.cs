@@ -24,7 +24,7 @@ namespace RuneMagic.Source
         public School School { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
-        public int Level { get; set; }
+        public int Level { get; set; } = 1;
 
         public abstract bool Cast();
 

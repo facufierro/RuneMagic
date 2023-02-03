@@ -15,6 +15,7 @@ namespace RuneMagic.Source
         public Spell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
+        public bool RunemasterActive { get; set; } = false;
 
         public Rune() : base()
         {
@@ -53,11 +54,24 @@ namespace RuneMagic.Source
         public void Activate()
         {
             if (!Fizzle())
-                if (Spell.Cast() && Charges > 0)
+                if (Math.Floor(Charges) > 0)
                 {
-                    RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
-                    Charges--;
+                    if (Spell.Cast())
+                    {
+                        if (RunemasterActive)
+                        {
+                            if (Math.Floor(Charges) >= 3)
+                                Charges -= 3;
+                            else
+                                Charges--;
+
+                        }
+                        else
+                            Charges--;
+                        RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
+                    }
                 }
+
         }
         public bool Fizzle()
         {
@@ -86,6 +100,13 @@ namespace RuneMagic.Source
                 Charges = ChargesMax;
             if (Charges < 0)
                 Charges = 0;
+
+            if (RunemasterActive && Charges < 3)
+            {
+                RunemasterActive = false;
+                Spell.CastingTime = 1;
+            }
+
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
@@ -106,14 +127,18 @@ namespace RuneMagic.Source
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
             DrawCharges(spriteBatch, location, layerDepth);
-            DrawCastbar(spriteBatch, location, Game1.player);
-
-            //if (RuneMagic.PlayerStats.runeMasterActive)
-            //{
-            //    spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 400, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
 
 
-            //}
+            if (RunemasterActive)
+            {
+                spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 400, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
+
+            }
+            else
+            {
+                if (Charges >= 1)
+                    DrawCastbar(spriteBatch, location, Game1.player);
+            }
         }
         public override bool canBeShipped()
         {

@@ -33,9 +33,9 @@ namespace RuneMagic.Source
                 if (keyboardState.IsKeyDown(Keys.R))
                 {
 
-                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && ItemHeld is Scroll)
+                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && item is Scroll)
                         RuneMagic.Farmer.CanMove = false;
-                    else if (ItemHeld is not Scroll)
+                    else if (item is not Scroll && item.Charges >= 1)
                         RuneMagic.Farmer.CanMove = false;
 
 

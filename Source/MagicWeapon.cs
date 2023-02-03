@@ -46,10 +46,6 @@ namespace RuneMagic.Source
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
         }
-        public void Use()
-        {
-            RuneMagic.PlayerStats.ItemHeld = this;
-        }
         public void Activate()
         {
             if (Spell.Cast() && Charges > 0)
@@ -75,7 +71,7 @@ namespace RuneMagic.Source
 
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.PlayerStats.ItemHeld == this)
+            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.Farmer.CurrentItem == this)
             {
                 var castingTime = Spell.CastingTime;
                 var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);

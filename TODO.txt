@@ -1,27 +1,21 @@
 ﻿
 High priority		
-
--Finish skills
-	-Implement professions	
-	
-Low priority
 -Add magic weapons
--Improve magic item registration code
 -Add more magic spells
 -Add a rune crack system
 -Mod compatibility with MARGO
 -Add interfaces
 -add sounds
+-Animations for the  player
+
 -Add configuration menu
--animate casting
+	
 
 Maybe
 -Add spellbooks and rune pouches
 -Add magic armor
--Add potions
 -Add monsters
 -Add bosses
--Animations for the  player
 -Add Rituals and rituals altar
 -add casting interrupt
 -add channeling mechanic

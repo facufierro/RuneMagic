@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using RuneMagic.Source;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -17,7 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Object = StardewValley.Object;
 
-namespace RuneMagic
+namespace RuneMagic.Source
 {
     public sealed class RuneMagic : Mod
     {
@@ -28,7 +27,7 @@ namespace RuneMagic
         public static List<Spell> Spells;
 
         public static JsonAssets.IApi JsonAssetsApi;
-        public static SpaceCore.IApi SpaceCoreApi;
+        public static IApi SpaceCoreApi;
 
         public override void Entry(IModHelper helper)
         {
@@ -54,7 +53,7 @@ namespace RuneMagic
         {
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
-            SpaceCoreApi = Helper.ModRegistry.GetApi<SpaceCore.IApi>("spacechase0.SpaceCore");
+            SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
@@ -176,7 +175,25 @@ namespace RuneMagic
         {
             if (Context.IsWorldReady)
             {
-                //if shift+R is pressed
+                if (e.Button == SButton.Q)
+                {
+                    if (Farmer.HasCustomProfession(MagicSkill.Runemaster) && Farmer.CurrentItem is Rune rune)
+                    {
+
+                        if (!rune.RunemasterActive && rune.Charges >= 3)
+                        {
+                            rune.RunemasterActive = true;
+                            rune.Spell.CastingTime = 0.1f;
+                        }
+                        else
+                        {
+                            rune.RunemasterActive = false;
+                            rune.Spell.CastingTime = 1;
+
+
+                        }
+                    }
+                }
 
 
                 if (e.Button == SButton.F5)
@@ -302,7 +319,7 @@ namespace RuneMagic
 
             var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
 
-            string rootPath = Path.Combine(RuneMagic.Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
+            string rootPath = Path.Combine(Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
             string fileName = "content.json";
             string fullPath = Path.Combine(rootPath, fileName);
 
