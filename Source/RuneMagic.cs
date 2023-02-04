@@ -21,13 +21,13 @@ namespace RuneMagic.Source
     public sealed class RuneMagic : Mod
     {
 
-        public static RuneMagic Instance;
-        public static PlayerStats PlayerStats = new();
-        public static Farmer Farmer;
-        public static List<Spell> Spells;
+        public static RuneMagic Instance { get; private set; }
+        public static PlayerStats PlayerStats { get; private set; } = new PlayerStats();
+        public static Farmer Farmer { get; private set; }
+        public static List<ISpell> Spells { get; private set; }
 
-        public static JsonAssets.IApi JsonAssetsApi;
-        public static IApi SpaceCoreApi;
+        public static JsonAssets.IApi JsonAssetsApi { get; private set; }
+        public static IApi SpaceCoreApi { get; private set; }
 
         public override void Entry(IModHelper helper)
         {
@@ -39,11 +39,13 @@ namespace RuneMagic.Source
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
             helper.Events.GameLoop.Saving += OnSaving;
-            SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
-            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
+
+            SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
+            SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
+
             PlayerStats.MagicSkill = new MagicSkill();
             Skills.RegisterSkill(PlayerStats.MagicSkill);
         }
@@ -57,7 +59,6 @@ namespace RuneMagic.Source
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
-            SpaceCoreApi.RegisterSerializerType(typeof(Spell));
         }
         private void OnItemsRegistered(object sender, EventArgs e)
         {
@@ -219,10 +220,11 @@ namespace RuneMagic.Source
         public static void RegisterSpells()
         {
             var spells = typeof(RuneMagic).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Source.Spells").Select(t => t.Name).ToList();
-            Spells = new List<Spell>();
+            Spells = new List<ISpell>();
             for (int i = 0; i < spells.Count; i++)
             {
-                Spells.Add((Spell)Activator.CreateInstance(Type.GetType($"RuneMagic.Source.Spells.{spells[i]}")));
+                Spells.Add((ISpell)Activator.CreateInstance(Type.GetType($"RuneMagic.Source.Spells.{spells[i]}")));
+                Instance.Monitor.Log($"{Spells[i].Name}", LogLevel.Alert);
             }
         }
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)

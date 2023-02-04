@@ -1,9 +1,12 @@
-﻿
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SpaceCore;
+using StardewValley;
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 using System.Xml.Serialization;
+using Object = StardewValley.Object;
+using System.Collections.Generic;
 
 namespace RuneMagic.Source
 {
@@ -17,25 +20,16 @@ namespace RuneMagic.Source
         Illusion, //creates illusions (invisibility, phantoms)
     }
 
-    [XmlType("Mods_Spell")]
-    public abstract class Spell
+    public interface ISpell
     {
         public string Name { get; set; }
         public School School { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
-        public int Level { get; set; } = 1;
+        public int Level { get; set; }
+        public int ProjectileNumber { get; set; }
 
         public abstract bool Cast();
-
-        public Spell()
-        {
-
-            CastingTime = 1f;
-            Level = 1;
-
-        }
-
         public List<Color> GetColor()
         {
             List<Color> colors = new List<Color>();
@@ -71,9 +65,5 @@ namespace RuneMagic.Source
                     return colors;
             }
         }
-
-
-
-
     }
 }

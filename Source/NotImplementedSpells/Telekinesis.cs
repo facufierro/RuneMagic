@@ -1,10 +1,6 @@
-﻿
-
-using StardewValley;
-
-namespace RuneMagic.Source.Spells
+﻿namespace RuneMagic.Source.NotImplementedSpells
 {
-    public class Teleportation : ISpell
+    public class Telekinesis : ISpell
     {
         public string Name { get; set; }
         public School School { get; set; }
@@ -13,21 +9,18 @@ namespace RuneMagic.Source.Spells
         public int Level { get; set; }
         public int ProjectileNumber { get; set; }
 
-        public Teleportation() : base()
+        public Telekinesis() : base()
         {
-            Name = "Teleportation";
+            Name = "Telekinesis";
             School = School.Alteration;
-            Description = "Teleports the caster to their home.";
-            Level = 7;
-            CastingTime = 5;
+            Description = "You gain the ability to move or manipulate creatures or objects by thought.";
+            Level = 5;
         }
+
 
         public bool Cast()
         {
-            Game1.warpFarmer("FarmHouse", 4, 3, false);
-            return true;
-
-
+            return false;
         }
     }
 }

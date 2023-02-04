@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
+using StardewModdingAPI;
 using StardewValley;
 using System;
 using System.Reflection;
@@ -12,7 +13,8 @@ namespace RuneMagic.Source
     [XmlType("Mods_Rune")]
     public class Rune : Object, IMagicItem
     {
-        public Spell Spell { get; set; }
+        [XmlIgnore]
+        public ISpell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
         public bool RunemasterActive { get; set; } = false;
@@ -20,7 +22,7 @@ namespace RuneMagic.Source
         public Rune() : base()
         {
             if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 30;
+                ChargesMax = 10;
             else
                 ChargesMax = 5;
             Charges = ChargesMax;
@@ -29,7 +31,7 @@ namespace RuneMagic.Source
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 30;
+                ChargesMax = 10;
             else
                 ChargesMax = 5;
             Charges = ChargesMax;
@@ -41,12 +43,13 @@ namespace RuneMagic.Source
         {
 
             string spellName = Name[8..];
-            spellName = spellName.Replace(" ", "");
+
             foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Name == spellName)
                 {
                     Spell = spell;
+                    RuneMagic.Instance.Monitor.Log($"{spell.Name} Initialized", LogLevel.Debug);
                     break;
                 }
             }

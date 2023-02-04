@@ -14,7 +14,8 @@ namespace RuneMagic.Source
     [XmlType("Mods_Scroll")]
     public class Scroll : Object, IMagicItem
     {
-        public Spell Spell { get; set; }
+        [XmlIgnore]
+        public ISpell Spell { get; set; }
         public float Charges { get; set; }
         public Scroll() : base()
         {

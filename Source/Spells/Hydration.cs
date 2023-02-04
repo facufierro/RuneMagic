@@ -7,8 +7,16 @@ using StardewValley.TerrainFeatures;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Hydration : Spell
+    public class Hydration : ISpell
     {
+        public string Name { get; set; }
+        public School School { get; set; }
+        public string Description { get; set; }
+        public float CastingTime { get; set; }
+        public int Level { get; set; }
+        public int ProjectileNumber { get; set; }
+
+
         public Hydration() : base()
         {
             Name = "Hydration";
@@ -16,7 +24,7 @@ namespace RuneMagic.Source.Spells
             Description = "Water a tile at the cursor.";
             Level = 1;
         }
-        public override bool Cast()
+        public bool Cast()
         {
             var Cursor = Game1.currentCursorTile;
             if (Game1.currentLocation.terrainFeatures.ContainsKey(Cursor) && Game1.currentLocation.terrainFeatures[Cursor] is HoeDirt)

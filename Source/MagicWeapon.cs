@@ -14,7 +14,8 @@ namespace RuneMagic.Source
     [XmlType("Mods_MagicWeapon")]
     public class MagicWeapon : MeleeWeapon, IMagicItem
     {
-        public Spell Spell { get; set; }
+        [XmlIgnore]
+        public ISpell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
 
@@ -33,9 +34,9 @@ namespace RuneMagic.Source
 
         public void InitializeSpell()
         {
-            List<Spell> apprenticeSpells = new List<Spell>();
-            List<Spell> adeptSpells = new List<Spell>();
-            List<Spell> masterSpells = new List<Spell>();
+            List<ISpell> apprenticeSpells = new List<ISpell>();
+            List<ISpell> adeptSpells = new List<ISpell>();
+            List<ISpell> masterSpells = new List<ISpell>();
             foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Level >= 1 && spell.Level <= 2)

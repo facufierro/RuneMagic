@@ -1,6 +1,5 @@
 ﻿
 High priority		
--Add magic weapons
 -Add more magic spells
 -Add a rune crack system
 -Mod compatibility with MARGO

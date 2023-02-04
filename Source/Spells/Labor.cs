@@ -6,8 +6,14 @@ using StardewValley.TerrainFeatures;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Labor : Spell
+    public class Labor : ISpell
     {
+        public string Name { get; set; }
+        public School School { get; set; }
+        public string Description { get; set; }
+        public float CastingTime { get; set; }
+        public int Level { get; set; }
+        public int ProjectileNumber { get; set; }
         public Labor() : base()
         {
             Name = "Labor";
@@ -16,7 +22,7 @@ namespace RuneMagic.Source.Spells
             Level = 1;
 
         }
-        public override bool Cast()
+        public  bool Cast()
         {
             var Cursor = Game1.currentCursorTile;
 
