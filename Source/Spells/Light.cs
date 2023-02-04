@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.Source.Spells
 {
-    public class CandleLight : ISpell
+    public class Light : ISpell
     {
 
 
@@ -22,9 +22,8 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
 
-        public CandleLight()
+        public Light()
         {
             Name = "Light";
             School = School.Conjuration;
@@ -37,7 +36,7 @@ namespace RuneMagic.Source.Spells
             //get cursorlocation
             var cursorLocation = Game1.currentCursorTile;
             //place a Light object at cursorlocation
-            var light = new SpellEffects.CandleLightEffect(cursorLocation, 0, false);
+            var light = new SpellEffects.LightEffect(cursorLocation, 0, false);
             Game1.currentLocation.objects.Add(cursorLocation, light);
 
 

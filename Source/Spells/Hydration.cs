@@ -14,7 +14,6 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
 
 
         public Hydration() : base()
@@ -31,13 +30,11 @@ namespace RuneMagic.Source.Spells
             {
                 HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[Cursor];
                 dirt.state.Value = HoeDirt.watered;
-
                 return true;
             }
             else
             {
                 return false;
-
             }
         }
     }

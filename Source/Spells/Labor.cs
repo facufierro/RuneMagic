@@ -13,16 +13,14 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
         public Labor() : base()
         {
             Name = "Labor";
             School = School.Conjuration;
             Description = "Creates a hoe dirt tile at the cursor.";
             Level = 1;
-
         }
-        public  bool Cast()
+        public bool Cast()
         {
             var Cursor = Game1.currentCursorTile;
 
@@ -35,7 +33,6 @@ namespace RuneMagic.Source.Spells
             {
                 return false;
             }
-
         }
     }
 }

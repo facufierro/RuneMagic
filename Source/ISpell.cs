@@ -1,12 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using StardewValley;
-using System;
 using System.Reflection;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RuneMagic.Source
 {
@@ -27,7 +30,6 @@ namespace RuneMagic.Source
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
 
         public abstract bool Cast();
         public List<Color> GetColor()

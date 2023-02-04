@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.Source.SpellEffects
 {
-    public class CandleLightEffect : Torch, ISpellEffect
+    public class LightEffect : Torch, ISpellEffect
     {
         public int Timer { get; set; } = 0;
         public int Duration { get; set; } = 10;
         public int Cooldown { get; set; }
 
-        public CandleLightEffect()
+        public LightEffect()
         {
 
         }
-        public CandleLightEffect(Vector2 tileLocation, int index, bool bigCraftable)
+        public LightEffect(Vector2 tileLocation, int index, bool bigCraftable)
           : base(tileLocation, index)
         {
             boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);

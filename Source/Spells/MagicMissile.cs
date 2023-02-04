@@ -14,7 +14,6 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
 
         public MagicMissile() : base()
         {
@@ -29,11 +28,11 @@ namespace RuneMagic.Source.Spells
         }
         public bool Cast()
         {
-            ProjectileNumber = RuneMagic.Farmer.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
+            var projectileNumber = RuneMagic.Farmer.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
             var bonusDamage = RuneMagic.Farmer.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
             var minDamage = 1;
             var maxDamage = 4;
-            for (int i = 0; i < ProjectileNumber; i++)
+            for (int i = 0; i < projectileNumber; i++)
                 Game1.currentLocation.projectiles.Add(new SpellProjectile(Game1.player, "magic_missile", minDamage, maxDamage, bonusDamage, 8, 400, 3, true, ""));
             return true;
         }

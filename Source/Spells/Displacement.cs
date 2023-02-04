@@ -15,7 +15,6 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public int ProjectileNumber { get; set; }
         public Displacement() : base()
         {
             Name = "Displacement";
