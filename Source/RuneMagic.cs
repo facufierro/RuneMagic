@@ -219,12 +219,14 @@ namespace RuneMagic.Source
         //Registering Methods
         public static void RegisterSpells()
         {
-            var spells = typeof(RuneMagic).Assembly.GetTypes().Where(t => t.Namespace == "RuneMagic.Source.Spells").Select(t => t.Name).ToList();
-            Spells = new List<ISpell>();
-            for (int i = 0; i < spells.Count; i++)
+            var spellTypes = typeof(RuneMagic).Assembly
+                .GetTypes()
+                .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(ISpell).IsAssignableFrom(t));
+
+            Spells = spellTypes.Select(t => (ISpell)Activator.CreateInstance(t)).ToList();
+            foreach (var spell in Spells)
             {
-                Spells.Add((ISpell)Activator.CreateInstance(Type.GetType($"RuneMagic.Source.Spells.{spells[i]}")));
-                Instance.Monitor.Log($"{Spells[i].Name}", LogLevel.Alert);
+                Instance.Monitor.Log(spell.Name, LogLevel.Alert);
             }
         }
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)

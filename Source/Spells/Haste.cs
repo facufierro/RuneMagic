@@ -1,6 +1,9 @@
 ﻿
 using SpaceCore;
 using StardewValley;
+using StardewValley.Menus;
+using System.Linq;
+using System.Threading;
 
 namespace RuneMagic.Source.Spells
 {
@@ -23,13 +26,16 @@ namespace RuneMagic.Source.Spells
 
         public bool Cast()
         {
-            if (Game1.buffsDisplay.hasBuff(2))
+            var buff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 10, "Glyph of Haste", "Glyph of Haste");
+            //if the player already has the buff, refresh it
+            if (Game1.buffsDisplay.otherBuffs.Any(b => b.which == buff.which))
             {
-                return false;
+                Game1.buffsDisplay.otherBuffs.First(b => b.which == buff.which).millisecondsDuration = buff.millisecondsDuration;
+                return true;
             }
             else
             {
-                Game1.buffsDisplay.addOtherBuff(new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 10, "Glyph of Haste", "Glyph of Haste"));
+                Game1.buffsDisplay.addOtherBuff(buff);
                 return true;
             }
         }
