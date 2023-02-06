@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.Source.NotImplementedSpells
 {
-    public class Storm
+    public class Storm : ISpell
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public School School { get; set; }
+        public float CastingTime { get; set; }
+        public int Level { get; set; }
+        public ISpellEffect Effect { get; set; }
+
+        public bool Cast()
+        {
+            return false;
+        }
     }
 }
