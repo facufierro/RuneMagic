@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 using System.Threading.Tasks;
+using RuneMagic.Source.Interfaces;
 
 namespace RuneMagic.Source.Spells
 {
@@ -22,6 +23,7 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+        public ISpellEffect Effect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Light()
         {

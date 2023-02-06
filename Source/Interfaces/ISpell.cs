@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 using Object = StardewValley.Object;
 using System.Threading.Tasks;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Interfaces
 {
     public enum School
     {
@@ -30,7 +30,7 @@ namespace RuneMagic.Source
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-
+        public ISpellEffect Effect { get; set; }
         public abstract bool Cast();
         public List<Color> GetColor()
         {
@@ -67,5 +67,6 @@ namespace RuneMagic.Source
                     return colors;
             }
         }
+
     }
 }

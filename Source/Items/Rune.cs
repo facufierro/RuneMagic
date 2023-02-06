@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Interfaces;
+using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
@@ -8,7 +10,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Items
 {
     [XmlType("Mods_Rune")]
     public class Rune : Object, IMagicItem
@@ -21,7 +23,7 @@ namespace RuneMagic.Source
 
         public Rune() : base()
         {
-            if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -30,7 +32,7 @@ namespace RuneMagic.Source
         }
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runelord))
+            if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
                 ChargesMax = 10;
             else
                 ChargesMax = 5;
@@ -71,7 +73,7 @@ namespace RuneMagic.Source
                         }
                         else
                             Charges--;
-                        RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
+                        Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     }
                 }
 
@@ -92,9 +94,11 @@ namespace RuneMagic.Source
         }
         public void Update()
         {
+
+            //Charges
             if (Charges < ChargesMax)
             {
-                if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Runesmith))
+                if (Game1.player.HasCustomProfession(MagicSkill.Runesmith))
                     Charges += 0.0010f;
                 else
                     Charges += 0.0005f;
@@ -103,7 +107,7 @@ namespace RuneMagic.Source
                 Charges = ChargesMax;
             if (Charges < 0)
                 Charges = 0;
-
+            //Runemaster
             if (RunemasterActive && Charges < 3)
             {
                 RunemasterActive = false;
@@ -113,7 +117,7 @@ namespace RuneMagic.Source
         }
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.Farmer.CurrentItem == this)
+            if (RuneMagic.PlayerStats.IsCasting && Game1.player.CurrentItem == this)
             {
                 var castingTime = Spell.CastingTime;
                 var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);

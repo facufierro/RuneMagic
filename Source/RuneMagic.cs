@@ -1,30 +1,30 @@
 ﻿using JsonAssets.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
+using RuneMagic.Source.Interfaces;
+using RuneMagic.Source.Items;
+using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using Object = StardewValley.Object;
 
 namespace RuneMagic.Source
 {
     public sealed class RuneMagic : Mod
     {
-
         public static RuneMagic Instance { get; private set; }
         public static PlayerStats PlayerStats { get; private set; } = new PlayerStats();
-        public static Farmer Farmer { get; private set; }
         public static List<ISpell> Spells { get; private set; }
+
+        public static List<Texture2D> RuneTextures { get; private set; }
+        public static Dictionary<string, Texture2D> SpellTextures { get; private set; }
 
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
@@ -47,7 +47,20 @@ namespace RuneMagic.Source
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
 
             PlayerStats.MagicSkill = new MagicSkill();
-            Skills.RegisterSkill(PlayerStats.MagicSkill);
+            SpaceCore.Skills.RegisterSkill(PlayerStats.MagicSkill);
+
+            RuneTextures = new List<Texture2D>();
+            //add all the png files from assets/Runes to the RuneTextures list
+            foreach (var file in Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets", "Runes")))
+            {
+                RuneTextures.Add(Instance.Helper.ModContent.Load<Texture2D>($"assets/Runes/{Path.GetFileName(file)}"));
+            }
+            SpellTextures = new Dictionary<string, Texture2D>();
+            //add all the png files from assets/Runes to the RuneTextures list
+            foreach (var file in Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets", "Spells")))
+            {
+                SpellTextures.Add(Path.GetFileNameWithoutExtension(file), Instance.Helper.ModContent.Load<Texture2D>($"assets/Spells/{Path.GetFileName(file)}"));
+            }
         }
 
         //Event Handlers
@@ -60,15 +73,13 @@ namespace RuneMagic.Source
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
         }
+
         private void OnItemsRegistered(object sender, EventArgs e)
         {
             int textureIndex = 0;
             foreach (var spell in Spells)
             {
-
-                int textureCount = Directory.GetFiles(Path.Combine(Helper.DirectoryPath, "assets", "Runes")).Length;
-
-                var texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Runes/rune-{textureIndex}.png");
+                var texture = RuneTextures[textureIndex];
                 Color[] data = new Color[texture.Width * texture.Height];
                 texture.GetData(data);
                 for (int j = 0; j < data.Length; ++j)
@@ -82,7 +93,7 @@ namespace RuneMagic.Source
                 RegisterJasonAssets(typeof(ObjectData), $"Rune of {spell.Name}", $"{spell.Description}", texture,
                 new() { new ObjectIngredient() { Object = "Blank Rune", Count = 1 }, new ObjectIngredient() { Object = "Magic Dust", Count = 10 }, });
                 textureIndex++;
-                if (textureIndex >= textureCount)
+                if (textureIndex >= RuneTextures.Count)
                     textureIndex = 0;
 
                 texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/scroll.png");
@@ -98,7 +109,6 @@ namespace RuneMagic.Source
                 texture.SetData(data);
                 RegisterJasonAssets(typeof(ObjectData), $"{spell.Name} Scroll", $"{spell.Description}", texture,
                        new() { new ObjectIngredient() { Object = "Blank Parchment", Count = 1 }, new ObjectIngredient() { Object = "Magic Dust", Count = 1 }, });
-
             }
 
             //Register Crafting Stations
@@ -118,43 +128,40 @@ namespace RuneMagic.Source
             RegisterJasonAssets(typeof(WeaponData), "Apprentice Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/apprentice_staff.png"), null, WeaponType.Club, 10);
             RegisterJasonAssets(typeof(WeaponData), "Adept Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/adept_staff.png"), null, WeaponType.Club, 80);
             RegisterJasonAssets(typeof(WeaponData), "Master Staff", "A stick with strange markings in it.", Instance.Helper.ModContent.Load<Texture2D>("assets/Items/master_staff.png"), null, WeaponType.Club, 120);
-
         }
+
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            Farmer = Game1.player;
-
         }
+
         private void OnBlankSave(object sender, EventArgs e)
         {
-            Farmer = Game1.player;
-            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
-            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
-            Farmer.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-            Farmer.addItemToInventory(new Object(390, 2));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
+            Game1.player.addItemToInventory(new Object(390, 2));
         }
+
         private void OnSaving(object sender, SavingEventArgs e)
         {
-            foreach (var item in Farmer.Items)
+            foreach (var item in Game1.player.Items)
             {
                 if (item is IMagicItem)
                     (item as IMagicItem).Spell = null;
             }
-
         }
+
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-
             if (Context.IsWorldReady)
             {
+
                 ManageMagicItems(Game1.player, JsonAssetsApi);
-                PlayerStats.Cast(Farmer.CurrentItem as IMagicItem);
-
-
+                PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
 
             }
-
         }
+
         private void OnEventFinished(object sender, EventArgs e)
         {
             if (Game1.CurrentEvent.id == 15065001)
@@ -162,10 +169,11 @@ namespace RuneMagic.Source
                 Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
             }
         }
+
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             PlayerStats.LearnRecipes();
-            foreach (Item item in Farmer.Items)
+            foreach (Item item in Game1.player.Items)
             {
                 if (item is IMagicItem magicItem && magicItem.Spell == null)
                 {
@@ -174,16 +182,20 @@ namespace RuneMagic.Source
             }
 
 
+
+
         }
+
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (Context.IsWorldReady)
             {
+
+
                 if (e.Button == SButton.Q)
                 {
-                    if (Farmer.HasCustomProfession(MagicSkill.Runemaster) && Farmer.CurrentItem is Rune rune)
+                    if (Game1.player.HasCustomProfession(MagicSkill.Runemaster) && Game1.player.CurrentItem is Rune rune)
                     {
-
                         if (!rune.RunemasterActive && rune.Charges >= 3)
                         {
                             rune.RunemasterActive = true;
@@ -193,24 +205,18 @@ namespace RuneMagic.Source
                         {
                             rune.RunemasterActive = false;
                             rune.Spell.CastingTime = 1;
-
-
                         }
                     }
                 }
 
-
                 if (e.Button == SButton.F5)
                 {
-                    Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                    Monitor.Log(Farmer.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
+                    Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
                 }
-
             }
-
-
-
         }
+
         private void OnWarped(object sender, WarpedEventArgs e)
         {
             WizardEvent(e.NewLocation);
@@ -229,6 +235,7 @@ namespace RuneMagic.Source
                 Instance.Monitor.Log(spell.Name, LogLevel.Alert);
             }
         }
+
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)
         {
             if (dataType == typeof(ObjectData))
@@ -254,7 +261,6 @@ namespace RuneMagic.Source
                     Recipe = recipe
                 });
             }
-
             else if (dataType == typeof(BigCraftableData))
             {
                 BigCraftableRecipe recipe = null;
@@ -296,15 +302,11 @@ namespace RuneMagic.Source
                     CanTrash = true,
                     MineDropVar = mineDropVar,
                     MineDropMinimumLevel = 10,
-
-
-
-
                 });
         }
+
         public static void RegisterCustomCraftingStations()
         {
-
             var runeRecipes = new List<string>() { "Blank Rune" };
             var scrollRecipes = new List<string>() { "Blank Parchment" };
 
@@ -312,7 +314,7 @@ namespace RuneMagic.Source
             {
                 if (spell.Name.Contains("_"))
                 {
-                    spell.Name.Replace("_", " ");
+                    _ = spell.Name.Replace("_", " ");
                 }
                 runeRecipes.Add($"Rune of {spell.Name}");
                 scrollRecipes.Add($"{spell.Name} Scroll");
@@ -329,7 +331,6 @@ namespace RuneMagic.Source
             string fullPath = Path.Combine(rootPath, fileName);
 
             File.WriteAllText(fullPath, json);
-
         }
 
         //Game Management Methods
@@ -359,16 +360,15 @@ namespace RuneMagic.Source
                     if (inventory[i] is IMagicItem magicItem)
                     {
                         magicItem.Update();
-
+                        magicItem.Spell?.Effect?.Update();
                     }
-
-
                 }
         }
+
         public static void WizardEvent(GameLocation location)
         {
             Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Farmer.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
@@ -385,12 +385,10 @@ namespace RuneMagic.Source
                        $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
-                Farmer.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                Farmer.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
+                Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+                Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
                 PlayerStats.MagicLearned = true;
             }
         }
     }
 }
-
-

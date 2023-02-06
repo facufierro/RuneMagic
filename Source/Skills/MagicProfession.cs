@@ -1,4 +1,4 @@
-﻿namespace RuneMagic.Source
+﻿namespace RuneMagic.Source.Skills
 {
     public class MagicProfession : SpaceCore.Skills.Skill.Profession
     {

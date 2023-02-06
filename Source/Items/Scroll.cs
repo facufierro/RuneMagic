@@ -2,6 +2,8 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Interfaces;
+using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewValley;
 using System;
@@ -9,7 +11,7 @@ using System.Reflection;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Items
 {
     [XmlType("Mods_Scroll")]
     public class Scroll : Object, IMagicItem
@@ -39,7 +41,7 @@ namespace RuneMagic.Source
                 {
 
                     Spell = spell;
-                    if (RuneMagic.Farmer.HasCustomProfession(MagicSkill.Scribe))
+                    if (Game1.player.HasCustomProfession(MagicSkill.Scribe))
                         Spell.CastingTime *= 0.8f;
                     break;
                 }
@@ -51,14 +53,17 @@ namespace RuneMagic.Source
             if (Spell.Cast())
             {
                 //remove an item stack from this object if Farmer doesnt have Lorekeeper profession and if it does give it a 20% chance of not consuming the scroll
-                if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
+                if (!Game1.player.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
                     Stack--;
                 if (Stack <= 0)
-                    RuneMagic.Farmer.removeItemFromInventory(this);
+                    Game1.player.removeItemFromInventory(this);
 
             }
         }
-        public void Update() { }
+        public void Update()
+        {
+          
+        }
         public bool Fizzle()
         {
             return false;
@@ -68,7 +73,7 @@ namespace RuneMagic.Source
             //draw a castbar on the item if isCasting is true taking into account that if player has Scribe profession the castbar is 50% shorter
             if (RuneMagic.PlayerStats.IsCasting)
             {
-                if (RuneMagic.PlayerStats.IsCasting && RuneMagic.Farmer.CurrentItem == this)
+                if (RuneMagic.PlayerStats.IsCasting && Game1.player.CurrentItem == this)
                 {
                     var castingTime = Spell.CastingTime;
                     var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);

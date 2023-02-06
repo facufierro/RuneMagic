@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Interfaces;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Items
 {
     [XmlType("Mods_MagicWeapon")]
     public class MagicWeapon : MeleeWeapon, IMagicItem
@@ -67,7 +68,7 @@ namespace RuneMagic.Source
         {
             if (Spell.Cast() && Charges > 0)
             {
-                RuneMagic.Farmer.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
+                Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                 Charges--;
             }
 
@@ -88,7 +89,7 @@ namespace RuneMagic.Source
 
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting && RuneMagic.Farmer.CurrentItem == this)
+            if (RuneMagic.PlayerStats.IsCasting && Game1.player.CurrentItem == this)
             {
                 var castingTime = Spell.CastingTime;
                 var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
@@ -104,7 +105,7 @@ namespace RuneMagic.Source
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
             DrawCharges(spriteBatch, location, layerDepth);
-            DrawCastbar(spriteBatch, location, RuneMagic.Farmer);
+            DrawCastbar(spriteBatch, location, Game1.player);
         }
     }
 }

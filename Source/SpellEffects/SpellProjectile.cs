@@ -6,9 +6,9 @@ using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.SpellEffects
 {
-    internal class SpellProjectile : Projectile
+    public class SpellProjectile : Projectile
     {
         /*********
         ** Fields

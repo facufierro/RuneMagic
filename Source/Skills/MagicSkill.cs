@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using static SpaceCore.Skills;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Skills
 {
     public class MagicSkill : Skill
     {

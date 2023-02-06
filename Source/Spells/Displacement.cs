@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
+using RuneMagic.Source.Interfaces;
 using SpaceCore;
 using StardewValley;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace RuneMagic.Source.Spells
     {
         public string Name { get; set; }
         public School School { get; set; }
+        public ISpellEffect Effect { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+
         public Displacement() : base()
         {
             Name = "Displacement";
@@ -29,7 +32,7 @@ namespace RuneMagic.Source.Spells
             var cursorTile = Game1.currentCursorTile;
             if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(cursorTile))
             {
-                RuneMagic.Farmer.Position = new Vector2(cursorTile.X * Game1.tileSize, cursorTile.Y * Game1.tileSize);
+                Game1.player.Position = new Vector2(cursorTile.X * Game1.tileSize, cursorTile.Y * Game1.tileSize);
                 return true;
             }
             else

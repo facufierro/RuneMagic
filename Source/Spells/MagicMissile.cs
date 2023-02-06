@@ -1,6 +1,8 @@
 ﻿
 
 using JsonAssets.Data;
+using RuneMagic.Source.Interfaces;
+using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
 using System;
@@ -14,6 +16,7 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+        public ISpellEffect Effect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public MagicMissile() : base()
         {
@@ -28,8 +31,8 @@ namespace RuneMagic.Source.Spells
         }
         public bool Cast()
         {
-            var projectileNumber = RuneMagic.Farmer.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
-            var bonusDamage = RuneMagic.Farmer.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
+            var projectileNumber = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
+            var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
             var minDamage = 1;
             var maxDamage = 4;
             for (int i = 0; i < projectileNumber; i++)

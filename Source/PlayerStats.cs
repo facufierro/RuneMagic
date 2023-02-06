@@ -1,10 +1,16 @@
 ﻿
 using Microsoft.Xna.Framework.Input;
+using RuneMagic.Source.Interfaces;
+using RuneMagic.Source.Items;
+using RuneMagic.Source.Skills;
 using SpaceCore;
+using SpaceShared;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Monsters;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace RuneMagic.Source
@@ -18,25 +24,36 @@ namespace RuneMagic.Source
         public float CastingTimer { get; set; } = 0;
         public int SpellAttack { get; set; }
         public int CastingFailureChance { get; set; }
-
+        public List<ISpellEffect> Effects { get; set; }
 
         public PlayerStats()
         {
-            CastingFailureChance = 12;
-            SpellAttack = 0;
+            Effects = new List<ISpellEffect>();
         }
         public void Cast(IMagicItem item)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            if (RuneMagic.Farmer.CurrentItem is IMagicItem)
+            if (Game1.player.CurrentItem is IMagicItem)
             {
                 if (keyboardState.IsKeyDown(Keys.R))
                 {
 
-                    if (!RuneMagic.Farmer.HasCustomProfession(MagicSkill.Sage) && item is Scroll)
-                        RuneMagic.Farmer.CanMove = false;
+                    if (!Game1.player.HasCustomProfession(MagicSkill.Sage) && item is Scroll)
+                    {
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.A);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.S);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.D);
+
+                    }
+
                     else if (item is not Scroll && item.Charges >= 1)
-                        RuneMagic.Farmer.CanMove = false;
+                    {
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.A);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.S);
+                        RuneMagic.Instance.Helper.Input.Suppress(SButton.D);
+                    }
 
 
                     IsCasting = true;
@@ -45,7 +62,6 @@ namespace RuneMagic.Source
                         item.Activate();
                         CastingTimer = 0;
                         IsCasting = false;
-                        RuneMagic.Farmer.CanMove = true;
                     }
                     else
                         CastingTimer += 1;
@@ -54,7 +70,6 @@ namespace RuneMagic.Source
                 {
                     CastingTimer = 0;
                     IsCasting = false;
-                    RuneMagic.Farmer.CanMove = true;
                 }
             }
 
@@ -64,7 +79,7 @@ namespace RuneMagic.Source
         public void LearnRecipes()
         {
 
-            var level = RuneMagic.Farmer.GetCustomSkillLevel(MagicSkill);
+            var level = Game1.player.GetCustomSkillLevel(MagicSkill);
 
             foreach (var spell in RuneMagic.Spells)
             {
@@ -72,22 +87,22 @@ namespace RuneMagic.Source
                 {
                     if (level >= 1)
                     {
-                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Runic Anvil"))
-                            RuneMagic.Farmer.craftingRecipes.Add("Runic Anvil", 0);
-                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Inscription Table"))
-                            RuneMagic.Farmer.craftingRecipes.Add("Inscription Table", 0);
-                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Magic Grinder"))
-                            RuneMagic.Farmer.craftingRecipes.Add("Magic Grinder", 0);
-                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Rune"))
-                            RuneMagic.Farmer.craftingRecipes.Add("Blank Rune", 0);
-                        if (!RuneMagic.Farmer.craftingRecipes.ContainsKey("Blank Parchment"))
-                            RuneMagic.Farmer.craftingRecipes.Add("Blank Parchment", 0);
+                        if (!Game1.player.craftingRecipes.ContainsKey("Runic Anvil"))
+                            Game1.player.craftingRecipes.Add("Runic Anvil", 0);
+                        if (!Game1.player.craftingRecipes.ContainsKey("Inscription Table"))
+                            Game1.player.craftingRecipes.Add("Inscription Table", 0);
+                        if (!Game1.player.craftingRecipes.ContainsKey("Magic Grinder"))
+                            Game1.player.craftingRecipes.Add("Magic Grinder", 0);
+                        if (!Game1.player.craftingRecipes.ContainsKey("Blank Rune"))
+                            Game1.player.craftingRecipes.Add("Blank Rune", 0);
+                        if (!Game1.player.craftingRecipes.ContainsKey("Blank Parchment"))
+                            Game1.player.craftingRecipes.Add("Blank Parchment", 0);
 
                     }
-                    if (!RuneMagic.Farmer.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
-                        RuneMagic.Farmer.craftingRecipes.Add($"Rune of {spell.Name}", 0);
-                    if (!RuneMagic.Farmer.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
-                        RuneMagic.Farmer.craftingRecipes.Add($"{spell.Name} Scroll", 0);
+                    if (!Game1.player.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
+                        Game1.player.craftingRecipes.Add($"Rune of {spell.Name}", 0);
+                    if (!Game1.player.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
+                        Game1.player.craftingRecipes.Add($"{spell.Name} Scroll", 0);
                 }
 
             }

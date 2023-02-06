@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Interfaces;
 using SpaceCore;
 using StardewValley;
 using StardewValley.TerrainFeatures;
@@ -13,6 +14,8 @@ namespace RuneMagic.Source.Spells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+        public ISpellEffect Effect { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
         public Labor() : base()
         {
             Name = "Labor";

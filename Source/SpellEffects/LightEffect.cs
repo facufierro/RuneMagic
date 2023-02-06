@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Interfaces;
 using StardewValley;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace RuneMagic.Source.SpellEffects
         public int Timer { get; set; } = 0;
         public int Duration { get; set; } = 10;
         public int Cooldown { get; set; }
+        public string Description { get; set; }
 
         public LightEffect()
         {
@@ -24,7 +26,10 @@ namespace RuneMagic.Source.SpellEffects
         {
             boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);
         }
-
+        public void Update()
+        {
+            throw new NotImplementedException();
+        }
         public override void updateWhenCurrentLocation(GameTime time, GameLocation environment)
         {
             base.updateWhenCurrentLocation(time, environment);
@@ -39,14 +44,12 @@ namespace RuneMagic.Source.SpellEffects
                 Timer++;
             }
         }
-        //if the object is broken dispose of it
         public override bool performToolAction(Tool t, GameLocation location)
         {
             //destroy the object
             location.objects.Remove(tileLocation.Value);
             return false;
         }
-
 
     }
 }

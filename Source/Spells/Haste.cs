@@ -1,9 +1,6 @@
-﻿
-using SpaceCore;
+﻿using RuneMagic.Source.Interfaces;
 using StardewValley;
-using StardewValley.Menus;
 using System.Linq;
-using System.Threading;
 
 namespace RuneMagic.Source.Spells
 {
@@ -11,9 +8,11 @@ namespace RuneMagic.Source.Spells
     {
         public string Name { get; set; }
         public School School { get; set; }
+        public ISpellEffect Effect { get; set; }
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+
         public Haste() : base()
         {
             Name = "Haste";

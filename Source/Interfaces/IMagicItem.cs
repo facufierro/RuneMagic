@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using System.Xml.Serialization;
 
-namespace RuneMagic.Source
+namespace RuneMagic.Source.Interfaces
 {
     public interface IMagicItem
     {
