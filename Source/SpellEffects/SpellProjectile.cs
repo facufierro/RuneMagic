@@ -14,7 +14,7 @@ namespace RuneMagic.Source.SpellEffects
         ** Fields
         *********/
         private readonly Farmer Source;
-        private NetString SpellTexture = new();
+        private readonly NetString SpellTexture = new();
         private readonly NetInt MinDamage = new();
         private readonly NetInt MaxDamage = new();
         private readonly NetInt BonusDamage = new();

@@ -32,6 +32,8 @@ namespace RuneMagic.Source
         }
         public void Cast(IMagicItem item)
         {
+            //playsound 
+
             KeyboardState keyboardState = Keyboard.GetState();
             if (Game1.player.CurrentItem is IMagicItem)
             {
@@ -60,6 +62,7 @@ namespace RuneMagic.Source
                     if (CastingTimer >= Math.Floor(item.Spell.CastingTime * 60))
                     {
                         item.Activate();
+                        Game1.playSound("flameSpell");
                         CastingTimer = 0;
                         IsCasting = false;
                     }
