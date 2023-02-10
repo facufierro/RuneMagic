@@ -21,7 +21,7 @@ namespace RuneMagic.Source.Spells
             Name = "Labor";
             School = School.Conjuration;
             Description = "Creates a hoe dirt tile at the cursor.";
-            Level = 1;
+            Level = 2;
         }
         public bool Cast()
         {

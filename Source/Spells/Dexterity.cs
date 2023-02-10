@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RuneMagic.Source.NotImplementedSpells
+namespace RuneMagic.Source.Spells
 {
     public class Dexterity : ISpell
     {
@@ -16,6 +16,17 @@ namespace RuneMagic.Source.NotImplementedSpells
         public int Level { get; set; }
         public ISpellEffect Effect { get; set; }
 
+        public Dexterity()
+        {
+            Name = "Dexterity";
+            Description = "Improves the casting speed of the caster.";
+            School = School.Enchantment;
+            CastingTime = 1;
+            Level = 3;
+           
+
+
+        }
         public bool Cast()
         {
             return false;

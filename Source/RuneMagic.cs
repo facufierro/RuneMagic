@@ -72,6 +72,7 @@ namespace RuneMagic.Source
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
+
         }
 
         private void OnItemsRegistered(object sender, EventArgs e)
@@ -226,15 +227,23 @@ namespace RuneMagic.Source
         public static void RegisterSpells()
         {
             var spellTypes = typeof(RuneMagic).Assembly
-                .GetTypes()
-                .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(ISpell).IsAssignableFrom(t));
+              .GetTypes()
+              .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(ISpell).IsAssignableFrom(t));
 
             Spells = spellTypes.Select(t => (ISpell)Activator.CreateInstance(t)).ToList();
-            foreach (var spell in Spells)
+            var spellGroups = Spells.OrderBy(s => s.Level).ThenBy(s => s.Name).GroupBy(s => s.Level);
+            Instance.Monitor.Log($"Registering Spells...", LogLevel.Debug);
+            foreach (var spellGroup in spellGroups)
             {
-                Instance.Monitor.Log(spell.Name, LogLevel.Alert);
+                Instance.Monitor.Log($"--------------Level {spellGroup.Key} Spells--------------", LogLevel.Debug);
+                foreach (var spell in spellGroup)
+                {
+                    Instance.Monitor.Log($"\t{spell.Name,-25}REGISTERED", LogLevel.Debug);
+                }
             }
         }
+
+
 
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)
         {

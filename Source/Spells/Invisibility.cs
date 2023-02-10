@@ -26,7 +26,7 @@ namespace RuneMagic.Source.Spells
             School = School.Illusion;
             Description = "Makes the caster invisible";
             CastingTime = 1.0f;
-            Level = 1;
+            Level = 6;
             ProjectileNumber = 0;
             Effect = new InvisibilityEffect(10);
         }
