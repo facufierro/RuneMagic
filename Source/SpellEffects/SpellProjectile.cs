@@ -18,6 +18,7 @@ namespace RuneMagic.Source.SpellEffects
         private readonly NetInt MinDamage = new();
         private readonly NetInt MaxDamage = new();
         private readonly NetInt BonusDamage = new();
+        private readonly NetFloat Area = new();
         private readonly NetFloat Direction = new();
         private readonly NetFloat Velocity = new();
         private NetInt Range = new();
@@ -43,9 +44,9 @@ namespace RuneMagic.Source.SpellEffects
         *********/
         public SpellProjectile()
         {
-            NetFields.AddFields(SpellTexture, MinDamage, MaxDamage, BonusDamage, Direction, Velocity, Range, Spread, IsHoming, SoundHit, TextureId);
+            NetFields.AddFields(SpellTexture, MinDamage, MaxDamage, BonusDamage, Area, Direction, Velocity, Range, Spread, IsHoming, SoundHit, TextureId);
         }
-        public SpellProjectile(Farmer source, string spellTexture, int minDamage, int maxDamage, int bonusDamage, float velocity, int range, int spread, bool isHoming, string soundHit)
+        public SpellProjectile(Farmer source, string spellTexture, int minDamage, int maxDamage, int bonusDamage, int area, float velocity, int range, int spread, bool isHoming, string soundHit)
             : this()
         {
             Source = source;
@@ -53,6 +54,7 @@ namespace RuneMagic.Source.SpellEffects
             MinDamage.Value = minDamage;
             MaxDamage.Value = maxDamage;
             BonusDamage.Value = bonusDamage;
+            Area.Value = area;
             Velocity.Value = velocity;
             Range.Value = range;
             Spread.Value = spread;
@@ -77,6 +79,7 @@ namespace RuneMagic.Source.SpellEffects
                 {
                     if (character is Monster mob)
                     {
+
                         float distance = Utility.distance(mob.Position.X, CursorPosition.X, mob.Position.Y, CursorPosition.Y);
                         if (distance < nearestDistance)
                         {
@@ -90,25 +93,17 @@ namespace RuneMagic.Source.SpellEffects
 
         public override bool update(GameTime time, GameLocation location)
         {
-
-
-
             if (!seekTarget)
             {
-
-                if (time.TotalGameTime.TotalMilliseconds - creationTime > 500)
+                if (time.TotalGameTime.TotalMilliseconds - creationTime > 300)
                 {
                     seekTarget = true;
                 }
-
-
             }
 
             if (seekTarget == false)
             {
-                //Target = random position around the cursor
                 Target = RandomCursorPosition;
-
             }
             else
             {
@@ -122,11 +117,6 @@ namespace RuneMagic.Source.SpellEffects
                     Target = CursorPosition;
                 }
             }
-
-
-
-
-
             Vector2 direction = Target - position;
             direction.Normalize();
             xVelocity.Value = direction.X * Velocity;
@@ -138,11 +128,22 @@ namespace RuneMagic.Source.SpellEffects
             {
                 if (time.TotalGameTime.TotalMilliseconds > 300)
                 {
-                    //play sound 
-                    if (SoundHit.Value != "")
+                    //damage monsters in area tiles around the target if area is greater than 0
+                    if (Area > 0)
                     {
-                        Game1.playSound(SoundHit.Value);
+                        Rectangle area = new((int)((int)Target.X - (Game1.tileSize * Area)), (int)((int)Target.Y - (Game1.tileSize * Area)), (int)((int)Target.X + (Game1.tileSize * Area)), (int)((int)Target.Y + (Game1.tileSize * Area)));
+                        foreach (var character in location.characters)
+                        {
+                            if (character is Monster mob)
+                            {
+                                if (area.Contains(mob.GetBoundingBox()))
+                                {
+                                    location.damageMonster(mob.GetBoundingBox(), MinDamage.Value + BonusDamage.Value, MaxDamage.Value + BonusDamage.Value, false, Source);
+                                }
+                            }
+                        }
                     }
+                    Game1.playSound(SoundHit.Value);
                     Disappear(location);
                     return true;
                 }
@@ -183,6 +184,8 @@ namespace RuneMagic.Source.SpellEffects
 
         public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
         {
+
+            Game1.playSound(SoundHit);
             Disappear(location);
         }
 

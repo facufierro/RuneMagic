@@ -32,7 +32,7 @@ namespace RuneMagic.Source.Spells
         public bool Cast()
         {
             var projectileNumber = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
-            var spellTexture = "fireball";
+            var spellTexture = "magic_missile";
             var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
             var minDamage = 1;
             var maxDamage = 4;
