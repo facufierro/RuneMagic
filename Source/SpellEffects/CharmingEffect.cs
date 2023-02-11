@@ -28,7 +28,8 @@ namespace RuneMagic.Source.SpellEffects
 
 
         }
-
+        public void Start() { }
+        
         public void Update()
         {
             if (RuneMagic.PlayerStats.Effects.Contains(this))

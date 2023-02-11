@@ -25,6 +25,7 @@ namespace RuneMagic.Source.SpellEffects
             Duration = duration;
 
         }
+        public void Start() { }
         public void Update()
         {
             if (RuneMagic.PlayerStats.Effects.Contains(this))

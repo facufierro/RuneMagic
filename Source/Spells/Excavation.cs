@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using xTile.Dimensions;
 using xTile.Tiles;
 
-namespace RuneMagic.Source.NotImplementedSpells
+namespace RuneMagic.Source.Spells
 {
     public class Excavation : ISpell
     {
@@ -21,7 +21,7 @@ namespace RuneMagic.Source.NotImplementedSpells
         public string Description { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public ISpellEffect Effect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ISpellEffect Effect { get; set; }
 
         public Excavation() : base()
         {
@@ -35,6 +35,11 @@ namespace RuneMagic.Source.NotImplementedSpells
         {
             if (Game1.currentLocation is MineShaft)
             {
+                var currentMineLevel = Game1.mine.mineLevel;
+                //warp to currentMineLevel + 1 
+                Game1.nextMineLevel();
+
+
 
 
 

@@ -26,6 +26,7 @@ namespace RuneMagic.Source.SpellEffects
         {
             boundingBox.Value = new Rectangle((int)tileLocation.X * 64, (int)tileLocation.Y * 64, 64, 64);
         }
+        public void Start() { }
         public void Update()
         {
             throw new NotImplementedException();
