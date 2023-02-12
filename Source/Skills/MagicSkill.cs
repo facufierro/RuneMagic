@@ -82,7 +82,7 @@ namespace RuneMagic.Source.Skills
         public override List<string> GetExtraLevelUpInfo(int level)
         {
 
-            List<string> info = new List<string>();
+            List<string> info = new();
             if (level == 1)
                 info = new List<string>(){
                 $"The wizard has taught you the basics of magic." };

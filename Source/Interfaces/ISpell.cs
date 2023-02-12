@@ -1,40 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SpaceCore;
+﻿using Microsoft.Xna.Framework;
 using StardewValley;
-using System.Reflection;
-using System.Xml.Serialization;
-using Object = StardewValley.Object;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace RuneMagic.Source.Interfaces
 {
-    public enum School
-    {
-        Abjuration, //protects against magic (warding, protection)
-        Alteration, //alters reality (teleportation, tranformation of objects)
-        Conjuration, //creates objects from nothing (summons, portals)
-        Evocation, //alters the threads of magic itself (fire, lightning, arcane )
-        Enchantment, //changes the properties of objects people (enchanting, curses)
-        Illusion, //creates illusions (invisibility, phantoms)
-    }
 
     public interface ISpell
     {
         public string Name { get; set; }
-        public School School { get; set; }
         public string Description { get; set; }
+        public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public ISpellEffect Effect { get; set; }
-        public abstract bool Cast();
+        public Buff Buff { get; set; }
+
+        public bool Cast() { return false; }
+        public void Update() { }
+
         public List<Color> GetColor()
         {
-            List<Color> colors = new List<Color>();
+            List<Color> colors = new();
             switch (School)
             {
                 case School.Abjuration:

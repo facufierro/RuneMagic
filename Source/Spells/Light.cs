@@ -1,29 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SpaceCore;
+﻿using RuneMagic.Source.Interfaces;
 using StardewValley;
-using System.Reflection;
-using System.Xml.Serialization;
-using Object = StardewValley.Object;
-using System.Threading.Tasks;
-using RuneMagic.Source.Interfaces;
 
 namespace RuneMagic.Source.Spells
 {
     public class Light : ISpell
     {
-
-
         public string Name { get; set; }
-        public School School { get; set; }
         public string Description { get; set; }
+        public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public ISpellEffect Effect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Buff Buff { get; set; }
+        public void Update() { }
 
         public Light()
         {

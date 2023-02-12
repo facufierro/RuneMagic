@@ -1,22 +1,19 @@
-﻿
-
-using JsonAssets.Data;
-using RuneMagic.Source.Interfaces;
+﻿using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
-using System;
 
 namespace RuneMagic.Source.Spells
 {
     public class MagicMissile : ISpell
     {
         public string Name { get; set; }
-        public School School { get; set; }
         public string Description { get; set; }
+        public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public ISpellEffect Effect { get; set; }
+        public Buff Buff { get; set; }
+        public void Update() { }
 
         public MagicMissile() : base()
         {

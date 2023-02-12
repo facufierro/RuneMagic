@@ -1,11 +1,5 @@
 ﻿using RuneMagic.Source.Interfaces;
 using StardewValley;
-using StardewValley.Monsters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RuneMagic.Source.SpellEffects
 {
@@ -29,7 +23,7 @@ namespace RuneMagic.Source.SpellEffects
 
         }
         public void Start() { }
-        
+
         public void Update()
         {
             if (RuneMagic.PlayerStats.Effects.Contains(this))

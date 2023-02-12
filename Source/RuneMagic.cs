@@ -72,7 +72,6 @@ namespace RuneMagic.Source
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
-
         }
 
         private void OnItemsRegistered(object sender, EventArgs e)
@@ -156,10 +155,8 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-
                 ManageMagicItems(Game1.player, JsonAssetsApi);
                 PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
-
             }
         }
 
@@ -181,18 +178,12 @@ namespace RuneMagic.Source
                     magicItem.InitializeSpell();
                 }
             }
-
-
-
-
         }
 
         private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
         {
             if (Context.IsWorldReady)
             {
-
-
                 if (e.Button == SButton.Q)
                 {
                     if (Game1.player.HasCustomProfession(MagicSkill.Runemaster) && Game1.player.CurrentItem is Rune rune)
@@ -231,6 +222,7 @@ namespace RuneMagic.Source
               .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(ISpell).IsAssignableFrom(t));
 
             Spells = spellTypes.Select(t => (ISpell)Activator.CreateInstance(t)).ToList();
+
             var spellGroups = Spells.OrderBy(s => s.Level).ThenBy(s => s.Name).GroupBy(s => s.Level);
             Instance.Monitor.Log($"Registering Spells...", LogLevel.Debug);
             foreach (var spellGroup in spellGroups)
@@ -242,8 +234,6 @@ namespace RuneMagic.Source
                 }
             }
         }
-
-
 
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)
         {
@@ -369,7 +359,7 @@ namespace RuneMagic.Source
                     if (inventory[i] is IMagicItem magicItem)
                     {
                         magicItem.Update();
-                        magicItem.Spell?.Effect?.Update();
+                        magicItem.Spell?.Update();
                     }
                 }
         }

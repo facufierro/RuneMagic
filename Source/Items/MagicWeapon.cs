@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using RuneMagic.Source.Interfaces;
 using SpaceCore;
-using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Tools;
 using System;
@@ -35,9 +34,9 @@ namespace RuneMagic.Source.Items
 
         public void InitializeSpell()
         {
-            List<ISpell> apprenticeSpells = new List<ISpell>();
-            List<ISpell> adeptSpells = new List<ISpell>();
-            List<ISpell> masterSpells = new List<ISpell>();
+            List<ISpell> apprenticeSpells = new();
+            List<ISpell> adeptSpells = new();
+            List<ISpell> masterSpells = new();
             foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Level >= 1 && spell.Level <= 2)

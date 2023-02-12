@@ -2,11 +2,6 @@
 using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RuneMagic.Source.Spells
 {
@@ -17,7 +12,7 @@ namespace RuneMagic.Source.Spells
         public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
-        public ISpellEffect Effect { get; set; }
+        public Buff Buff { get; set; }
 
         public Fireball()
         {
@@ -45,5 +40,8 @@ namespace RuneMagic.Source.Spells
                 velocity, range, spread, isHoming, hitSound));
             return true;
         }
+
+        public void Update()
+        { }
     }
 }

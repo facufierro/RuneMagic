@@ -6,6 +6,13 @@ namespace RuneMagic.Source.Spells
 {
     public class Translocation : ISpell
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public School School { get; set; }
+        public float CastingTime { get; set; }
+        public int Level { get; set; }
+        public Buff Buff { get; set; }
+
         public Translocation() : base()
         {
             Name = "Translocation";
@@ -15,22 +22,13 @@ namespace RuneMagic.Source.Spells
             CastingTime = 2;
         }
 
-        public float CastingTime { get; set; }
-        public string Description { get; set; }
-        public int Level { get; set; }
-        public string Name { get; set; }
-        public School School { get; set; }
-        public ISpellEffect Effect { get; set; }
-
         public bool Cast()
         {
             var cursorLocation = Game1.currentCursorTile;
             var target = Game1.currentLocation.characters.FirstOrDefault(c => c.getTileLocation() == cursorLocation);
             if (target != null)
             {
-                var temp = target.Position;
-                target.Position = Game1.player.Position;
-                Game1.player.Position = temp;
+                (Game1.player.Position, target.Position) = (target.Position, Game1.player.Position);
                 return true;
             }
             else
@@ -38,5 +36,8 @@ namespace RuneMagic.Source.Spells
                 return false;
             }
         }
+
+        public void Update()
+        { }
     }
 }

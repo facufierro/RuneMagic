@@ -6,8 +6,6 @@ using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewValley;
-using System;
-using System.Reflection;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
@@ -62,7 +60,7 @@ namespace RuneMagic.Source.Items
         }
         public void Update()
         {
-          
+
         }
         public bool Fizzle()
         {

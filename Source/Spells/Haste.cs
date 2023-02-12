@@ -7,11 +7,11 @@ namespace RuneMagic.Source.Spells
     public class Haste : ISpell
     {
         public string Name { get; set; }
-        public School School { get; set; }
-        public ISpellEffect Effect { get; set; }
         public string Description { get; set; }
+        public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+        public Buff Buff { get; set; }
 
         public Haste() : base()
         {
@@ -37,5 +37,8 @@ namespace RuneMagic.Source.Spells
                 return true;
             }
         }
+
+        public void Update()
+        { }
     }
 }

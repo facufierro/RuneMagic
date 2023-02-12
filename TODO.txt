@@ -7,7 +7,7 @@ High priority
 -Add interfaces
 -add sounds
 -Animations for the  player
-
+-Add Quality to runes
 -Add configuration menu
 -Random charges system
 -rune crafting cost tied to the lvl of the spell

@@ -1,22 +1,17 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using RuneMagic.Source.Interfaces;
-using SpaceCore;
 using StardewValley;
-using System.Collections.Generic;
-using xTile.Dimensions;
-using xTile.Tiles;
 
 namespace RuneMagic.Source.Spells
 {
     public class Displacement : ISpell
     {
         public string Name { get; set; }
-        public School School { get; set; }
-        public ISpellEffect Effect { get; set; }
         public string Description { get; set; }
+        public School School { get; set; }
         public float CastingTime { get; set; }
         public int Level { get; set; }
+        public Buff Buff { get; set; }
 
         public Displacement() : base()
         {
@@ -40,5 +35,8 @@ namespace RuneMagic.Source.Spells
                 return false;
             }
         }
+
+        public void Update()
+        { }
     }
 }
