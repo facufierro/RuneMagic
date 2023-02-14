@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Source.Interfaces;
 using SpaceCore;
 using StardewValley;
 using StardewValley.Tools;
@@ -15,7 +14,7 @@ namespace RuneMagic.Source.Items
     public class MagicWeapon : MeleeWeapon, IMagicItem
     {
         [XmlIgnore]
-        public ISpell Spell { get; set; }
+        public Spell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
 
@@ -34,9 +33,9 @@ namespace RuneMagic.Source.Items
 
         public void InitializeSpell()
         {
-            List<ISpell> apprenticeSpells = new();
-            List<ISpell> adeptSpells = new();
-            List<ISpell> masterSpells = new();
+            List<Spell> apprenticeSpells = new();
+            List<Spell> adeptSpells = new();
+            List<Spell> masterSpells = new();
             foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Level >= 1 && spell.Level <= 2)

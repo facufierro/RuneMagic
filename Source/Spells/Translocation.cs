@@ -4,31 +4,22 @@ using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Translocation : ISpell
+    public class Translocation : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Translocation() : base()
         {
             Name = "Translocation";
             School = School.Evocation;
             Description = "The caster changes position with a target living creature.";
             Level = 2;
-            CastingTime = 2;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            var cursorLocation = Game1.currentCursorTile;
-            var target = Game1.currentLocation.characters.FirstOrDefault(c => c.getTileLocation() == cursorLocation);
-            if (target != null)
+            Target = Game1.currentLocation.characters.FirstOrDefault(c => c.getTileLocation() == Game1.currentCursorTile);
+            if (Target != null)
             {
-                (Game1.player.Position, target.Position) = (target.Position, Game1.player.Position);
+                (Game1.player.Position, Target.Position) = (Target.Position, Game1.player.Position);
                 return true;
             }
             else
@@ -36,8 +27,5 @@ namespace RuneMagic.Source.Spells
                 return false;
             }
         }
-
-        public void Update()
-        { }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
-using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.Items;
 using RuneMagic.Source.Skills;
 using SpaceCore;
@@ -21,7 +20,7 @@ namespace RuneMagic.Source
     {
         public static RuneMagic Instance { get; private set; }
         public static PlayerStats PlayerStats { get; private set; } = new PlayerStats();
-        public static List<ISpell> Spells { get; private set; }
+        public static List<Spell> Spells { get; private set; }
 
         public static List<Texture2D> RuneTextures { get; private set; }
         public static Dictionary<string, Texture2D> SpellTextures { get; private set; }
@@ -219,9 +218,9 @@ namespace RuneMagic.Source
         {
             var spellTypes = typeof(RuneMagic).Assembly
               .GetTypes()
-              .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(ISpell).IsAssignableFrom(t));
+              .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(Spell).IsAssignableFrom(t));
 
-            Spells = spellTypes.Select(t => (ISpell)Activator.CreateInstance(t)).ToList();
+            Spells = spellTypes.Select(t => (Spell)Activator.CreateInstance(t)).ToList();
 
             var spellGroups = Spells.OrderBy(s => s.Level).ThenBy(s => s.Name).GroupBy(s => s.Level);
             Instance.Monitor.Log($"Registering Spells...", LogLevel.Debug);

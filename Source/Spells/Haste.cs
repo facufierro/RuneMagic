@@ -4,41 +4,32 @@ using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Haste : ISpell
+    public class Haste : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Haste() : base()
         {
             Name = "Haste";
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
-            CastingTime = 1;
             Level = 3;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            var buff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 10, "Glyph of Haste", "Glyph of Haste");
-            //if the player already has the buff, refresh it
-            if (Game1.buffsDisplay.otherBuffs.Any(b => b.which == buff.which))
+            if (!Game1.buffsDisplay.hasBuff(Id))
             {
-                Game1.buffsDisplay.otherBuffs.First(b => b.which == buff.which).millisecondsDuration = buff.millisecondsDuration;
+                Buff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 10, "Glyph of Haste", "Glyph of Haste") { which = Id, description = Description, millisecondsDuration = Duration * 1000 };
+                Game1.buffsDisplay.addOtherBuff(Buff);
+                Game1.player.changeFriendship(250, Target as NPC);
                 return true;
             }
             else
             {
-                Game1.buffsDisplay.addOtherBuff(buff);
-                return true;
+                return false;
             }
         }
 
-        public void Update()
+        public override void Update()
         { }
     }
 }

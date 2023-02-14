@@ -4,15 +4,8 @@ using StardewValley.TerrainFeatures;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Hydration : ISpell
+    public class Hydration : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Hydration() : base()
         {
             Name = "Hydration";
@@ -21,12 +14,11 @@ namespace RuneMagic.Source.Spells
             Level = 1;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            var Cursor = Game1.currentCursorTile;
-            if (Game1.currentLocation.terrainFeatures.ContainsKey(Cursor) && Game1.currentLocation.terrainFeatures[Cursor] is HoeDirt)
+            Target = Game1.currentCursorTile;
+            if (Game1.currentLocation.terrainFeatures[Target] is HoeDirt dirt)
             {
-                HoeDirt dirt = (HoeDirt)Game1.currentLocation.terrainFeatures[Cursor];
                 dirt.state.Value = HoeDirt.watered;
                 return true;
             }

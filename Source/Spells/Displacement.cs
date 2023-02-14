@@ -4,30 +4,22 @@ using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Displacement : ISpell
+    public class Displacement : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Displacement() : base()
         {
             Name = "Displacement";
             School = School.Alteration;
             Description = "Teleports a the caster to a target location.";
-            CastingTime = 1;
             Level = 4;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            var cursorTile = Game1.currentCursorTile;
-            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(cursorTile))
+            Target = Game1.currentCursorTile;
+            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Target))
             {
-                Game1.player.Position = new Vector2(cursorTile.X * Game1.tileSize, cursorTile.Y * Game1.tileSize);
+                Game1.player.Position = new Vector2(Target.X * Game1.tileSize, Target.Y * Game1.tileSize);
                 return true;
             }
             else
@@ -35,8 +27,5 @@ namespace RuneMagic.Source.Spells
                 return false;
             }
         }
-
-        public void Update()
-        { }
     }
 }

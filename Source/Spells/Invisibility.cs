@@ -6,40 +6,53 @@ using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Invisibility : ISpell
+    public class Invisibility : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
-        public void Update()
-        { }
-
         public Invisibility()
         {
             Name = "Invisibility";
             School = School.Illusion;
             Description = "Makes the caster invisible";
-            CastingTime = 1.0f;
             Level = 6;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            //if (!RuneMagic.PlayerStats.Effects.Contains(Effect))
-            //{
-            //    RuneMagic.PlayerStats.Effects.Add(Effect);
+            if (!Game1.buffsDisplay.hasBuff(Id))
+            {
+                Buff = new(Id) { which = Id, millisecondsDuration = Duration * 1000 };
+                Game1.buffsDisplay.addOtherBuff(Buff);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
-            return true;
+        public override void Update()
+        {
+            if (Game1.buffsDisplay.hasBuff(Id))
+            {
+                Game1.player.hidden.Value = true;
+                //get all the mobs in the screen
+                var mobs = Game1.currentLocation.characters;
+                //loop through all the mobs
+                foreach (var mob in mobs)
+                {
+                    //if the mob is a monster
+                    if (mob is StardewValley.Monsters.Monster monster)
+                    {
+                        monster.moveTowardPlayerThreshold.Value = -1;
+                        monster.focusedOnFarmers = false;
+                        monster.timeBeforeAIMovementAgain = 50f;
+                    }
+                }
+            }
+            else
+            {
+                Game1.player.hidden.Value = false;
+            }
         }
     }
 }

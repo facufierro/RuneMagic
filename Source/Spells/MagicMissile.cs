@@ -5,28 +5,17 @@ using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
-    public class MagicMissile : ISpell
+    public class MagicMissile : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-        public void Update() { }
-
         public MagicMissile() : base()
         {
-
             Name = "Magic Missile";
             School = School.Evocation;
             Description = "Shoots a magic missile";
-            CastingTime = 1;
             Level = 1;
-
-
         }
-        public bool Cast()
+
+        public override bool Cast()
         {
             var projectileNumber = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
             var spellTexture = "magic_missile";

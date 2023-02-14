@@ -4,16 +4,8 @@ using StardewValley.TerrainFeatures;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Labor : ISpell
+    public class Labor : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-        public void Update() { }
-
         public Labor() : base()
         {
             Name = "Labor";
@@ -21,13 +13,14 @@ namespace RuneMagic.Source.Spells
             Description = "Creates a hoe dirt tile at the cursor.";
             Level = 2;
         }
-        public bool Cast()
-        {
-            var Cursor = Game1.currentCursorTile;
 
-            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Cursor))
+        public override bool Cast()
+        {
+            Target = Game1.currentCursorTile;
+
+            if (Game1.currentLocation.isTileLocationTotallyClearAndPlaceable(Target))
             {
-                Game1.currentLocation.terrainFeatures.Add(Cursor, new HoeDirt());
+                Game1.currentLocation.terrainFeatures.Add(Target, new HoeDirt());
                 return true;
             }
             else

@@ -1,40 +1,45 @@
 ﻿using RuneMagic.Source.Interfaces;
 using StardewValley;
+using xTile.Dimensions;
+using static StardewValley.Menus.CharacterCustomization;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Light : ISpell
+    public class Light : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-        public void Update() { }
-
         public Light()
         {
             Name = "Light";
             School = School.Conjuration;
             Description = "Conjures a torch at a target location.";
-            CastingTime = 1;
             Level = 3;
         }
-        public bool Cast()
+
+        public override bool Cast()
         {
-            //get cursorlocation
-            var cursorLocation = Game1.currentCursorTile;
-            //place a Light object at cursorlocation
-            var light = new SpellEffects.LightEffect(cursorLocation, 0, false);
-            Game1.currentLocation.objects.Add(cursorLocation, light);
+            if (!Game1.buffsDisplay.hasBuff(Id))
+            {
+                Buff = new Buff(Id) { which = Id, millisecondsDuration = Duration * 1000, sheetIndex = 16, description = Description, source = $"Glyph of {Name}", displaySource = $"Glyph of {Name}" };
+                Game1.buffsDisplay.addOtherBuff(Buff);
+                Target = Game1.currentCursorTile;
+                Game1.currentLocation.objects.Add(Target, new Torch(Target, 1));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-
-
-
-
-
-            return true;
+        public override void Update()
+        {
+            if (!Game1.buffsDisplay.hasBuff(Id) && Buff != null)
+            {
+                Game1.currentLocation.objects.Remove(Target);
+            }
+            else
+            {
+            }
         }
     }
 }

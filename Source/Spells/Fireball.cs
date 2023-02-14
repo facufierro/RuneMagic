@@ -5,25 +5,17 @@ using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Fireball : ISpell
+    public class Fireball : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Fireball()
         {
             Name = "Fireball";
             School = School.Evocation;
             Description = "Shoots a fireball";
-            CastingTime = 1;
-            Level = 1;
+            Level = 6;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
             var spellTexture = "fireball";
             var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
@@ -41,7 +33,9 @@ namespace RuneMagic.Source.Spells
             return true;
         }
 
-        public void Update()
-        { }
+        public override void Update()
+        {
+            //Implement fire damage over time
+        }
     }
 }

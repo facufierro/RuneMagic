@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using System.Xml.Serialization;
 
-namespace RuneMagic.Source.Interfaces
+namespace RuneMagic.Source
 {
     public interface IMagicItem
     {
         public string Name { get; set; }
         [XmlIgnore]
-        public ISpell Spell { get; set; }
+        public Spell Spell { get; set; }
         public float Charges { get; set; }
         public void InitializeSpell();
         public void Activate();

@@ -2,7 +2,6 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewValley;
@@ -15,7 +14,7 @@ namespace RuneMagic.Source.Items
     public class Scroll : Object, IMagicItem
     {
         [XmlIgnore]
-        public ISpell Spell { get; set; }
+        public Spell Spell { get; set; }
         public float Charges { get; set; }
         public Scroll() : base()
         {

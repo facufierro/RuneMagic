@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewModdingAPI;
@@ -15,7 +14,7 @@ namespace RuneMagic.Source.Items
     public class Rune : Object, IMagicItem
     {
         [XmlIgnore]
-        public ISpell Spell { get; set; }
+        public Spell Spell { get; set; }
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
         public bool RunemasterActive { get; set; } = false;

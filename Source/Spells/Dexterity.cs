@@ -1,17 +1,11 @@
 ﻿using RuneMagic.Source.Interfaces;
 using StardewValley;
+using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Dexterity : ISpell
+    public class Dexterity : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Dexterity()
         {
             Name = "Dexterity";
@@ -21,10 +15,37 @@ namespace RuneMagic.Source.Spells
             CastingTime = 1;
         }
 
-        public bool Cast()
-        { return false; }
+        public override bool Cast()
+        {
+            Target = Game1.currentLocation.characters.FirstOrDefault(c => c.getTileLocation() == Game1.currentCursorTile);
 
-        public void Update()
-        { }
+            if (Target is not null and NPC)
+            {
+                if (!Game1.buffsDisplay.hasBuff(Id))
+                {
+                    Buff = new Buff("You feel fingers move faster.", Duration * 1000, $"Glyph of {Name}", 16) { which = Id };
+                    Game1.buffsDisplay.addOtherBuff(Buff);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override void Update()
+        {
+            if (Buff != null)
+            {
+                if (Buff.millisecondsDuration == 16 && Game1.buffsDisplay.hasBuff(Id))
+                {
+                }
+            }
+        }
     }
 }

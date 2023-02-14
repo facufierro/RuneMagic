@@ -1,18 +1,12 @@
-﻿using RuneMagic.Source.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using RuneMagic.Source.Interfaces;
 using RuneMagic.Source.SpellEffects;
 using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Warding : ISpell
+    public class Warding : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
         public Warding()
         {
             Name = "Warding";
@@ -22,12 +16,19 @@ namespace RuneMagic.Source.Spells
             Level = 1;
         }
 
-        public bool Cast()
+        public override bool Cast()
         {
-            return false;
+            Buff = new Buff(Buff.yobaBlessing)
+            {
+                millisecondsDuration = Duration * 1000,
+                description = Description,
+                source = Name,
+                displaySource = Name,
+                glow = Color.Transparent,
+                sheetIndex = 16,
+            };
+            Game1.buffsDisplay.addOtherBuff(Buff);
+            return true;
         }
-
-        public void Update()
-        { }
     }
 }

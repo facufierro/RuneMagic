@@ -3,21 +3,14 @@ using StardewValley;
 
 namespace RuneMagic.Source.NotImplementedSpells
 {
-    public class IceShield : ISpell
+    public class IceShield : Spell
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public School School { get; set; }
-        public float CastingTime { get; set; }
-        public int Level { get; set; }
-        public Buff Buff { get; set; }
-
-        public bool Cast()
+        public override bool Cast()
         {
             return false;
         }
 
-        public void Update()
+        public override void Update()
         {
         }
     }
