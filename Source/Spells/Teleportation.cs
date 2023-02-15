@@ -9,7 +9,7 @@ namespace RuneMagic.Source.Spells
             Name = "Teleportation";
             School = School.Alteration;
             Description = "Teleports the caster to their home.";
-            Level = 7;
+            Level = 8;
         }
 
         public override bool Cast()

@@ -8,9 +8,9 @@ namespace RuneMagic.Source.Spells
         public Translocation() : base()
         {
             Name = "Translocation";
-            School = School.Evocation;
+            School = School.Alteration;
             Description = "The caster changes position with a target living creature.";
-            Level = 2;
+            Level = 4;
         }
 
         public override bool Cast()

@@ -10,7 +10,7 @@ namespace RuneMagic.Source.Spells
             Name = "Blasting";
             School = School.Evocation;
             Description = "Creates an explosion at a target location.";
-            Level = 6;
+            Level = 5;
         }
 
         public override bool Cast()

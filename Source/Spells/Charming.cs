@@ -11,7 +11,7 @@ namespace RuneMagic.Source.Spells
         {
             Description = "Charms the target for a short time, when the effect ends the target will be annoyed";
             School = School.Illusion;
-            Level = 1;
+            Level = 2;
             Duration = Duration.Medium;
         }
 

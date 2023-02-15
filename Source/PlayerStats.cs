@@ -68,24 +68,24 @@ namespace RuneMagic.Source
         public void LearnRecipes()
         {
             var level = Game1.player.GetCustomSkillLevel(MagicSkill);
+            if (level >= 1)
+            {
+                if (!Game1.player.craftingRecipes.ContainsKey("Runic Anvil"))
+                    Game1.player.craftingRecipes.Add("Runic Anvil", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Inscription Table"))
+                    Game1.player.craftingRecipes.Add("Inscription Table", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Magic Grinder"))
+                    Game1.player.craftingRecipes.Add("Magic Grinder", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Blank Rune"))
+                    Game1.player.craftingRecipes.Add("Blank Rune", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Blank Parchment"))
+                    Game1.player.craftingRecipes.Add("Blank Parchment", 0);
+            }
 
             foreach (var spell in RuneMagic.Spells)
             {
                 if (level >= spell.Level)
                 {
-                    if (level >= 1)
-                    {
-                        if (!Game1.player.craftingRecipes.ContainsKey("Runic Anvil"))
-                            Game1.player.craftingRecipes.Add("Runic Anvil", 0);
-                        if (!Game1.player.craftingRecipes.ContainsKey("Inscription Table"))
-                            Game1.player.craftingRecipes.Add("Inscription Table", 0);
-                        if (!Game1.player.craftingRecipes.ContainsKey("Magic Grinder"))
-                            Game1.player.craftingRecipes.Add("Magic Grinder", 0);
-                        if (!Game1.player.craftingRecipes.ContainsKey("Blank Rune"))
-                            Game1.player.craftingRecipes.Add("Blank Rune", 0);
-                        if (!Game1.player.craftingRecipes.ContainsKey("Blank Parchment"))
-                            Game1.player.craftingRecipes.Add("Blank Parchment", 0);
-                    }
                     if (!Game1.player.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
                         Game1.player.craftingRecipes.Add($"Rune of {spell.Name}", 0);
                     if (!Game1.player.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))

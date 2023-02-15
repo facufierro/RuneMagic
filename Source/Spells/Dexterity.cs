@@ -9,7 +9,7 @@ namespace RuneMagic.Source.Spells
         {
             School = School.Enchantment;
             Description = "Increases the caster's casting speed.";
-            Level = 1;
+            Level = 6;
         }
 
         public override bool Cast()

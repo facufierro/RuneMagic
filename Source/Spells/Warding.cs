@@ -12,7 +12,7 @@ namespace RuneMagic.Source.Spells
             Description = "Protects the caster from damage for a short period of time.";
             School = School.Abjuration;
             CastingTime = 1.0f;
-            Level = 1;
+            Level = 7;
         }
 
         public override bool Cast()

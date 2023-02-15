@@ -1,18 +1,15 @@
-﻿using StardewModdingAPI;
-using StardewValley;
-using System.Linq;
-using System.Threading;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
-    public class Haste : Spell
+    public class Regeneration : Spell
     {
-        public Haste() : base()
+        public Regeneration() : base()
         {
             School = School.Enchantment;
-            Description = "Increases the caster's movement speed.";
+            Description = "Slowly regenerates the caster's health.";
             Level = 4;
-            Duration = Duration.Short;
+            Duration = Duration.Long;
         }
 
         public override bool Cast()
@@ -30,10 +27,8 @@ namespace RuneMagic.Source.Spells
         {
             if (Effect is not null)
             {
-                if (Effect.Timer <= DurationInMilliseconds && Game1.player.addedSpeed < 5)
-                    Game1.player.addedSpeed = 5;
-                if (Effect.Timer <= 0)
-                    Game1.player.addedSpeed = 0;
+                if (Effect.Timer <= DurationInMilliseconds && Game1.player.Stamina < Game1.player.MaxStamina)
+                    Game1.player.Stamina += 0.01f;
                 if (Effect.Timer < 0)
                     Effect = null;
                 else

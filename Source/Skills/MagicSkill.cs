@@ -52,7 +52,6 @@ namespace RuneMagic.Source.Skills
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
                 Name = "Runemaster",
                 Description = "The caster can spend 3 charges of a rune to make it instant cast."
-
             };
             Professions.Add(Runemaster);
             ProfessionsForLevels.Add(new ProfessionPair(10, Runelord, Runemaster, Runesmith));
@@ -72,8 +71,8 @@ namespace RuneMagic.Source.Skills
             };
             Professions.Add(Sage);
             ProfessionsForLevels.Add(new ProfessionPair(10, Lorekeeper, Sage, Scribe));
-
         }
+
         public override string GetName()
         {
             return "Magic";
@@ -81,8 +80,7 @@ namespace RuneMagic.Source.Skills
 
         public override List<string> GetExtraLevelUpInfo(int level)
         {
-
-            List<string> info = new();
+            List<string> info;
             if (level == 1)
                 info = new List<string>(){
                 $"The wizard has taught you the basics of magic." };
@@ -98,10 +96,7 @@ namespace RuneMagic.Source.Skills
             {
                 if (spell.Level == level)
                 {
-                    //set spellList to spellList + spell.Name  and add a comma if it's not the last spell in the list
                     spellList = spellList + spell.Name + (spellList == "" ? "" : ", ");
-
-
                 }
             }
             //remove the last comma from spellList
@@ -113,9 +108,6 @@ namespace RuneMagic.Source.Skills
         public override string GetSkillPageHoverText(int level)
         {
             return $"-{level}% Chance of Casting Failure" + Environment.NewLine + $"+{level}% Casting Speed";
-
         }
-
-
     }
 }

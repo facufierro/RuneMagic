@@ -21,7 +21,7 @@ Maybe
 -add casting interrupt
 -add channeling mechanic
 -modify scroll texture to be smaller
-
+-add a drop system for recipes.
 
 Fixes
 -Stop suppressing WASD after cast without unpressing the buttons 

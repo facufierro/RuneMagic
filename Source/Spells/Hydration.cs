@@ -9,7 +9,7 @@ namespace RuneMagic.Source.Spells
         {
             School = School.Conjuration;
             Description = "Water a tile at the cursor.";
-            Level = 2;
+            Level = 3;
         }
 
         public override bool Cast()

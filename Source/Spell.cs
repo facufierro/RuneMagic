@@ -58,9 +58,9 @@ namespace RuneMagic.Source
         public int DurationInMilliseconds => Duration switch
         {
             Duration.Instant => 0,
-            Duration.Short => 10 * 60,
+            Duration.Short => 5 * 60,
             Duration.Medium => 60 * 60,
-            Duration.Long => 5 * 60 * 60,
+            Duration.Long => 4 * 60 * 60,
             Duration.Permanent => 999999999,
             _ => 0
         };

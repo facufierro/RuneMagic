@@ -8,7 +8,6 @@ namespace RuneMagic.Source.Spells
     {
         public Fireball()
         {
-            Name = "Fireball";
             School = School.Evocation;
             Description = "Shoots a fireball";
             Level = 6;

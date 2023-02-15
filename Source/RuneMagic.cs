@@ -221,17 +221,18 @@ namespace RuneMagic.Source
               .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(Spell).IsAssignableFrom(t));
 
             Spells = spellTypes.Select(t => (Spell)Activator.CreateInstance(t)).ToList();
-
-            var spellGroups = Spells.OrderBy(s => s.Level).ThenBy(s => s.Name).GroupBy(s => s.Level);
+            Spells = Spells.OrderBy(s => s.Level).ThenBy(s => s.School).ThenBy(s => s.Name).ToList();
+            var spellGroups = Spells.GroupBy(s => s.Level);
             Instance.Monitor.Log($"Registering Spells...", LogLevel.Debug);
             foreach (var spellGroup in spellGroups)
             {
                 Instance.Monitor.Log($"--------------Level {spellGroup.Key} Spells--------------", LogLevel.Debug);
                 foreach (var spell in spellGroup)
                 {
-                    Instance.Monitor.Log($"\t{spell.Name,-25}REGISTERED", LogLevel.Debug);
+                    Instance.Monitor.Log($"\t{spell.Name,-25}REGISTERED \t {spell.School}", LogLevel.Debug);
                 }
             }
+            Spells = Spells.OrderBy(s => s.School).ThenBy(s => s.Name).ToList();
         }
 
         public static void RegisterJasonAssets(Type dataType, string name, string description, Texture2D texture, List<dynamic> ingredients = null, WeaponType weaponType = WeaponType.Club, int mineDropVar = 10)
