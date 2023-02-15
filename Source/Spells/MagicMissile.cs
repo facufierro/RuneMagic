@@ -10,7 +10,7 @@ namespace RuneMagic.Source.Spells
         {
             Name = "Magic Missile";
             School = School.Evocation;
-            Description = "Shoots a magic missile";
+            Description = "Shoots a magic missile per two magic skill levels.";
             Level = 1;
         }
 

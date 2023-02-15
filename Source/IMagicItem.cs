@@ -16,5 +16,6 @@ namespace RuneMagic.Source
         public bool Fizzle();
         public void Update();
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f);
+        int addToStack(Item otherStack);
     }
 }

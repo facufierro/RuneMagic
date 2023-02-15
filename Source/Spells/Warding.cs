@@ -17,16 +17,13 @@ namespace RuneMagic.Source.Spells
 
         public override bool Cast()
         {
-            //Buff = new Buff(Buff.yobaBlessing)
-            //{
-            //    millisecondsDuration = Duration * 1000,
-            //    description = Description,
-            //    source = Name,
-            //    displaySource = Name,
-            //    glow = Color.Transparent,
-            //    sheetIndex = 16,
-            //};
-            //Game1.buffsDisplay.addOtherBuff(Buff);
+            var buff = new Buff(Buff.yobaBlessing)
+            {
+                millisecondsDuration = 5 * 1000,
+                glow = Color.Transparent,
+                sheetIndex = 9000,
+            };
+            Game1.buffsDisplay.addOtherBuff(buff);
             return true;
         }
     }

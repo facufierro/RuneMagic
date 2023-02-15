@@ -11,7 +11,7 @@ namespace RuneMagic.Source.Spells
         {
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
-            Level = 3;
+            Level = 4;
             Duration = Duration.Short;
         }
 
@@ -31,13 +31,15 @@ namespace RuneMagic.Source.Spells
             if (Effect is not null)
             {
                 if (Effect.Timer <= DurationInMilliseconds && Game1.player.addedSpeed < 5)
-                    Game1.player.addedSpeed = 2;
+                    Game1.player.addedSpeed = 5;
                 if (Effect.Timer <= 0)
                     Game1.player.addedSpeed = 0;
                 if (Effect.Timer < 0)
                     Effect = null;
                 else
                     Effect.Timer--;
+
+                RuneMagic.Instance.Monitor.Log(Game1.player.addedSpeed.ToString());
             }
         }
     }

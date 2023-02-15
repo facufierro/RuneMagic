@@ -15,6 +15,7 @@ namespace RuneMagic.Source.Items
     {
         [XmlIgnore]
         public Spell Spell { get; set; }
+
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
         public bool RunemasterActive { get; set; } = false;
@@ -28,6 +29,7 @@ namespace RuneMagic.Source.Items
             Charges = ChargesMax;
             InitializeSpell();
         }
+
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
@@ -36,12 +38,10 @@ namespace RuneMagic.Source.Items
                 ChargesMax = 5;
             Charges = ChargesMax;
             InitializeSpell();
-
         }
 
         public void InitializeSpell()
         {
-
             string spellName = Name[8..];
 
             foreach (var spell in RuneMagic.Spells)
@@ -54,6 +54,7 @@ namespace RuneMagic.Source.Items
                 }
             }
         }
+
         public void Activate()
         {
             if (!Fizzle())
@@ -67,18 +68,16 @@ namespace RuneMagic.Source.Items
                                 Charges -= 3;
                             else
                                 Charges--;
-
                         }
                         else
                             Charges--;
                         Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     }
                 }
-
         }
+
         public bool Fizzle()
         {
-
             if (Game1.random.Next(1, 100) < 0)
             {
                 Game1.player.stamina -= 10;
@@ -90,9 +89,9 @@ namespace RuneMagic.Source.Items
             else
                 return false;
         }
+
         public void Update()
         {
-
             //Charges
             if (Charges < ChargesMax)
             {
@@ -111,8 +110,8 @@ namespace RuneMagic.Source.Items
                 RunemasterActive = false;
                 Spell.CastingTime = 1;
             }
-
         }
+
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
             if (RuneMagic.PlayerStats.IsCasting && Game1.player.CurrentItem == this)
@@ -122,6 +121,7 @@ namespace RuneMagic.Source.Items
                 spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
             }
         }
+
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
             spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
@@ -133,32 +133,36 @@ namespace RuneMagic.Source.Items
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
             DrawCharges(spriteBatch, location, layerDepth);
 
-
             if (RunemasterActive)
             {
                 spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 400, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
-
             }
             else
             {
                 if (Charges >= 1)
                     DrawCastbar(spriteBatch, location, Game1.player);
             }
+            //draw an emote over the player head
+            //spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 392, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
         }
+
         public override bool canBeShipped()
         {
             return false;
         }
+
         public override bool canBeGivenAsGift()
         {
             return false;
         }
+
         public override int maximumStackSize()
         {
             return 1;
         }
     }
 }
+
 //*************************
 //private void DrawRune(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float layerDepth)
 //{

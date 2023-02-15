@@ -7,7 +7,6 @@ namespace RuneMagic.Source.Spells
     {
         public Excavation() : base()
         {
-            Name = "Excavation";
             School = School.Evocation;
             Description = "The caster digs a hole at a target location.";
             Level = 7;

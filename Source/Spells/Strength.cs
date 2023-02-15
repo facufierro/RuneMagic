@@ -8,27 +8,36 @@ namespace RuneMagic.Source.NotImplementedSpells
         {
             School = School.Enchantment;
             Description = "Increases the caster's attack damage.";
-            Level = 1;
+            Level = 5;
+            Duration = Duration.Medium;
         }
 
         public override bool Cast()
         {
-            //if (!Game1.buffsDisplay.hasBuff(Id))
-            //{
-            //    //Buff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 5, Duration, "Glyph of Haste", "Glyph of Haste") { which = Id, description = Description, millisecondsDuration = Duration * 1000 };
-            //    //Game1.buffsDisplay.addOtherBuff(Buff);
-            //    Game1.player.changeFriendship(250, Target as NPC);
-            //    return true;
-            //}
-            //else
-            //{
-            return false;
-            //}
+            if (Effect is null)
+            {
+                Effect = new SpellEffect(Name, DurationInMilliseconds);
+                return true;
+            }
+            else
+                return false;
         }
 
-        //public override void Update()
-        //{
-        //    base.Update();
-        //}
+        public override void Update()
+        {
+            if (Effect is not null)
+            {
+                if (Effect.Timer <= DurationInMilliseconds && Game1.player.attackIncreaseModifier < 5)
+                    Game1.player.attackIncreaseModifier = 5;
+                if (Effect.Timer <= 0)
+                    Game1.player.attackIncreaseModifier = 0;
+                if (Effect.Timer < 0)
+                    Effect = null;
+                else
+                    Effect.Timer--;
+
+                RuneMagic.Instance.Monitor.Log(Game1.player.addedSpeed.ToString());
+            }
+        }
     }
 }

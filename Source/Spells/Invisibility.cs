@@ -11,7 +11,7 @@ namespace RuneMagic.Source.Spells
         {
             School = School.Illusion;
             Description = "Makes the caster invisible";
-            Level = 6;
+            Level = 8;
             Duration = Duration.Short;
         }
 
