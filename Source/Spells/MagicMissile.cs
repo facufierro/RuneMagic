@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using RuneMagic.Source.SpellEffects;
+﻿using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
 

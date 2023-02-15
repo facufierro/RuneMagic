@@ -1,6 +1,4 @@
-﻿
-using Microsoft.Xna.Framework.Input;
-using RuneMagic.Source.Interfaces;
+﻿using Microsoft.Xna.Framework.Input;
 using RuneMagic.Source.Items;
 using RuneMagic.Source.Skills;
 using SpaceCore;
@@ -13,38 +11,33 @@ namespace RuneMagic.Source
 {
     public class PlayerStats
     {
-
         public MagicSkill MagicSkill { get; set; }
         public bool MagicLearned { get; set; } = false;
         public bool IsCasting { get; set; } = false;
         public float CastingTimer { get; set; } = 0;
         public int SpellAttack { get; set; }
         public int CastingFailureChance { get; set; }
-        public List<ISpellEffect> Effects { get; set; }
 
         public PlayerStats()
         {
-            Effects = new List<ISpellEffect>();
         }
+
         public void Cast(IMagicItem item)
         {
-            //playsound 
+            //playsound
 
             KeyboardState keyboardState = Keyboard.GetState();
             if (Game1.player.CurrentItem is IMagicItem)
             {
                 if (keyboardState.IsKeyDown(Keys.R))
                 {
-
                     if (!Game1.player.HasCustomProfession(MagicSkill.Sage) && item is Scroll)
                     {
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.A);
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.S);
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.D);
-
                     }
-
                     else if (item is not Scroll && item.Charges >= 1)
                     {
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
@@ -52,7 +45,6 @@ namespace RuneMagic.Source
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.S);
                         RuneMagic.Instance.Helper.Input.Suppress(SButton.D);
                     }
-
 
                     IsCasting = true;
                     if (CastingTimer >= Math.Floor(item.Spell.CastingTime * 60))
@@ -71,13 +63,10 @@ namespace RuneMagic.Source
                     IsCasting = false;
                 }
             }
-
-
-
         }
+
         public void LearnRecipes()
         {
-
             var level = Game1.player.GetCustomSkillLevel(MagicSkill);
 
             foreach (var spell in RuneMagic.Spells)
@@ -96,16 +85,13 @@ namespace RuneMagic.Source
                             Game1.player.craftingRecipes.Add("Blank Rune", 0);
                         if (!Game1.player.craftingRecipes.ContainsKey("Blank Parchment"))
                             Game1.player.craftingRecipes.Add("Blank Parchment", 0);
-
                     }
                     if (!Game1.player.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
                         Game1.player.craftingRecipes.Add($"Rune of {spell.Name}", 0);
                     if (!Game1.player.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
                         Game1.player.craftingRecipes.Add($"{spell.Name} Scroll", 0);
                 }
-
             }
         }
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using StardewValley;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.NotImplementedSpells
 {

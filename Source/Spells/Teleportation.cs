@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using StardewValley;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
@@ -18,8 +17,5 @@ namespace RuneMagic.Source.Spells
             Game1.warpFarmer("FarmHouse", 4, 3, false);
             return true;
         }
-
-        public override void Update()
-        { }
     }
 }

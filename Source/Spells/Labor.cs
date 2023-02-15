@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using StardewValley;
+﻿using StardewValley;
 using StardewValley.TerrainFeatures;
 
 namespace RuneMagic.Source.Spells

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RuneMagic.Source.Interfaces;
 using StardewValley;
 
 namespace RuneMagic.Source.Spells

@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using StardewValley;
+﻿using StardewValley;
 using System.Linq;
 
 namespace RuneMagic.Source.Spells

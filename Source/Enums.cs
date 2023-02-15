@@ -9,4 +9,7 @@
         Enchantment, //changes the properties of objects people (enchanting, curses)
         Illusion, //creates illusions (invisibility, phantoms)
     }
+
+    public enum Duration
+    { Instant, Short, Medium, Long, Permanent }
 }

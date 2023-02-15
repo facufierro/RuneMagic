@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using RuneMagic.Source.SpellEffects;
+﻿using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
 
@@ -33,9 +32,9 @@ namespace RuneMagic.Source.Spells
             return true;
         }
 
-        public override void Update()
-        {
-            //Implement fire damage over time
-        }
+        //public override void Update()
+        //{
+        //    //Implement fire damage over time
+        //}
     }
 }

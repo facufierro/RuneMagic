@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Interfaces;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewValley;
 using System.Linq;
 using System.Threading;
@@ -13,7 +12,7 @@ namespace RuneMagic.Source.Spells
             Description = "Charms the target for a short time, when the effect ends the target will be annoyed";
             School = School.Illusion;
             Level = 1;
-            Duration = 10;
+            Duration = Duration.Medium;
         }
 
         public override bool Cast()
@@ -22,17 +21,8 @@ namespace RuneMagic.Source.Spells
 
             if (Target is not null and NPC)
             {
-                if (!Game1.buffsDisplay.hasBuff(Id))
-                {
-                    Buff = new Buff(Description, Duration * 1000, "Glyph of Charming", 16) { which = Id };
-                    Game1.buffsDisplay.addOtherBuff(Buff);
-                    Game1.player.changeFriendship(250, Target as NPC);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                Effect ??= new SpellEffect(Name, DurationInMilliseconds);
+                return true;
             }
             else
             {
@@ -42,12 +32,17 @@ namespace RuneMagic.Source.Spells
 
         public override void Update()
         {
-            if (Buff != null)
+            if (Effect is not null)
             {
-                if (Buff.millisecondsDuration == 16 && Game1.buffsDisplay.hasBuff(Id))
+                if (Effect.Timer == DurationInMilliseconds)
+                    Game1.player.changeFriendship(250, Target);
+                if (Effect.Timer == 0)
                 {
-                    Game1.player.changeFriendship(-500, Target as NPC);
+                    Game1.player.changeFriendship(-250, Target);
+                    Effect = null;
                 }
+                else
+                    Effect.Timer--;
             }
         }
     }
