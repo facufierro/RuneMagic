@@ -1,12 +1,8 @@
-﻿using StardewValley;
-using xTile.Dimensions;
-using static StardewValley.Menus.CharacterCustomization;
-
-namespace RuneMagic.Source.Spells
+﻿namespace RuneMagic.Source.Spells
 {
     public class Light : Spell
     {
-        public Light()
+        public Light() : base()
         {
             School = School.Conjuration;
             Description = "Conjures a torch at a target location.";

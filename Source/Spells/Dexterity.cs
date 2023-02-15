@@ -1,11 +1,10 @@
 ﻿using StardewValley;
-using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
     public class Dexterity : Spell
     {
-        public Dexterity()
+        public Dexterity() : base()
         {
             School = School.Enchantment;
             Description = "Increases the caster's casting speed.";

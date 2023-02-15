@@ -6,7 +6,7 @@ namespace RuneMagic.Source.Spells
 {
     public class Fireball : Spell
     {
-        public Fireball()
+        public Fireball() : base()
         {
             School = School.Evocation;
             Description = "Shoots a fireball";

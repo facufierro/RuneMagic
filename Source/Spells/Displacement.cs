@@ -7,7 +7,6 @@ namespace RuneMagic.Source.Spells
     {
         public Displacement() : base()
         {
-            Name = "Displacement";
             School = School.Alteration;
             Description = "Teleports a the caster to a target location.";
             Level = 4;

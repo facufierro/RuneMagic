@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RuneMagic.Source.Skills;
-using SpaceCore;
-using StardewValley;
 using System.Collections.Generic;
 
 namespace RuneMagic.Source
@@ -19,16 +16,6 @@ namespace RuneMagic.Source
         public float CastingTime { get; set; } = 1;
         public Duration Duration { get; set; } = Duration.Instant;
 
-        private static readonly Dictionary<School, List<Color>> s_schoolColors = new()
-        {
-            { School.Abjuration, new List<Color> { Color.Gray, Color.DarkGray } },
-            { School.Alteration, new List<Color> { new Color(0, 0, 200), new Color(0, 0, 175) } },
-            { School.Conjuration, new List<Color> { Color.Orange, Color.DarkOrange } },
-            { School.Evocation, new List<Color> { new Color(200, 0, 200), new Color(175, 0, 175) } },
-            { School.Enchantment, new List<Color> { new Color(0, 200, 0), new Color(0, 175, 0) } },
-            { School.Illusion, new List<Color> { new Color(200, 0, 0), new Color(175, 0, 0) } },
-        };
-
         public Spell()
         {
             Name = GetType().Name;
@@ -45,13 +32,28 @@ namespace RuneMagic.Source
 
         public List<Color> GetColor()
         {
-            if (s_schoolColors.TryGetValue(School, out List<Color> colors))
+            switch (School)
             {
-                return colors;
-            }
-            else
-            {
-                return new List<Color> { Color.Red, Color.White };
+                case School.Abjuration:
+                    return new List<Color> { new Color(200, 200, 200), new Color(175, 175, 175) };
+
+                case School.Alteration:
+                    return new List<Color> { new Color(0, 0, 200), new Color(0, 0, 175) };
+
+                case School.Conjuration:
+                    return new List<Color> { Color.Orange, Color.DarkOrange };
+
+                case School.Evocation:
+                    return new List<Color> { new Color(200, 0, 200), new Color(175, 0, 175) };
+
+                case School.Enchantment:
+                    return new List<Color> { new Color(0, 200, 0), new Color(0, 175, 0) };
+
+                case School.Illusion:
+                    return new List<Color> { new Color(200, 0, 0), new Color(175, 0, 0) };
+
+                default:
+                    return new List<Color> { Color.White, Color.Black };
             }
         }
 

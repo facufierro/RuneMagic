@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RuneMagic.Source.Spells
+﻿namespace RuneMagic.Source.Spells
 {
     public class Command : Spell
     {
-        public Command()
+        public Command() : base()
         {
             School = School.Illusion;
             Description = "";

@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using RuneMagic.Source.SpellEffects;
 using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
     public class Warding : Spell
     {
-        public Warding()
+        public Warding() : base()
         {
-            Name = "Warding";
             Description = "Protects the caster from damage for a short period of time.";
             School = School.Abjuration;
             CastingTime = 1.0f;

@@ -7,7 +7,6 @@ namespace RuneMagic.Source.Spells
     {
         public Translocation() : base()
         {
-            Name = "Translocation";
             School = School.Alteration;
             Description = "The caster changes position with a target living creature.";
             Level = 4;

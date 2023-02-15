@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using StardewValley;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
@@ -7,7 +6,6 @@ namespace RuneMagic.Source.Spells
     {
         public Blasting() : base()
         {
-            Name = "Blasting";
             School = School.Evocation;
             Description = "Creates an explosion at a target location.";
             Level = 5;

@@ -1,18 +1,15 @@
-﻿
-High priority	
+﻿FEATURES:
+-Add more magic spells 
+-Add Quality to runes
+-Random charges system
+-Crafting cost tied to the lvl of the spell
 
--Add more magic spells
--Add a rune crack system
+-Add a rune crack system	
 -Mod compatibility with MARGO
 -Add interfaces
--add sounds
+-Improve sounds
 -Animations for the  player
--Add Quality to runes
 -Add configuration menu
--Random charges system
--rune crafting cost tied to the lvl of the spell
-
-Maybe
 -Add spellbooks and rune pouches
 -Add magic armor
 -Add monsters
@@ -23,6 +20,6 @@ Maybe
 -modify scroll texture to be smaller
 -add a drop system for recipes.
 
-Fixes
+FIXES:
 -Stop suppressing WASD after cast without unpressing the buttons 
 -Fix multiple runes bug

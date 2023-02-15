@@ -1,13 +1,10 @@
-﻿using RuneMagic.Source.SpellEffects;
-using StardewValley;
-using System;
-using System.Linq;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
     public class Invisibility : Spell
     {
-        public Invisibility()
+        public Invisibility() : base()
         {
             School = School.Illusion;
             Description = "Makes the caster invisible";

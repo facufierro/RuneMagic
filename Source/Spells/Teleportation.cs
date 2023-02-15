@@ -6,7 +6,6 @@ namespace RuneMagic.Source.Spells
     {
         public Teleportation() : base()
         {
-            Name = "Teleportation";
             School = School.Alteration;
             Description = "Teleports the caster to their home.";
             Level = 8;

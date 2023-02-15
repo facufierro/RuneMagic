@@ -1,6 +1,4 @@
-﻿using StardewValley;
-
-namespace RuneMagic.Source.NotImplementedSpells
+﻿namespace RuneMagic.Source.Spells
 {
     public class Weakness : Spell
     {

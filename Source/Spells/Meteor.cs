@@ -1,6 +1,4 @@
-﻿using StardewValley;
-
-namespace RuneMagic.Source.Spells
+﻿namespace RuneMagic.Source.Spells
 {
     public class Meteor : Spell
     {

@@ -1,7 +1,4 @@
-﻿using StardewModdingAPI;
-using StardewValley;
-using System.Linq;
-using System.Threading;
+﻿using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {

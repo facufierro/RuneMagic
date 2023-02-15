@@ -81,7 +81,6 @@ namespace RuneMagic.Source
                 if (!Game1.player.craftingRecipes.ContainsKey("Blank Parchment"))
                     Game1.player.craftingRecipes.Add("Blank Parchment", 0);
             }
-
             foreach (var spell in RuneMagic.Spells)
             {
                 if (level >= spell.Level)

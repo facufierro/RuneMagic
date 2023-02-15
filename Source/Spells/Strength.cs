@@ -1,10 +1,10 @@
 ﻿using StardewValley;
 
-namespace RuneMagic.Source.NotImplementedSpells
+namespace RuneMagic.Source.Spells
 {
     public class Strength : Spell
     {
-        public Strength()
+        public Strength() : base()
         {
             School = School.Enchantment;
             Description = "Increases the caster's attack damage.";

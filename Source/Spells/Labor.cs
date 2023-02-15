@@ -7,7 +7,6 @@ namespace RuneMagic.Source.Spells
     {
         public Labor() : base()
         {
-            Name = "Labor";
             School = School.Conjuration;
             Description = "Creates a hoe dirt tile at the cursor.";
             Level = 2;
