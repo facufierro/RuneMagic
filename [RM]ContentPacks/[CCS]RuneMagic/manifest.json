@@ -1,7 +1,7 @@
 {
   "Name": "[CCS]RuneMagic",
   "Author": "fierro",
-  "Version": "0.1.0",
+  "Version": "1.0.0",
   "Description": "Content needed for the Rune Magic mod.",
   "UniqueID": "fierro.rune_magic_ccs",
   "MinimumApiVersion": "3.0.0",
