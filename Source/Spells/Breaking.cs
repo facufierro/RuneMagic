@@ -16,12 +16,9 @@ namespace RuneMagic.Source.Spells
 
         public override bool Cast()
         {
-            //set Target to the debris under muse cursor
-            var pickaxe = new Pickaxe();
-            var target = Game1.currentLocation.getObjectAtTile((int)Game1.currentCursorTile.X, (int)Game1.currentCursorTile.Y);
-            if (target == null)
-                return false;
-            pickaxe.DoFunction(Game1.currentLocation, (int)target.TileLocation.X * Game1.tileSize, (int)target.TileLocation.Y * Game1.tileSize, 1, Game1.player);
+            Target = Game1.currentCursorTile;
+            var tool = new Pickaxe();
+            tool.DoFunction(Game1.currentLocation, (int)Game1.currentCursorTile.X * Game1.tileSize, (int)Game1.currentCursorTile.Y * Game1.tileSize, 1, Game1.player);
             return true;
         }
     }
