@@ -1,5 +1,6 @@
 ﻿using StardewValley;
 using StardewValley.TerrainFeatures;
+using StardewValley.Tools;
 
 namespace RuneMagic.Source.Spells
 {
@@ -14,16 +15,9 @@ namespace RuneMagic.Source.Spells
 
         public override bool Cast()
         {
-            Target = Game1.currentCursorTile;
-            if (Game1.currentLocation.terrainFeatures[Target] is HoeDirt dirt)
-            {
-                dirt.state.Value = HoeDirt.watered;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            var tool = new WateringCan();
+            tool.DoFunction(Game1.currentLocation, (int)Game1.currentCursorTile.X * Game1.tileSize, (int)Game1.currentCursorTile.Y * Game1.tileSize, 1, Game1.player);
+            return true;
         }
     }
 }
