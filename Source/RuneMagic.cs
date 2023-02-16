@@ -31,10 +31,10 @@ namespace RuneMagic.Source
         public override void Entry(IModHelper helper)
         {
             Instance = this;
+
             LoadTextures();
             RegisterSpells();
             RegisterCustomCraftingStations();
-
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
@@ -54,11 +54,11 @@ namespace RuneMagic.Source
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
-            JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
             SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
+            JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
         }
 
         private void OnItemsRegistered(object sender, EventArgs e)
@@ -66,36 +66,36 @@ namespace RuneMagic.Source
             var jsonAssetsInstance = JsonAssets.Mod.instance;
 
             //Register BigCraftables
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Runic Anvil", "An anvil marked with strange runes.", Helper.ModContent.Load<Texture2D>("assets/Items/big-craftable.png"),
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Runic Anvil", "An anvil marked with strange runes.", Textures["item_big_craftable"],
                 new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Inscription Table", "A table marked with strange runes.", Helper.ModContent.Load<Texture2D>("assets/Items/big-craftable.png"),
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Inscription Table", "A table marked with strange runes.", Textures["item_big_craftable"],
                 new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Helper.ModContent.Load<Texture2D>("assets/Items/big-craftable.png"),
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["item_big_craftable"],
                 new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
 
             //Register Runes and Scrolls
             int textureIndex = 0;
             foreach (var spell in Spells)
             {
-                jsonAssetsInstance.RegisterObject(ModManifest, SetRuneData(spell, Helper.ModContent.Load<Texture2D>($"assets/Runes/{textureIndex}.png")));
+                jsonAssetsInstance.RegisterObject(ModManifest, SetScrollData(spell));
+                jsonAssetsInstance.RegisterObject(ModManifest, SetRuneData(spell, textureIndex));
                 if (textureIndex == 8)
                     textureIndex = 0;
                 else
                     textureIndex++;
-                jsonAssetsInstance.RegisterObject(ModManifest, SetScrollData(spell, Textures["item_scroll"]));
             }
 
             //Register other Objects
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Rune", "\"A stone carved and prepared to carve runes in it.", Helper.ModContent.Load<Texture2D>("assets/Items/blank_rune.png"),
-                new() { new ObjectIngredient() { Object = "Stone", Count = 1 }, }));
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Parchment", "A peace of parchment ready for inscribing.", Helper.ModContent.Load<Texture2D>("assets/Items/blank_parchment.png"),
-                new() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, }));
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Magic Dust", "Magically processed dust obtained from Gems", Helper.ModContent.Load<Texture2D>("assets/Items/magic_dust.png"), null));
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Rune", "A stone carved and prepared to carve runes in it.", Textures[$"item_blank_rune"],
+                new List<ObjectIngredient>() { new ObjectIngredient() { Object = "Stone", Count = 1 }, }));
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Parchment", "A peace of parchment ready for inscribing.", Textures[$"item_blank_parchment"],
+                new List<ObjectIngredient>() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, }));
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Magic Dust", "Magically processed dust obtained from Gems", Textures[$"item_magic_dust"], null));
 
             //Register Weapons
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Apprentice Staff", "A stick with strange markings in it.", Helper.ModContent.Load<Texture2D>("assets/Items/apprentice_staff.png"), WeaponType.Club, 10));
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Adept Staff", "A stick with strange markings in it.", Helper.ModContent.Load<Texture2D>("assets/Items/adept_staff.png"), WeaponType.Club, 80));
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Master Staff", "A stick with strange markings in it.", Helper.ModContent.Load<Texture2D>("assets/Items/master_staff.png"), WeaponType.Club, 120));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Apprentice Staff", "A stick with strange markings in it.", Textures[$"item_apprentice_staff"], WeaponType.Club, 10));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Adept Staff", "A stick with strange markings in it.", Textures[$"item_adept_staff"], WeaponType.Club, 80));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Master Staff", "A stick with strange markings in it.", Textures[$"item_master_staff"], WeaponType.Club, 120));
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -121,10 +121,14 @@ namespace RuneMagic.Source
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
-            if (Context.IsWorldReady)
+            if (!Context.IsWorldReady)
+                return;
+            ManageMagicItems(Game1.player, JsonAssetsApi);
+            PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
+
+            if (Game1.player.ActiveObject is IMagicItem)
             {
-                ManageMagicItems(Game1.player, JsonAssetsApi);
-                PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
+                PlayerAnimation();
             }
         }
 
@@ -159,12 +163,12 @@ namespace RuneMagic.Source
                         if (!rune.RunemasterActive && rune.Charges >= 3)
                         {
                             rune.RunemasterActive = true;
-                            rune.Spell.CastingTime = 0.1f;
+                            rune.Spell.CastingTime = 0.01f;
                         }
                         else
                         {
                             rune.RunemasterActive = false;
-                            rune.Spell.CastingTime = 1;
+                            rune.Spell.CastingTime = 1 + (rune.Spell.Level / 10f) * 1.5f;
                         }
                     }
                 }
@@ -186,15 +190,15 @@ namespace RuneMagic.Source
         public void LoadTextures()
         {
             Textures = new Dictionary<string, Texture2D>();
-            foreach (var file in Directory.GetFiles("assets/Spells"))
+            foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Spells"))
             {
                 Textures.Add($"spell_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Spells/{Path.GetFileName(file)}"));
             }
-            foreach (var file in Directory.GetFiles("assets/Runes"))
+            foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Runes"))
             {
                 Textures.Add($"rune_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Runes/{Path.GetFileName(file)}"));
             }
-            foreach (var file in Directory.GetFiles("assets/Items"))
+            foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Items"))
             {
                 Textures.Add($"item_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Items/{Path.GetFileName(file)}"));
             }
@@ -223,7 +227,7 @@ namespace RuneMagic.Source
                     Instance.Monitor.Log($"\t{spell.Name,-25}REGISTERED \t {spell.School}", LogLevel.Debug);
                 }
             }
-            Spells = Spells.OrderBy(s => s.School).ThenBy(s => s.Name).ToList();
+            Spells = Spells.OrderBy(s => s.School).ThenBy(s => s.Level).ThenBy(s => s.Name).ToList();
         }
 
         public BigCraftableData SetBigCraftableData(string name, string description, Texture2D texture, List<BigCraftableIngredient> ingredients)
@@ -296,16 +300,17 @@ namespace RuneMagic.Source
             };
         }
 
-        public ObjectData SetRuneData(Spell spell, Texture2D texture)
+        public static ObjectData SetRuneData(Spell spell, int textureIndex)
         {
+            var texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Runes/{textureIndex}");
             var data = new Color[texture.Width * texture.Height];
             texture.GetData(data);
-            for (int i = 0; i < data.Length; ++i)
+            for (int j = 0; j < data.Length; ++j)
             {
-                if (data[i] == Color.White)
-                    data[i] = spell.GetColor()[0];
-                if (data[i] == Color.Black)
-                    data[i] = spell.GetColor()[1];
+                if (data[j] == Color.White)
+                    data[j] = spell.GetColor()[0];
+                if (data[j] == Color.Black)
+                    data[j] = spell.GetColor()[1];
             }
             texture.SetData(data);
             return new ObjectData()
@@ -315,7 +320,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.GetColor()[0],
+                CategoryColorOverride = spell.GetColor()[1],
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -332,23 +337,24 @@ namespace RuneMagic.Source
                          new ObjectIngredient()
                         {
                             Object = "Magic Dust",
-                            Count = 1,
+                            Count = 5 + spell.Level * 2,
                         },
                     }
                 }
             };
         }
 
-        public ObjectData SetScrollData(Spell spell, Texture2D texture)
+        public ObjectData SetScrollData(Spell spell)
         {
+            var texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Items/scroll.png");
             var data = new Color[texture.Width * texture.Height];
             texture.GetData(data);
-            for (int j = 0; j < data.Length; ++j)
+            for (int i = 0; i < data.Length; ++i)
             {
-                if (data[j] == Color.White)
-                    data[j] = spell.GetColor()[0];
-                if (data[j] == Color.Black)
-                    data[j] = spell.GetColor()[1];
+                if (data[i] == Color.White)
+                    data[i] = spell.GetColor()[0];
+                if (data[i] == Color.Black)
+                    data[i] = spell.GetColor()[1];
             }
             texture.SetData(data);
             return new ObjectData()
@@ -358,7 +364,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.GetColor()[0],
+                CategoryColorOverride = spell.GetColor()[1],
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -375,7 +381,7 @@ namespace RuneMagic.Source
                          new ObjectIngredient()
                         {
                             Object = "Magic Dust",
-                            Count = 1,
+                            Count = spell.Level,
                         },
                     }
                 }
@@ -466,6 +472,59 @@ namespace RuneMagic.Source
                 Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
                 Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
                 PlayerStats.MagicLearned = true;
+            }
+        }
+
+        public void PlayerAnimation()
+        {
+            var time = 1;
+            if (!Game1.player.FarmerSprite.PauseForSingleAnimation && !Game1.player.UsingTool)
+            {
+                if (Game1.player.isRidingHorse() && !Game1.player.mount.dismounting.Value)
+                {
+                    Game1.player.showRiding();
+                }
+                else if (Game1.player.FacingDirection == 3 && Game1.player.isMoving() && Game1.player.running)
+                {
+                    Game1.player.FarmerSprite.animate(56, time);
+                }
+                else if (Game1.player.FacingDirection == 1 && Game1.player.isMoving() && Game1.player.running)
+                {
+                    Game1.player.FarmerSprite.animate(40, time);
+                }
+                else if (Game1.player.FacingDirection == 0 && Game1.player.isMoving() && Game1.player.running)
+                {
+                    Game1.player.FarmerSprite.animate(48, time);
+                }
+                else if (Game1.player.FacingDirection == 2 && Game1.player.isMoving() && Game1.player.running)
+                {
+                    Game1.player.FarmerSprite.animate(32, time);
+                }
+                else if (Game1.player.FacingDirection == 3 && Game1.player.isMoving())
+                {
+                    Game1.player.FarmerSprite.animate(24, time);
+                }
+                else if (Game1.player.FacingDirection == 1 && Game1.player.isMoving())
+                {
+                    Game1.player.FarmerSprite.animate(8, time);
+                }
+                else if (Game1.player.FacingDirection == 0 && Game1.player.isMoving())
+                {
+                    Game1.player.FarmerSprite.animate(16, time);
+                }
+                else if (Game1.player.FacingDirection == 2 && Game1.player.isMoving())
+                {
+                    Game1.player.FarmerSprite.animate(0, time);
+                }
+                else if (PlayerStats.IsCasting)
+                {
+                    Game1.player.faceDirection(2);
+                    Game1.player.showCarrying();
+                }
+                else
+                {
+                    Game1.player.showNotCarrying();
+                }
             }
         }
     }

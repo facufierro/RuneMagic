@@ -32,10 +32,10 @@ namespace RuneMagic.Source.Items
 
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
+            //Max charges is a random number between 3 and 5 (inclusive)
+            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill));
             if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 10;
-            else
-                ChargesMax = 5;
+                ChargesMax += 5;
             Charges = ChargesMax;
             InitializeSpell();
         }
@@ -62,12 +62,15 @@ namespace RuneMagic.Source.Items
                 {
                     if (Spell.Cast())
                     {
+                        Game1.playSound("flameSpell");
+
                         if (RunemasterActive)
                         {
                             if (Math.Floor(Charges) >= 3)
                                 Charges -= 3;
                             else
                                 Charges--;
+                            RunemasterActive = false;
                         }
                         else
                             Charges--;
@@ -144,6 +147,12 @@ namespace RuneMagic.Source.Items
             }
             //draw an emote over the player head
             //spriteBatch.Draw(Game1.mouseCursors, new Rectangle((int)location.X + 40, (int)location.Y + 16, 16, 16), new Rectangle(346, 392, 8, 8), Color.White, 0f, Vector2.Zero, SpriteEffects.None, layerDepth + 0.0001f);
+        }
+
+        public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
+        {
+            if (RuneMagic.PlayerStats.IsCasting)
+                base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
 
         public override bool canBeShipped()

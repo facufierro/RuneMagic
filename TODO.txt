@@ -1,25 +1,25 @@
 ﻿FEATURES:
--Add more magic spells 
--Add Quality to runes
--Random charges system
--Crafting cost tied to the lvl of the spell
 
--Add a rune crack system	
--Mod compatibility with MARGO
--Add interfaces
--Improve sounds
--Animations for the  player
+-Implement all spells 
+
 -Add configuration menu
+-Add a drop system for recipes
+-Improve sounds
+-Mod compatibility with MARGO
 -Add spellbooks and rune pouches
--Add magic armor
+-Shine instead of castbar
+-Draw effects
+
+IDEAS:
+-Add a rune crack system
 -Add monsters
 -Add bosses
 -Add Rituals and rituals altar
--add casting interrupt
--add channeling mechanic
--modify scroll texture to be smaller
--add a drop system for recipes.
+-Add magic armor
+-Add channeling mechanic
 
 FIXES:
 -Stop suppressing WASD after cast without unpressing the buttons 
 -Fix multiple runes bug
+-Fix or replace Rune Master profession
+-Fix Magic Missile

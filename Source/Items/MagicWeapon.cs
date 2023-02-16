@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
+using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Tools;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-
 
 namespace RuneMagic.Source.Items
 {
@@ -15,6 +15,7 @@ namespace RuneMagic.Source.Items
     {
         [XmlIgnore]
         public Spell Spell { get; set; }
+
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
 
@@ -24,6 +25,7 @@ namespace RuneMagic.Source.Items
             Charges = ChargesMax;
             InitializeSpell();
         }
+
         public MagicWeapon(int parentSheetIndex) : base(parentSheetIndex)
         {
             ChargesMax = 20;
@@ -44,7 +46,6 @@ namespace RuneMagic.Source.Items
                     apprenticeSpells.Add(spell);
                 if (spell.Level >= 5 && spell.Level <= 6)
                     apprenticeSpells.Add(spell);
-
             }
             if (Name.Contains("Apprentice"))
             {
@@ -62,17 +63,20 @@ namespace RuneMagic.Source.Items
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
         }
+
         public void Activate()
         {
             if (Spell.Cast() && Charges > 0)
             {
+                Game1.playSound("flameSpell");
                 Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                 Charges--;
             }
-
         }
+
         public bool Fizzle()
         { return false; }
+
         public void Update()
         {
             if (Charges < ChargesMax)
@@ -94,11 +98,13 @@ namespace RuneMagic.Source.Items
                 spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
             }
         }
+
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
             spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
         }
+
         public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
         {
             base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
