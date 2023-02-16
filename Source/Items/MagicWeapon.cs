@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RuneMagic.Source.Spells;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
@@ -35,31 +36,21 @@ namespace RuneMagic.Source.Items
 
         public void InitializeSpell()
         {
-            List<Spell> apprenticeSpells = new();
-            List<Spell> adeptSpells = new();
-            List<Spell> masterSpells = new();
-            foreach (var spell in RuneMagic.Spells)
-            {
-                if (spell.Level >= 1 && spell.Level <= 1)
-                    apprenticeSpells.Add(spell);
-                if (spell.Level >= 2 && spell.Level <= 3)
-                    apprenticeSpells.Add(spell);
-                if (spell.Level >= 4 && spell.Level <= 10)
-                    apprenticeSpells.Add(spell);
-            }
+            if (Name is null)
+                return;
             if (Name.Contains("Apprentice"))
             {
-                Spell = apprenticeSpells[new Random().Next(apprenticeSpells.Count)];
+                Spell = new MagicMissile();
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
             if (Name.Contains("Adept"))
             {
-                Spell = adeptSpells[new Random().Next(apprenticeSpells.Count)];
+                Spell = new Blasting();
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
             if (Name.Contains("Master"))
             {
-                Spell = masterSpells[new Random().Next(apprenticeSpells.Count)];
+                Spell = new Fireball();
                 description += $" Looks like it contains the {Spell.Name} spell.";
             }
         }

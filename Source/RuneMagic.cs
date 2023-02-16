@@ -104,12 +104,13 @@ namespace RuneMagic.Source
 
         private void OnBlankSave(object sender, EventArgs e)
         {
-            //Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
-            //Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
-            //Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-            //Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
-            //Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
-            //Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
+            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
+            Game1.player.addItemToInventory(new Object(72, 100));
+            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
+            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
+            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
         }
 
         private void OnSaving(object sender, SavingEventArgs e)
@@ -175,11 +176,11 @@ namespace RuneMagic.Source
                     }
                 }
 
-                //if (e.Button == SButton.F5)
-                //{
-                //    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                //    Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
-                //}
+                if (e.Button == SButton.F5)
+                {
+                    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
+                    Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                }
             }
         }
 

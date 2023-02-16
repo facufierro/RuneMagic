@@ -5,7 +5,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 60,
+    "MinutesUntilReady": 30,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 1,
     "Sounds": [
@@ -18,7 +18,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 60,
+    "MinutesUntilReady": 30,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 1,
     "Sounds": [
@@ -31,7 +31,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 80,
+    "MinutesUntilReady": 40,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 3,
     "Sounds": [
@@ -44,7 +44,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 80,
+    "MinutesUntilReady": 40,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 3,
     "Sounds": [
@@ -57,7 +57,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 100,
+    "MinutesUntilReady": 50,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 5,
     "Sounds": [
@@ -70,7 +70,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 100,
+    "MinutesUntilReady": 50,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 5,
     "Sounds": [
@@ -83,7 +83,7 @@
     "InputStack": 1,
     //"FuelIdentifier": "390",
     //"FuelStack": 1,
-    "MinutesUntilReady": 120,
+    "MinutesUntilReady": 60,
     "OutputIdentifier": "Magic Dust",
     "OutputStack": 10,
     "Sounds": [

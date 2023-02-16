@@ -1,5 +1,9 @@
-﻿FEATURES:
+﻿DOING:
+-Fix Fireball and Magic Missile
+-Fix Warding
 
+FEATURES:
+-Rebalance Staves
 -Implement all spells 
 
 -Add configuration menu
@@ -24,3 +28,4 @@ FIXES:
 -Fix multiple runes bug
 -Fix or replace Rune Master profession
 -Fix Magic Missile
+-Check compatibility with Better Crafting
