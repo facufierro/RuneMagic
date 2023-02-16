@@ -44,13 +44,13 @@ namespace RuneMagic.Source
                     return new List<Color> { Color.Orange, Color.DarkOrange };
 
                 case School.Evocation:
-                    return new List<Color> { new Color(200, 0, 200), new Color(175, 0, 175) };
+                    return new List<Color> { new Color(200, 0, 0), new Color(175, 0, 0) };
 
                 case School.Enchantment:
                     return new List<Color> { new Color(0, 200, 0), new Color(0, 175, 0) };
 
                 case School.Illusion:
-                    return new List<Color> { new Color(200, 0, 0), new Color(175, 0, 0) };
+                    return new List<Color> { new Color(200, 0, 200), new Color(175, 0, 175) };
 
                 default:
                     return new List<Color> { Color.White, Color.Black };

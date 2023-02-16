@@ -9,6 +9,7 @@
 -Add spellbooks and rune pouches
 -Shine instead of castbar
 -Draw effects
+-Modify Inscription table sprites
 
 IDEAS:
 -Add a rune crack system
