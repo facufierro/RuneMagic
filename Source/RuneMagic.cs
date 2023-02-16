@@ -67,11 +67,11 @@ namespace RuneMagic.Source
 
             //Register BigCraftables
             jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Runic Anvil", "An anvil marked with strange runes.", Textures["item_big_craftable"],
-                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
+                new() { new BigCraftableIngredient() { Object = "Iron Bar", Count = 20 }, new BigCraftableIngredient() { Object = "Amethyst", Count = 25 }, }));
             jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Inscription Table", "A table marked with strange runes.", Textures["item_big_craftable"],
-                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["item_big_craftable"],
-                new() { new BigCraftableIngredient() { Object = "Stone", Count = 1 }, }));
+                new() { new BigCraftableIngredient() { Object = "Wood", Count = 40 }, new BigCraftableIngredient() { Object = "Amethyst", Count = 25 }, }));
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["item_magic_grinder"],
+                new() { new BigCraftableIngredient() { Object = "Stone", Count = 40 }, new BigCraftableIngredient() { Object = "Topaz", Count = 25 }, }));
 
             //Register Runes and Scrolls
             int textureIndex = 0;
@@ -451,7 +451,7 @@ namespace RuneMagic.Source
 
         public void WizardEvent(GameLocation location)
         {
-            Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
+            //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
             if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +

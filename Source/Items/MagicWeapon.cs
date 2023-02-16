@@ -40,11 +40,11 @@ namespace RuneMagic.Source.Items
             List<Spell> masterSpells = new();
             foreach (var spell in RuneMagic.Spells)
             {
-                if (spell.Level >= 1 && spell.Level <= 2)
+                if (spell.Level >= 1 && spell.Level <= 1)
                     apprenticeSpells.Add(spell);
-                if (spell.Level >= 3 && spell.Level <= 4)
+                if (spell.Level >= 2 && spell.Level <= 3)
                     apprenticeSpells.Add(spell);
-                if (spell.Level >= 5 && spell.Level <= 6)
+                if (spell.Level >= 4 && spell.Level <= 10)
                     apprenticeSpells.Add(spell);
             }
             if (Name.Contains("Apprentice"))

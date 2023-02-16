@@ -7,7 +7,7 @@ namespace RuneMagic.Source.Spells
         public Regeneration() : base()
         {
             School = School.Enchantment;
-            Description = "Slowly regenerates the caster's health.";
+            Description = "Slowly regenerates the caster's Stamina.";
             Level = 4;
             Duration = Duration.Long;
         }

@@ -9,7 +9,7 @@ namespace RuneMagic.Source.Spells
     {
         public Breaking() : base()
         {
-            School = School.Alteration;
+            School = School.Conjuration;
             Description = "Breaks debris on the target location.";
             Level = 3;
         }

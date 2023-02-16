@@ -43,14 +43,14 @@ namespace RuneMagic.Source.Skills
             Runelord = new MagicProfession(this, "fierro.rune_magic.runelord")
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
-                Name = "Runelord",
+                Name = "Rune Lord",
                 Description = "When you craft a rune it has 10 charges instead of 5.",
             };
             Professions.Add(Runelord);
             Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
             {
                 Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
-                Name = "Runemaster",
+                Name = "Rune Master",
                 Description = "The caster can spend 3 charges of a rune to make it instant cast."
             };
             Professions.Add(Runemaster);
@@ -107,7 +107,7 @@ namespace RuneMagic.Source.Skills
 
         public override string GetSkillPageHoverText(int level)
         {
-            return $"-{level}% Chance of Casting Failure" + Environment.NewLine + $"+{level}% Casting Speed";
+            return /*$"-{level}% Chance of Casting Failure" + Environment.NewLine +*/ $"+{level}% Casting Speed";
         }
     }
 }
