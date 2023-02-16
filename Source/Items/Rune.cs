@@ -22,10 +22,9 @@ namespace RuneMagic.Source.Items
 
         public Rune() : base()
         {
+            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill));
             if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax = 10;
-            else
-                ChargesMax = 5;
+                ChargesMax += 5;
             Charges = ChargesMax;
             InitializeSpell();
         }
@@ -42,13 +41,12 @@ namespace RuneMagic.Source.Items
 
         public void InitializeSpell()
         {
-            string spellName = Name[8..];
             foreach (var spell in RuneMagic.Spells)
             {
-                if (spell.Name == spellName)
+                if (Name.Contains(spell.Name))
                 {
                     Spell = spell;
-                    //RuneMagic.Instance.Monitor.Log($"{spell.Name} Initialized", LogLevel.Debug);
+                    RuneMagic.Instance.Monitor.Log($"{Name} Initialized", LogLevel.Debug);
                     break;
                 }
             }

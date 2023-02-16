@@ -68,7 +68,6 @@ namespace RuneMagic.Source
             if (CastingTimer >= Math.Floor(item.Spell.CastingTime * 60))
             {
                 item.Activate();
-                RuneMagic.Instance.Helper.Input.Suppress(SButton.R);
                 CastingTimer = 0;
             }
             else

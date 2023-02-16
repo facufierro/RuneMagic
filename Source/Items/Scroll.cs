@@ -31,11 +31,9 @@ namespace RuneMagic.Source.Items
         {
             //set spellName to Name without " Scroll" at the end
 
-            string spellName = Name[0..^7];
-            spellName = spellName.Replace(" ", "");
             foreach (var spell in RuneMagic.Spells)
             {
-                if (spell.Name == spellName)
+                if (Name.Contains(spell.Name))
                 {
                     Spell = spell;
                     if (Game1.player.HasCustomProfession(MagicSkill.Scribe))

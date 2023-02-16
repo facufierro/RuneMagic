@@ -53,11 +53,11 @@ namespace RuneMagic.Source
         //Event Handlers
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
-            JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
+            JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
         }
 
@@ -178,8 +178,8 @@ namespace RuneMagic.Source
 
                 if (e.Button == SButton.F5)
                 {
-                    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                    Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+                    //Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
                 }
             }
         }
@@ -308,12 +308,12 @@ namespace RuneMagic.Source
             var texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Runes/{textureIndex}");
             var data = new Color[texture.Width * texture.Height];
             texture.GetData(data);
-            for (int j = 0; j < data.Length; ++j)
+            for (int i = 0; i < data.Length; ++i)
             {
-                if (data[j] == Color.White)
-                    data[j] = spell.GetColor()[0];
-                if (data[j] == Color.Black)
-                    data[j] = spell.GetColor()[1];
+                if (data[i] == Color.White)
+                    data[i] = spell.GetColor()[0];
+                if (data[i] == Color.Black)
+                    data[i] = spell.GetColor()[1];
             }
             texture.SetData(data);
             return new ObjectData()
