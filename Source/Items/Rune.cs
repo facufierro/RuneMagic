@@ -43,13 +43,12 @@ namespace RuneMagic.Source.Items
         public void InitializeSpell()
         {
             string spellName = Name[8..];
-
             foreach (var spell in RuneMagic.Spells)
             {
                 if (spell.Name == spellName)
                 {
                     Spell = spell;
-                    RuneMagic.Instance.Monitor.Log($"{spell.Name} Initialized", LogLevel.Debug);
+                    //RuneMagic.Instance.Monitor.Log($"{spell.Name} Initialized", LogLevel.Debug);
                     break;
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using RuneMagic.Source.SpellEffects;
 using SpaceCore;
 using StardewValley;
+using System;
 
 namespace RuneMagic.Source.Spells
 {
@@ -16,7 +17,7 @@ namespace RuneMagic.Source.Spells
 
         public override bool Cast()
         {
-            var projectileNumber = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2;
+            var projectileNumber = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) / 2 + 1;
             var spellTexture = "magic_missile";
             var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill);
             var minDamage = 1;
