@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using SpaceCore;
+using StardewValley;
 using StardewValley.TerrainFeatures;
 using StardewValley.Tools;
 
@@ -16,7 +17,8 @@ namespace RuneMagic.Source.Spells
         public override bool Cast()
         {
             var tool = new WateringCan();
-            tool.DoFunction(Game1.currentLocation, (int)Game1.currentCursorTile.X * Game1.tileSize, (int)Game1.currentCursorTile.Y * Game1.tileSize, 1, Game1.player);
+            var potency = 1 + (Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) - Level) / 4;
+            tool.DoFunction(Game1.currentLocation, (int)Game1.currentCursorTile.X * Game1.tileSize, (int)Game1.currentCursorTile.Y * Game1.tileSize, potency, Game1.player);
             return true;
         }
     }

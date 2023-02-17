@@ -86,9 +86,7 @@ namespace RuneMagic.Source.Skills
                 $"The wizard has taught you the basics of magic." };
             else
                 info = new List<string>(){
-                $"You now have {level}% less chance of Casting Failure",
-                $"and {level}% Casting Speed"};
-
+                $"Your spells have become more powerful." };
             info.Add($"You have gained access to the following spells:");
 
             string spellList = "";
@@ -107,7 +105,7 @@ namespace RuneMagic.Source.Skills
 
         public override string GetSkillPageHoverText(int level)
         {
-            return /*$"-{level}% Chance of Casting Failure" + Environment.NewLine +*/ $"+{level}% Casting Speed";
+            return $"+{level}% Spell Potency";
         }
     }
 }

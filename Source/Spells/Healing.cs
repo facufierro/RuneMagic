@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using SpaceCore;
+using StardewValley;
 
 namespace RuneMagic.Source.Spells
 {
@@ -15,8 +16,10 @@ namespace RuneMagic.Source.Spells
         {
             if (Game1.player.health >= Game1.player.maxHealth)
                 return false;
-
-            Game1.player.health += 20;
+            var heal = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill) * 10;
+            if (heal > Game1.player.maxHealth - Game1.player.health)
+                heal = Game1.player.maxHealth - Game1.player.health;
+            Game1.player.health += heal;
             return true;
         }
     }

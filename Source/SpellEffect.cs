@@ -1,4 +1,8 @@
-﻿namespace RuneMagic.Source
+﻿using RuneMagic.Source.Skills;
+using SpaceCore;
+using StardewValley;
+
+namespace RuneMagic.Source
 {
     public abstract class SpellEffect
     {
@@ -13,9 +17,9 @@
             switch (Duration)
             {
                 case Duration.Instant: Timer = 0; break;
-                case Duration.Short: Timer = 5 * 60; break;             //5 minutes ingame
-                case Duration.Medium: Timer = 10 * 60; break;           //1 hour ingame
-                case Duration.Long: Timer = 4 * 60 * 60; break;         //4 hours ingame
+                case Duration.Short: Timer = (5 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
+                case Duration.Medium: Timer = (10 * Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
+                case Duration.Long: Timer = (30 * Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
                 case Duration.Permanent: Timer = 999999999; break;
             }
         }
