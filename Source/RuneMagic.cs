@@ -574,12 +574,22 @@ namespace RuneMagic.Source
                 mod: ModManifest,
                 reset: () => Config = new ModConfig(),
                 save: () => Helper.WriteConfig(Config));
+            ConfigMenuApi.AddKeybind(
+                mod: ModManifest,
+                name: () => "Casting Key",
+                getValue: () => Config.CastKey,
+                setValue: value => Config.CastKey = value);
+            ConfigMenuApi.AddKeybind(
+                mod: ModManifest,
+                name: () => "Rune Master Activation Key",
+                getValue: () => Config.RunemasterKey,
+                setValue: value => Config.RunemasterKey = value);
+            ConfigMenuApi.SetTitleScreenOnlyForNextOptions(ModManifest, true);
             ConfigMenuApi.AddBoolOption(
-                mod: this.ModManifest,
-                name: () => "Developer Mode",
-                getValue: () => this.Config.DevMode,
-                setValue: value => this.Config.DevMode = value
-      );
+               mod: ModManifest,
+               name: () => "Developer Mode",
+               getValue: () => Config.DevMode,
+               setValue: value => Config.DevMode = value);
         }
     }
 }

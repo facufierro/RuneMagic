@@ -1,2 +1,3 @@
 ﻿-Improved Skill Profession Icons
-
+-Improved Cast Bar
+-Made Magic Skill improve spells not Casting Speed and modified all Spells Accordingly
