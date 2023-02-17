@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using RuneMagic.Source.Effects;
 using StardewValley;
+using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
@@ -15,14 +17,13 @@ namespace RuneMagic.Source.Spells
 
         public override bool Cast()
         {
-            var buff = new Buff(Buff.yobaBlessing)
+            if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Warded>().Any())
             {
-                millisecondsDuration = 5 * 1000,
-                glow = Color.Transparent,
-                sheetIndex = 9000,
-            };
-            Game1.buffsDisplay.addOtherBuff(buff);
-            return true;
+                Effect = new Warded(Name);
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

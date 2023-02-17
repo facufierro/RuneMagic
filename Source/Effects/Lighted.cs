@@ -13,7 +13,7 @@ namespace RuneMagic.Source.Effects
     {
         private Vector2 Target;
 
-        public Lighted(string name, Vector2 target) : base(name, Duration.Short)
+        public Lighted(string name, Vector2 target) : base(name, Duration.Medium)
         {
             Name = name;
             Target = target;
