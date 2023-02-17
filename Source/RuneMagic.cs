@@ -28,10 +28,15 @@ namespace RuneMagic.Source
 
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
+        public static IGenericModConfigMenuApi ConfigMenuApi { get; private set; }
+
+        private ModConfig Config;
 
         public override void Entry(IModHelper helper)
         {
             Instance = this;
+
+            Config = Helper.ReadConfig<ModConfig>();
 
             LoadTextures();
             RegisterSpells();
@@ -55,11 +60,16 @@ namespace RuneMagic.Source
         private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
         {
             SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
+            JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
+            ConfigMenuApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
+
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
-            JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
+
             JsonAssetsApi.ItemsRegistered += OnItemsRegistered;
+
+            RegisterConfigMenu();
         }
 
         private void OnItemsRegistered(object sender, EventArgs e)
@@ -105,13 +115,16 @@ namespace RuneMagic.Source
 
         private void OnBlankSave(object sender, EventArgs e)
         {
-            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
-            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
-            Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-            Game1.player.addItemToInventory(new Object(72, 100));
-            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
-            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
-            Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
+            if (Config.DevMode)
+            {
+                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
+                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
+                Game1.player.addItemToInventory(new Object(72, 100));
+                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
+                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
+                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
+            }
         }
 
         private void OnSaving(object sender, SavingEventArgs e)
@@ -176,11 +189,18 @@ namespace RuneMagic.Source
                         }
                     }
                 }
-
-                if (e.Button == SButton.F5)
+                if (Config.DevMode)
                 {
-                    Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                    //Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                    if (e.Button == SButton.F5)
+                    {
+                        Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
+                        Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                    }
+                    if (e.Button == SButton.F4)
+                    {
+                        Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+                        Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                    }
                 }
             }
         }
@@ -539,6 +559,23 @@ namespace RuneMagic.Source
                     Game1.player.showNotCarrying();
                 }
             }
+        }
+
+        public void RegisterConfigMenu()
+        {
+            if (ConfigMenuApi is null)
+                return;
+
+            ConfigMenuApi.Register(
+                mod: ModManifest,
+                reset: () => Config = new ModConfig(),
+                save: () => Helper.WriteConfig(Config));
+            ConfigMenuApi.AddBoolOption(
+                mod: this.ModManifest,
+                name: () => "Developer Mode",
+                getValue: () => this.Config.DevMode,
+                setValue: value => this.Config.DevMode = value
+      );
         }
     }
 }
