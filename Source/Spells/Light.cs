@@ -9,7 +9,6 @@ namespace RuneMagic.Source.Spells
             School = School.Conjuration;
             Description = "Conjures a torch at a target location.";
             Level = 3;
-            Duration = Duration.Medium;
         }
 
         public override bool Cast()

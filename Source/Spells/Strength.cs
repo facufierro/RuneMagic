@@ -1,4 +1,6 @@
-﻿using StardewValley;
+﻿using RuneMagic.Source.Effects;
+using StardewValley;
+using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
@@ -9,35 +11,17 @@ namespace RuneMagic.Source.Spells
             School = School.Enchantment;
             Description = "Increases the caster's attack damage.";
             Level = 5;
-            Duration = Duration.Medium;
         }
 
         public override bool Cast()
         {
-            if (Effect is null)
+            if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Strengthened>().Any())
             {
-                Effect = new SpellEffect(Name, DurationInMilliseconds);
+                Effect = new Strengthened(Name);
                 return true;
             }
             else
                 return false;
-        }
-
-        public override void Update()
-        {
-            if (Effect is not null)
-            {
-                if (Effect.Timer <= DurationInMilliseconds && Game1.player.attackIncreaseModifier < 5)
-                    Game1.player.attackIncreaseModifier = 5;
-                if (Effect.Timer <= 0)
-                    Game1.player.attackIncreaseModifier = 0;
-                if (Effect.Timer < 0)
-                    Effect = null;
-                else
-                    Effect.Timer--;
-
-                RuneMagic.Instance.Monitor.Log(Game1.player.addedSpeed.ToString());
-            }
         }
     }
 }

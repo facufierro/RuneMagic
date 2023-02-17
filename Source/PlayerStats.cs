@@ -14,6 +14,7 @@ namespace RuneMagic.Source
     public class PlayerStats
     {
         public MagicSkill MagicSkill { get; set; } // The player's magic skill added using SpaceCore
+        public List<SpellEffect> ActiveEffects { get; set; }
         public bool MagicLearned { get; set; } = false; // Indicates whether the player has learned magic
         public bool IsCasting { get; set; } = false; // Indicates whether the player is currently casting a spell
         public float CastingTimer { get; set; } = 0; // Tracks how long the player has been casting the current spell
@@ -24,6 +25,8 @@ namespace RuneMagic.Source
 
         public PlayerStats()
         {
+            MagicSkill = new MagicSkill();
+            ActiveEffects = new List<SpellEffect>();
         }
 
         // Attempts to cast a spell using the specified IMagicItem object

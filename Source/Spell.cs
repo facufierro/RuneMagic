@@ -14,7 +14,6 @@ namespace RuneMagic.Source
 
         public int Level { get; set; } = 1;
         public float CastingTime { get; set; } = 1;
-        public Duration Duration { get; set; } = Duration.Instant;
 
         public Spell()
         {
@@ -24,11 +23,8 @@ namespace RuneMagic.Source
 
         public virtual bool Cast()
         {
-            return false;
+            return true;
         }
-
-        public virtual void Update()
-        { }
 
         public List<Color> GetColor()
         {
@@ -56,15 +52,5 @@ namespace RuneMagic.Source
                     return new List<Color> { Color.White, Color.Black };
             }
         }
-
-        public int DurationInMilliseconds => Duration switch
-        {
-            Duration.Instant => 0,
-            Duration.Short => 5 * 60,
-            Duration.Medium => 60 * 60,
-            Duration.Long => 4 * 60 * 60,
-            Duration.Permanent => 999999999,
-            _ => 0
-        };
     }
 }

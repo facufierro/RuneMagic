@@ -16,7 +16,7 @@ namespace RuneMagic.Source.Spells
             if (Game1.player.health >= Game1.player.maxHealth)
                 return false;
 
-            Game1.player.health += 10;
+            Game1.player.health += 20;
             return true;
         }
     }

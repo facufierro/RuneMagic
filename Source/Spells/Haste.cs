@@ -1,4 +1,6 @@
-﻿using StardewValley;
+﻿using RuneMagic.Source.Effects;
+using StardewValley;
+using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
@@ -9,33 +11,17 @@ namespace RuneMagic.Source.Spells
             School = School.Enchantment;
             Description = "Increases the caster's movement speed.";
             Level = 4;
-            Duration = Duration.Short;
         }
 
         public override bool Cast()
         {
-            if (Effect is null)
+            if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Hastened>().Any())
             {
-                Effect = new SpellEffect(Name, DurationInMilliseconds);
+                Effect = new Hastened(Name);
                 return true;
             }
             else
                 return false;
-        }
-
-        public override void Update()
-        {
-            if (Effect is not null)
-            {
-                if (Effect.Timer <= DurationInMilliseconds && Game1.player.addedSpeed < 5)
-                    Game1.player.addedSpeed = 5;
-                if (Effect.Timer <= 0)
-                    Game1.player.addedSpeed = 0;
-                if (Effect.Timer < 0)
-                    Effect = null;
-                else
-                    Effect.Timer--;
-            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using StardewValley;
+﻿using RuneMagic.Source.Effects;
+using StardewValley;
+using System.Linq;
 
 namespace RuneMagic.Source.Spells
 {
@@ -9,31 +11,17 @@ namespace RuneMagic.Source.Spells
             School = School.Enchantment;
             Description = "Slowly regenerates the caster's Stamina.";
             Level = 4;
-            Duration = Duration.Long;
         }
 
         public override bool Cast()
         {
-            if (Effect is null)
+            if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Regenerating>().Any())
             {
-                Effect = new SpellEffect(Name, DurationInMilliseconds);
+                Effect = new Regenerating(Name);
                 return true;
             }
             else
                 return false;
-        }
-
-        public override void Update()
-        {
-            if (Effect is not null)
-            {
-                if (Effect.Timer <= DurationInMilliseconds && Game1.player.Stamina < Game1.player.MaxStamina)
-                    Game1.player.Stamina += 0.01f;
-                if (Effect.Timer < 0)
-                    Effect = null;
-                else
-                    Effect.Timer--;
-            }
         }
     }
 }

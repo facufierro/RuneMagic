@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 using Object = StardewValley.Object;
 
@@ -20,7 +21,7 @@ namespace RuneMagic.Source
     public sealed class RuneMagic : Mod
     {
         public static RuneMagic Instance { get; private set; }
-        public static PlayerStats PlayerStats { get; private set; } = new PlayerStats();
+        public static PlayerStats PlayerStats { get; private set; }
         public static List<Spell> Spells { get; private set; }
 
         public static Dictionary<string, Texture2D> Textures;
@@ -46,7 +47,7 @@ namespace RuneMagic.Source
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
 
-            PlayerStats.MagicSkill = new MagicSkill();
+            PlayerStats = new PlayerStats();
             SpaceCore.Skills.RegisterSkill(PlayerStats.MagicSkill);
         }
 
@@ -127,10 +128,10 @@ namespace RuneMagic.Source
             if (!Context.IsWorldReady)
                 return;
             ManageMagicItems(Game1.player, JsonAssetsApi);
-            PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
-
-            if (Game1.player.ActiveObject is IMagicItem)
+            ManageSpellEffects();
+            if (Game1.player.CurrentItem is IMagicItem)
             {
+                PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
                 PlayerAnimation();
             }
         }
@@ -423,33 +424,42 @@ namespace RuneMagic.Source
         //Game Management Methods
         public void ManageMagicItems(Farmer player, JsonAssets.IApi jsonAssetsApi)
         {
-            if (Context.IsWorldReady)
-                for (int i = 0; i < player.Items.Count; i++)
-                {
-                    var inventory = player.Items;
-                    List<string> objectsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
-                    List<string> weaponsFromPack = new(jsonAssetsApi.GetAllWeaponsFromContentPack("fierro.rune_magic"));
+            if (!Context.IsWorldReady)
+                return;
 
-                    if (inventory[i] is not IMagicItem and not null)
+            for (int i = 0; i < player.Items.Count; i++)
+            {
+                var inventory = player.Items;
+                List<string> objectsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
+                List<string> weaponsFromPack = new(jsonAssetsApi.GetAllWeaponsFromContentPack("fierro.rune_magic"));
+
+                if (inventory[i] is not IMagicItem and not null)
+                {
+                    if (objectsFromPack.Contains(inventory[i].Name))
                     {
-                        if (objectsFromPack.Contains(inventory[i].Name))
-                        {
-                            if (inventory[i].Name.Contains("Rune of "))
-                                player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                            if (inventory[i].Name.Contains(" Scroll"))
-                                player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                        }
-                        if (weaponsFromPack.Contains(inventory[i].Name))
-                        {
-                            player.Items[i] = new MagicWeapon(JsonAssetsApi.GetWeaponId(inventory[i].Name));
-                        }
+                        if (inventory[i].Name.Contains("Rune of "))
+                            player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
+                        if (inventory[i].Name.Contains(" Scroll"))
+                            player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
                     }
-                    if (inventory[i] is IMagicItem magicItem)
+                    if (weaponsFromPack.Contains(inventory[i].Name))
                     {
-                        magicItem.Update();
-                        magicItem.Spell?.Update();
+                        player.Items[i] = new MagicWeapon(JsonAssetsApi.GetWeaponId(inventory[i].Name));
                     }
                 }
+                if (inventory[i] is IMagicItem magicItem)
+                {
+                    magicItem.Update();
+                }
+            }
+        }
+
+        public void ManageSpellEffects()
+        {
+            for (int i = 0; i < PlayerStats.ActiveEffects.Count; i++)
+            {
+                PlayerStats.ActiveEffects[i].Update();
+            }
         }
 
         public void WizardEvent(GameLocation location)
