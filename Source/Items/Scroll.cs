@@ -65,6 +65,11 @@ namespace RuneMagic.Source.Items
             return false;
         }
 
+        public override int maximumStackSize()
+        {
+            return 10;
+        }
+
         public void DrawCastbar(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
             //draw a castbar on the item if isCasting is true taking into account that if player has Scribe profession the castbar is 50% shorter
@@ -73,20 +78,16 @@ namespace RuneMagic.Source.Items
                 if (RuneMagic.PlayerStats.IsCasting && Game1.player.CurrentItem == this)
                 {
                     var castingTime = Spell.CastingTime;
-                    var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 64);
-                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X, (int)objectPosition.Y + 64, castbarWidth, 5), Color.DarkBlue);
+                    var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 58);
+                    spriteBatch.Draw(RuneMagic.Textures["interface_castbar_frame"], new Rectangle((int)objectPosition.X, (int)objectPosition.Y, 64, 84), Color.White);
+                    spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + 3, (int)objectPosition.Y + 75, castbarWidth, 5), new Color(new Vector4(0, 0, 200, 0.8f)));
                 }
             }
         }
 
-        public override int maximumStackSize()
-        {
-            return 10;
-        }
-
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting)
+            if (RuneMagic.PlayerStats.IsCasting && Game1.player.HasCustomProfession(MagicSkill.Sage))
                 base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
 
