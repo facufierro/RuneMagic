@@ -19,21 +19,21 @@ namespace RuneMagic.Source.Skills
         public MagicSkill()
             : base(MagicSkillId)
         {
-            Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_magic_icon.png");
-            SkillsPageIcon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill_page_magic_icon.png");
+            Icon = RuneMagic.Textures["interface_skill_icon_magic"];
+            SkillsPageIcon = RuneMagic.Textures["interface_skill_icon_magic"];
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
             ExperienceBarColor = Color.DarkBlue;
 
             Runesmith = new MagicProfession(this, "fierro.rune_magic.runesmith")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_runesmith"],
                 Name = "Runesmith",
                 Description = "Your runes recharge 50% faster.",
             };
             Professions.Add(Runesmith);
             Scribe = new MagicProfession(this, "fierro.rune_magic.scribe")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_scribe"],
                 Name = "Scribe",
                 Description = "Scroll casting time is reduced by 20%.",
             };
@@ -42,14 +42,14 @@ namespace RuneMagic.Source.Skills
 
             Runelord = new MagicProfession(this, "fierro.rune_magic.runelord")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_runelord"],
                 Name = "Rune Lord",
                 Description = "When you craft a rune it has 10 charges instead of 5.",
             };
             Professions.Add(Runelord);
             Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_runemaster"],
                 Name = "Rune Master",
                 Description = "The caster can spend 3 charges of a rune to make it instant cast."
             };
@@ -58,14 +58,14 @@ namespace RuneMagic.Source.Skills
 
             Lorekeeper = new MagicProfession(this, "fierro.rune_magic.lorekeeper")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_lorekeeper"],
                 Name = "Lorekeeper",
                 Description = "The caster has 20% chance to not consume a scroll when casting."
             };
             Professions.Add(Lorekeeper);
             Sage = new MagicProfession(this, "fierro.rune_magic.sage")
             {
-                Icon = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>("assets/Interface/skill-icon.png"),
+                Icon = RuneMagic.Textures["interface_skill_icon_sage"],
                 Name = "Sage",
                 Description = "The caster can walk while casting.",
             };

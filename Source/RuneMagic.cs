@@ -226,6 +226,10 @@ namespace RuneMagic.Source
             {
                 Textures.Add($"item_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Items/{Path.GetFileName(file)}"));
             }
+            foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Interface"))
+            {
+                Textures.Add($"interface_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Interface/{Path.GetFileName(file)}"));
+            }
             //print the Textures keys on console as alert
             foreach (var texture in Textures)
             {

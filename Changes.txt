@@ -1,2 +1,3 @@
 ﻿-Implemented Light Spell.
 -Fixed Player Casting again after Cast.
+-Fixed Warding Spell
