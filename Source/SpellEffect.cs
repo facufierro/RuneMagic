@@ -45,7 +45,7 @@ namespace RuneMagic.Source
                 }
                 Timer--;
             }
-            RuneMagic.Instance.Monitor.Log($"{Timer}");
+            //RuneMagic.Instance.Monitor.Log($"{Timer}");
         }
     }
 }

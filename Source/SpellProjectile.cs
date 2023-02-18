@@ -1,229 +1,103 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Netcode;
+using SpaceCore;
 using StardewValley;
 using StardewValley.Monsters;
 using StardewValley.Projectiles;
 using StardewValley.TerrainFeatures;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace RuneMagic.Source.SpellEffects
+namespace RuneMagic.Source
 {
     public class SpellProjectile : Projectile
     {
-        /*********
-        ** Fields
-        *********/
-        private readonly Farmer Source;
-        private readonly NetString SpellTexture = new();
-        private readonly NetInt MinDamage = new();
-        private readonly NetInt MaxDamage = new();
-        private readonly NetInt BonusDamage = new();
-        private readonly NetFloat Area = new();
-        private readonly NetFloat Direction = new();
-        private readonly NetFloat Velocity = new();
-        private NetInt Range = new();
-        private NetBool IsHoming = new();
-        private NetVector2 CursorPosition = new();
-        private NetVector2 RandomCursorPosition = new();
-        private NetInt Spread = new();
-        private NetString SoundHit = new();
+        public Farmer Source { get; set; }
+        public Spell Spell { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
+        public int BonusDamage { get; set; }
+        public float Direction { get; set; }
+        public float Velocity { get; set; }
+        public Texture2D Texture { get; set; }
+        public bool Homing { get; set; }
 
+        private Random random = new Random();
 
-        private Texture2D Texture;
-        private readonly NetString TextureId = new();
-        private Vector2 Target;
-        private float nearestDistance = float.MaxValue;
-        private Monster nearestMonster = null;
-        private bool seekTarget = false;
-        private double creationTime;
-
-        private static readonly System.Random Rand = new();
-
-        /*********
-        ** Public methods
-        *********/
-        public SpellProjectile()
+        public SpellProjectile(Texture2D texture, int minDamage, int maxDamage, int bonusDamage, int velocity, bool homing)
         {
-            NetFields.AddFields(SpellTexture, MinDamage, MaxDamage, BonusDamage, Area, Direction, Velocity, Range, Spread, IsHoming, SoundHit, TextureId);
-        }
-        public SpellProjectile(Farmer source, string spellTexture, int minDamage, int maxDamage, int bonusDamage, int area, float velocity, int range, int spread, bool isHoming, string soundHit)
-            : this()
-        {
-            Source = source;
-            SpellTexture.Value = spellTexture;
-            MinDamage.Value = minDamage;
-            MaxDamage.Value = maxDamage;
-            BonusDamage.Value = bonusDamage;
-            Area.Value = area;
-            Velocity.Value = velocity;
-            Range.Value = range;
-            Spread.Value = spread;
-            IsHoming.Value = isHoming;
-            SoundHit.Value = soundHit;
+            Source = Game1.player;
+            Homing = homing;
+            MinDamage = minDamage;
+            MaxDamage = maxDamage;
+            BonusDamage = bonusDamage;
+            Texture = texture;
 
-            theOneWhoFiredMe.Set(source.currentLocation, Source);
-            position.Value = Source.getStandingPosition();
-            position.X += Source.GetBoundingBox().Width;
-            position.Y += Source.GetBoundingBox().Height;
+            theOneWhoFiredMe.Set(Source.currentLocation, Source);
             damagesMonsters.Value = true;
-            Texture = RuneMagic.Instance.Helper.ModContent.Load<Texture2D>($"assets/Spells/{spellTexture}.png");
-            TextureId.Value = RuneMagic.Instance.Helper.ModContent.GetInternalAssetName($"assets/Spells/{spellTexture}.png").BaseName;
 
-            CursorPosition.Value = new Vector2(Game1.getMousePosition().X + Game1.viewport.X + Game1.tileSize, Game1.getMousePosition().Y + Game1.viewport.Y + Game1.tileSize);
-            RandomCursorPosition.Value = new Vector2(CursorPosition.X + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread), CursorPosition.Y + Rand.Next(-Game1.tileSize * spread, Game1.tileSize * spread));
-            creationTime = Game1.currentGameTime.TotalGameTime.TotalMilliseconds;
+            position.Value = Source.getStandingPosition();
+            position.X -= Source.GetBoundingBox().Width / 1.5f;
+            position.Y -= (Source.GetBoundingBox().Height);
 
-            if (IsHoming.Value)
-            {
-                foreach (var character in source.currentLocation.characters)
-                {
-                    if (character is Monster mob)
-                    {
-
-                        float distance = Utility.distance(mob.Position.X, CursorPosition.X, mob.Position.Y, CursorPosition.Y);
-                        if (distance < nearestDistance)
-                        {
-                            nearestDistance = distance;
-                            nearestMonster = mob;
-                        }
-                    }
-                }
-            }
-        }
-
-        public override bool update(GameTime time, GameLocation location)
-        {
-            if (!seekTarget)
-            {
-                if (time.TotalGameTime.TotalMilliseconds - creationTime > 300)
-                {
-                    seekTarget = true;
-                }
-            }
-
-            if (seekTarget == false)
-            {
-                Target = RandomCursorPosition;
-            }
-            else
-            {
-                if (nearestMonster is not null && (int)nearestDistance < Range)
-                {
-                    Target.X = nearestMonster.position.Value.X + Game1.tileSize;
-                    Target.Y = nearestMonster.position.Value.Y + Game1.tileSize;
-                }
-                else
-                {
-                    Target = CursorPosition;
-                }
-            }
-            Vector2 direction = Target - position;
-            direction.Normalize();
-            xVelocity.Value = direction.X * Velocity;
-            yVelocity.Value = direction.Y * Velocity;
-
-            float distance = Vector2.Distance(position, Target);
-
-            if (distance <= 3)
-            {
-                if (time.TotalGameTime.TotalMilliseconds > 300)
-                {
-                    //damage monsters in area tiles around the target if area is greater than 0
-                    if (Area > 0)
-                    {
-                        Rectangle area = new((int)((int)Target.X - (Game1.tileSize * Area)), (int)((int)Target.Y - (Game1.tileSize * Area)), (int)((int)Target.X + (Game1.tileSize * Area)), (int)((int)Target.Y + (Game1.tileSize * Area)));
-                        foreach (var character in location.characters)
-                        {
-                            if (character is Monster mob)
-                            {
-                                if (area.Contains(mob.GetBoundingBox()))
-                                {
-                                    location.damageMonster(mob.GetBoundingBox(), MinDamage.Value + BonusDamage.Value, MaxDamage.Value + BonusDamage.Value, false, Source);
-                                }
-                            }
-                        }
-                    }
-                    Game1.playSound(SoundHit.Value);
-                    Disappear(location);
-                    return true;
-                }
-            }
-            if (time.TotalGameTime.TotalMilliseconds - creationTime > 1000)
-            {
-                Disappear(location);
-                return true;
-            }
-            return base.update(time, location);
-        }
-
-
-        public override void behaviorOnCollisionWithMineWall(int tileX, int tileY)
-        {
-
-        }
-
-        public override void behaviorOnCollisionWithMonster(NPC npc, GameLocation location)
-        {
-            if (npc is not Monster)
-                return;
-
-            bool didDmg = location.damageMonster(npc.GetBoundingBox(), MinDamage.Value + BonusDamage.Value, MaxDamage.Value + BonusDamage.Value, false, Source);
-            Disappear(location);
-        }
-
-        public override void behaviorOnCollisionWithOther(GameLocation location)
-        {
-
-
-        }
-
-        public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer farmer)
-        {
-
-        }
-
-        public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
-        {
-
-            Game1.playSound(SoundHit);
-            Disappear(location);
-        }
-
-        public override bool isColliding(GameLocation location)
-        {
-            return base.isColliding(location);
-        }
-
-        public override Rectangle getBoundingBox()
-        {
-            return new((int)(position.X - Game1.tileSize), (int)(position.Y - Game1.tileSize), Game1.tileSize / 2, Game1.tileSize / 2);
+            Velocity = velocity;
+            Direction = (float)Math.Atan2(Game1.currentCursorTile.Y * 64 - position.Y, Game1.currentCursorTile.X * 64 - position.X);
         }
 
         public override void updatePosition(GameTime time)
         {
-            position.X += xVelocity.Value;
-            position.Y += yVelocity.Value;
+            Velocity += 0.1f;
+            if (Homing)
+            {
+                var monsters = Game1.currentLocation.characters.OfType<Monster>().ToList();
+                var closestMonster = monsters.OrderBy(m => Vector2.Distance(m.position, position)).FirstOrDefault();
+                if (closestMonster != null)
+                {
+                    var monsterCenter = new Vector2(closestMonster.position.X - closestMonster.GetBoundingBox().Width / 4, closestMonster.position.Y - closestMonster.GetBoundingBox().Height / 4);
+                    Direction = (float)Math.Atan2(monsterCenter.Y - position.Y, monsterCenter.X - position.X);
+                }
+            }
+            position.X += (float)Math.Cos(Direction) * Velocity;
+            position.Y += (float)Math.Sin(Direction) * Velocity;
         }
 
         public override void draw(SpriteBatch b)
         {
-            Texture ??= Game1.content.Load<Texture2D>(TextureId.Value);
             Vector2 drawPos = Game1.GlobalToLocal(new Vector2(getBoundingBox().X + getBoundingBox().Width / 2, getBoundingBox().Y + getBoundingBox().Height / 2));
-            b.Draw(Texture, drawPos, new Rectangle(0, 0, Texture.Width, Texture.Height), Color.White, Direction.Value, new Vector2(Texture.Width / 2, Texture.Height / 2), 2, SpriteEffects.None, (float)((position.Y + (double)(Game1.tileSize * 3 / 2)) / 10000.0));
+            b.Draw(Texture, drawPos, new Rectangle(0, 0, Texture.Width, Texture.Height), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 2, SpriteEffects.None, (float)((position.Y + (double)(Game1.tileSize * 3 / 2)) / 10000.0));
         }
 
-        /*********
-        ** Private methods
-        *********/
-        private void Disappear(GameLocation location)
+        public override void behaviorOnCollisionWithOther(GameLocation loc)
         {
+            //if (!Homing)
+            //    destroyMe = true;
+        }
 
-
-            Game1.createRadialDebris(location, TextureId.Value, Game1.getSourceRectForStandardTileSheet(projectileSheet, 0), 4,
-                (int)position.X, (int)position.Y, 6 + Rand.Next(10), (int)(position.Y / (double)Game1.tileSize) + 1,
-                new Color(255, 255, 255, 8 + Rand.Next(64)), 2.0f);
-
+        public override void behaviorOnCollisionWithMineWall(int tileX, int tileY)
+        {
             destroyMe = true;
+        }
+
+        public override void behaviorOnCollisionWithMonster(NPC n, GameLocation location)
+        {
+            if (n is not Monster)
+                return;
+            location.damageMonster(new Rectangle(n.GetBoundingBox().X, n.GetBoundingBox().Y, 64, 64), MinDamage + BonusDamage, MaxDamage + BonusDamage, false, -100, 100, 0, 0, false, Source);
+            destroyMe = true;
+        }
+
+        public override void behaviorOnCollisionWithPlayer(GameLocation location, Farmer player)
+        {
+        }
+
+        public override void behaviorOnCollisionWithTerrainFeature(TerrainFeature t, Vector2 tileLocation, GameLocation location)
+        {
+            //if (!Homing)
+            //    destroyMe = true;
         }
     }
 }

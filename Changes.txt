@@ -2,3 +2,5 @@
 -Improved Cast Bar
 -Made Magic Skill improve spells not Casting Speed and modified all Spells Accordingly
 -Added Config Options to bind Casting and Rune Master Activation keys.
+-Improved SpellProjectiles
+-Improved Magic Missile

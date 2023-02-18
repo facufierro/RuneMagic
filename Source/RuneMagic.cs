@@ -8,6 +8,7 @@ using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Locations;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -191,15 +192,26 @@ namespace RuneMagic.Source
                 }
                 if (Config.DevMode)
                 {
-                    if (e.Button == SButton.F5)
+                    switch (e.Button)
                     {
-                        Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                        Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
-                    }
-                    if (e.Button == SButton.F4)
-                    {
-                        Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                        Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                        case SButton.F9:
+                            Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+                            Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                            break;
+
+                        case SButton.F10:
+                            Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
+                            Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                            break;
+
+                        case SButton.F11:
+                            Game1.nextMineLevel();
+                            break;
+
+                        case SButton.F12:
+
+                            Game1.warpFarmer("UndergroundMine2", 10, 4, false);
+                            break;
                     }
                 }
             }
