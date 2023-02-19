@@ -1,15 +1,18 @@
-[b][size=6][center]Rune Magic[/center][/size][/b]
+[b][size=6][center][color=#674ea7]Rune Magic[/color][/center][/size][/b]
 
 
-[color=red][b][size=4][center]WARNING[/center]
+[color=red][b][size=4][center]WARNING
 This mod is in ALPHA, every feature is fully functional but there will be bugs. I will try to fix problems as they appear.
 Please back up your save file if you use it with other mods!
-[/size][/b][/color]
+[/size][/b][/color][/center]
 
-[color=yellow][b][size=4][center]Big Update[/center]
-This update is hugh, it adds a lot of new features and fixes a lot of bugs. If you are updating from a previous version please remove every item that has spells on it from inventory and chests.
-You can restart the wizard event using the config menu, if you already had it.
-[/size][/b][/color]
+[color=yellow][b][size=4][center]Big Update
+This update is huge, it adds a lot of new features and fixes a lot of bugs. If you are updating from a previous version please remove every item that has spells on it from inventory and chests.
+You will need to restart the wizard event using the config menu.
+
+The professions don't work yet, they are a priority for the next update.
+Also, some of the spells are not working yet, you'll see the big NOT IMPLEMENTED on the description.
+[/size][/b][/color][/center]
 
 [center][size=5][b]Features[/b][/size][/center]
 

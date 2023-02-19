@@ -116,6 +116,7 @@ namespace RuneMagic.Source
 
         private void OnBlankSave(object sender, EventArgs e)
         {
+            Config.MagicLearned = false;
             if (Config.DevMode)
             {
                 Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
