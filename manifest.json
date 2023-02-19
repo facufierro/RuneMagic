@@ -1,7 +1,7 @@
 {
   "Name": "RuneMagic",
   "Author": "fierro",
-  "Version": "0.1.4",
+  "Version": "0.2.0",
   "Description": "Adds a new magic system to the game.",
   "UniqueID": "fierro.rune_magic",
   "UpdateKeys": [
