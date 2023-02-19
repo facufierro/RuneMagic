@@ -597,11 +597,7 @@ namespace RuneMagic.Source
                 name: () => "Casting Key",
                 getValue: () => Config.CastKey,
                 setValue: value => Config.CastKey = value);
-            ConfigMenuApi.AddKeybind(
-                mod: ModManifest,
-                name: () => "Rune Master Activation Key",
-                getValue: () => Config.RunemasterKey,
-                setValue: value => Config.RunemasterKey = value);
+
             ConfigMenuApi.SetTitleScreenOnlyForNextOptions(ModManifest, true);
             ConfigMenuApi.AddBoolOption(
                mod: ModManifest,
