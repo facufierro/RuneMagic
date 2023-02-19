@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace RuneMagic.Source
 {
-    public sealed class ModConfig
+    public class ModConfig
     {
         public bool DevMode { get; set; } = false;
+        public bool MagicLearned { get; set; } = false;
         public SButton CastKey { get; set; } = SButton.R;
         //public SButton RunemasterKey { get; set; } = SButton.Q;
     }

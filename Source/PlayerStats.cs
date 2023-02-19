@@ -18,7 +18,6 @@ namespace RuneMagic.Source
     {
         public Dictionary<School, MagicSkill> MagicSkills { get; set; }
         public List<SpellEffect> ActiveEffects { get; set; }
-        public bool MagicLearned { get; set; } = false; // Indicates whether the player has learned magic
         public bool IsCasting { get; set; } = false; // Indicates whether the player is currently casting a spell
         public float CastingTimer { get; set; } = 0; // Tracks how long the player has been casting the current spell
         public int SpellAttack { get; set; } // Represents the strength of the player's spell attack NOT IMPLEMENTED

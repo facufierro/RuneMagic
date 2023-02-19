@@ -1,5 +1,6 @@
 ﻿-Added 4 Skills for each school of magic with its professions (effects not implemented yet).
 -Added some more spells (effects not implemented yet).
+-Wizard event triggers at 3 hearts
 -Improved Cast Bar
 -Made Magic Skill improve spells not Casting Speed and modified all Spells Accordingly
 -Added Config Options to bind Casting and Profession Activation keys.
