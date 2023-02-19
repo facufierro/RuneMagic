@@ -10,9 +10,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Hastened : SpellEffect
     {
-        public Hastened(string name) : base(name, Duration.Short)
+        public Hastened(Spell spell) : base(spell, Duration.Short)
         {
-            Name = name;
             Start();
         }
 

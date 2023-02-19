@@ -22,21 +22,21 @@ namespace RuneMagic.Source.Items
 
         public Rune() : base()
         {
-            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill));
-            if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax += 5;
-            Charges = ChargesMax;
             InitializeSpell();
+            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(Spell.Skill));
+            //if (Game1.player.HasCustomProfession(AlterationSkill.profesion1))
+            //    ChargesMax += 5;
+            Charges = ChargesMax;
         }
 
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            //Max charges is a random number between 3 and 5 (inclusive)
-            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill));
-            if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
-                ChargesMax += 5;
-            Charges = ChargesMax;
             InitializeSpell();
+            //Max charges is a random number between 3 and 5 (inclusive)
+            ChargesMax = Game1.random.Next(3, 3 + Game1.player.GetCustomSkillLevel(Spell.Skill));
+            //if (Game1.player.HasCustomProfession(MagicSkill.Runelord))
+            //    ChargesMax += 5;
+            Charges = ChargesMax;
         }
 
         public void InitializeSpell()
@@ -71,7 +71,6 @@ namespace RuneMagic.Source.Items
                         }
                         else
                             Charges--;
-                        Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                     }
                 }
         }
@@ -95,10 +94,10 @@ namespace RuneMagic.Source.Items
             //Charges
             if (Charges < ChargesMax)
             {
-                if (Game1.player.HasCustomProfession(MagicSkill.Runesmith))
-                    Charges += 0.0010f;
-                else
-                    Charges += 0.0005f;
+                //if (Game1.player.HasCustomProfession(MagicSkill.Runesmith))
+                //    Charges += 0.0010f;
+                //else
+                Charges += 0.0005f;
             }
             if (Charges > ChargesMax)
                 Charges = ChargesMax;

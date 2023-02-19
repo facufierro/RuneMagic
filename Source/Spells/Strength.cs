@@ -6,19 +6,18 @@ namespace RuneMagic.Source.Spells
 {
     public class Strength : Spell
     {
-        public Strength() : base()
+        public Strength() : base(School.Abjuration)
         {
-            School = School.Enchantment;
-            Description = "Increases the caster's attack damage.";
-            Level = 5;
+            Description += "Increases the caster's attack damage.";
+            Level = 3;
         }
 
         public override bool Cast()
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Strengthened>().Any())
             {
-                Effect = new Strengthened(Name);
-                return true;
+                Effect = new Strengthened(this);
+                return base.Cast();
             }
             else
                 return false;

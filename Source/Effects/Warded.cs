@@ -10,9 +10,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Warded : SpellEffect
     {
-        public Warded(string name) : base(name, Duration.Short)
+        public Warded(Spell spell) : base(spell, Duration.Short)
         {
-            Name = name;
             Start();
         }
 

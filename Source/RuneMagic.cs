@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using static SpaceCore.Skills;
 using Object = StardewValley.Object;
 
 namespace RuneMagic.Source
@@ -39,9 +40,6 @@ namespace RuneMagic.Source
 
             Config = Helper.ReadConfig<ModConfig>();
 
-            LoadTextures();
-            RegisterSpells();
-            RegisterCustomCraftingStations();
             helper.Events.GameLoop.GameLaunched += OnGameLaunched;
             helper.Events.GameLoop.SaveLoaded += OnSaveLoaded;
             helper.Events.GameLoop.DayStarted += OnDayStarted;
@@ -53,8 +51,10 @@ namespace RuneMagic.Source
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
 
+            LoadTextures();
             PlayerStats = new PlayerStats();
-            SpaceCore.Skills.RegisterSkill(PlayerStats.MagicSkill);
+            RegisterSpells();
+            RegisterCustomCraftingStations();
         }
 
         //Event Handlers
@@ -154,7 +154,12 @@ namespace RuneMagic.Source
         {
             if (Game1.CurrentEvent.id == 15065001)
             {
-                Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
+                foreach (var magicSkill in PlayerStats.MagicSkills)
+                {
+                    Game1.player.AddCustomSkillExperience(magicSkill.Value, 100);
+                }
+                Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
+                PlayerStats.MagicLearned = true;
             }
         }
 
@@ -174,34 +179,38 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-                if (e.Button == SButton.Q)
-                {
-                    if (Game1.player.HasCustomProfession(MagicSkill.Runemaster) && Game1.player.CurrentItem is Rune rune)
-                    {
-                        if (!rune.RunemasterActive && rune.Charges >= 3)
-                        {
-                            rune.RunemasterActive = true;
-                            rune.Spell.CastingTime = 0.01f;
-                        }
-                        else
-                        {
-                            rune.RunemasterActive = false;
-                            rune.Spell.CastingTime = 1 + (rune.Spell.Level / 10f) * 1.5f;
-                        }
-                    }
-                }
+                //if (e.Button == SButton.Q)
+                //{
+                //    if (Game1.player.HasCustomProfession(MagicSkill.Runemaster) && Game1.player.CurrentItem is Rune rune)
+                //    {
+                //        if (!rune.RunemasterActive && rune.Charges >= 3)
+                //        {
+                //            rune.RunemasterActive = true;
+                //            rune.Spell.CastingTime = 0.01f;
+                //        }
+                //        else
+                //        {
+                //            rune.RunemasterActive = false;
+                //            rune.Spell.CastingTime = 1 + (rune.Spell.Level / 10f) * 1.5f;
+                //        }
+                //    }
+                //}
                 if (Config.DevMode)
                 {
                     switch (e.Button)
                     {
                         case SButton.F9:
-                            Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                            Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                            foreach (var magicSkill in PlayerStats.MagicSkills)
+                            {
+                                Game1.player.AddCustomSkillExperience(magicSkill.Value, 100);
+                            }
                             break;
 
                         case SButton.F10:
-                            Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 15000);
-                            Monitor.Log(Game1.player.GetCustomSkillExperience(PlayerStats.MagicSkill).ToString());
+                            foreach (var magicSkill in PlayerStats.MagicSkills)
+                            {
+                                Game1.player.AddCustomSkillExperience(magicSkill.Value, 1500);
+                            }
                             break;
 
                         case SButton.F11:
@@ -340,7 +349,7 @@ namespace RuneMagic.Source
             };
         }
 
-        public static ObjectData SetRuneData(Spell spell, int textureIndex)
+        public ObjectData SetRuneData(Spell spell, int textureIndex)
         {
             var texture = Instance.Helper.ModContent.Load<Texture2D>($"assets/Runes/{textureIndex}");
             var data = new Color[texture.Width * texture.Height];
@@ -348,9 +357,9 @@ namespace RuneMagic.Source
             for (int i = 0; i < data.Length; ++i)
             {
                 if (data[i] == Color.White)
-                    data[i] = spell.GetColor()[0];
+                    data[i] = spell.Skill.Colors[0];
                 if (data[i] == Color.Black)
-                    data[i] = spell.GetColor()[1];
+                    data[i] = spell.Skill.Colors[1];
             }
             texture.SetData(data);
             return new ObjectData()
@@ -360,7 +369,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.GetColor()[1],
+                CategoryColorOverride = spell.Skill.Colors[1],
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -392,9 +401,9 @@ namespace RuneMagic.Source
             for (int i = 0; i < data.Length; ++i)
             {
                 if (data[i] == Color.White)
-                    data[i] = spell.GetColor()[0];
+                    data[i] = spell.Skill.Colors[0];
                 if (data[i] == Color.Black)
-                    data[i] = spell.GetColor()[1];
+                    data[i] = spell.Skill.Colors[1];
             }
             texture.SetData(data);
             return new ObjectData()
@@ -404,7 +413,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.GetColor()[1],
+                CategoryColorOverride = spell.Skill.Colors[1],
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -518,9 +527,6 @@ namespace RuneMagic.Source
                        $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
-                Game1.player.AddCustomSkillExperience(PlayerStats.MagicSkill, 100);
-                Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
-                PlayerStats.MagicLearned = true;
             }
         }
 

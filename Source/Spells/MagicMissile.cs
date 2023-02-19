@@ -10,11 +10,10 @@ namespace RuneMagic.Source.Spells
 {
     public class MagicMissile : Spell
     {
-        public MagicMissile() : base()
+        public MagicMissile() : base(School.Evocation)
         {
             Name = "Magic Missile";
-            School = School.Evocation;
-            Description = "Shoots a magic missile per two magic skill levels.";
+            Description += "Shoots a magic missile per two magic skill levels.";
             Level = 1;
         }
 
@@ -22,8 +21,8 @@ namespace RuneMagic.Source.Spells
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<CastingMagicMissile>().Any())
             {
-                Effect = new CastingMagicMissile(Name);
-                return true;
+                Effect = new CastingMagicMissile(this);
+                return base.Cast();
             }
             else
                 return false;

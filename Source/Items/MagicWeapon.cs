@@ -60,7 +60,6 @@ namespace RuneMagic.Source.Items
             if (Spell.Cast() && Charges > 0)
             {
                 Game1.playSound("flameSpell");
-                Game1.player.AddCustomSkillExperience(RuneMagic.PlayerStats.MagicSkill, 5);
                 Charges--;
             }
         }

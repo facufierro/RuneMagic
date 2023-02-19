@@ -5,11 +5,10 @@ namespace RuneMagic.Source.Spells
 {
     public class Excavation : Spell
     {
-        public Excavation() : base()
+        public Excavation() : base(School.Conjuration)
         {
-            School = School.Conjuration;
-            Description = "The caster digs a hole at a target location.";
-            Level = 7;
+            Description += "The caster digs a hole at a target location.";
+            Level = 5;
         }
 
         public override bool Cast()
@@ -17,8 +16,7 @@ namespace RuneMagic.Source.Spells
             if (Game1.currentLocation is MineShaft)
             {
                 Game1.nextMineLevel();
-
-                return true;
+                return base.Cast();
             }
             else
                 return false;

@@ -1,18 +1,13 @@
-﻿namespace RuneMagic.Source.Skills
+﻿using static SpaceCore.Skills;
+
+namespace RuneMagic.Source.Skills
 {
-    public class MagicProfession : SpaceCore.Skills.Skill.Profession
+    public class MagicProfession : Skill.Profession
     {
-        /*********
-        ** Accessors
-        *********/
         public string Name { get; set; }
         public string Description { get; set; }
 
-
-        /*********
-        ** Public methods
-        *********/
-        public MagicProfession(MagicSkill skill, string Id)
+        public MagicProfession(Skill skill, string Id)
             : base(skill, Id) { }
 
         public override string GetName()

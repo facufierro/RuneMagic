@@ -7,20 +7,18 @@ namespace RuneMagic.Source.Spells
 {
     public class Warding : Spell
     {
-        public Warding() : base()
+        public Warding() : base(School.Abjuration)
         {
-            Description = "Protects the caster from damage for a short period of time.";
-            School = School.Abjuration;
-            CastingTime = 1.0f;
-            Level = 7;
+            Description += "Protects the caster from damage for a short period of time.";
+            Level = 5;
         }
 
         public override bool Cast()
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Warded>().Any())
             {
-                Effect = new Warded(Name);
-                return true;
+                Effect = new Warded(this);
+                return base.Cast();
             }
             else
                 return false;

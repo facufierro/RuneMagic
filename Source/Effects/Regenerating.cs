@@ -10,9 +10,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Regenerating : SpellEffect
     {
-        public Regenerating(string name) : base(name, Duration.Medium)
+        public Regenerating(Spell spell) : base(spell, Duration.Medium)
         {
-            Name = name;
             Start();
         }
 

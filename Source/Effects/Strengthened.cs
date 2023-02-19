@@ -10,9 +10,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Strengthened : SpellEffect
     {
-        public Strengthened(string name) : base(name, Duration.Medium)
+        public Strengthened(Spell spell) : base(spell, Duration.Medium)
         {
-            Name = name;
             Start();
         }
 

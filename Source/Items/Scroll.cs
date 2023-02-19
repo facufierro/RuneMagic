@@ -36,8 +36,8 @@ namespace RuneMagic.Source.Items
                 if (Name.Contains(spell.Name))
                 {
                     Spell = spell;
-                    if (Game1.player.HasCustomProfession(MagicSkill.Scribe))
-                        Spell.CastingTime *= 0.8f;
+                    //if (Game1.player.HasCustomProfession(MagicSkill.Scribe))
+                    //    Spell.CastingTime *= 0.8f;
                     break;
                 }
             }
@@ -49,8 +49,8 @@ namespace RuneMagic.Source.Items
             {
                 Game1.playSound("flameSpell");
                 //remove an item stack from this object if Farmer doesnt have Lorekeeper profession and if it does give it a 20% chance of not consuming the scroll
-                if (!Game1.player.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
-                    Stack--;
+                //if (!Game1.player.HasCustomProfession(MagicSkill.Lorekeeper) || Game1.random.Next(1, 100) > 20)
+                Stack--;
                 if (Stack <= 0)
                     Game1.player.removeItemFromInventory(this);
             }
@@ -87,7 +87,7 @@ namespace RuneMagic.Source.Items
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.IsCasting && Game1.player.HasCustomProfession(MagicSkill.Sage))
+            if (RuneMagic.PlayerStats.IsCasting /*&& Game1.player.HasCustomProfession(MagicSkill.Sage)*/)
                 base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
 

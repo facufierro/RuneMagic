@@ -1,6 +1,8 @@
-﻿-Improved Skill Profession Icons
+﻿-Added 4 Skills for each school of magic with its professions (effects not implemented yet).
+-Added some more spells (effects not implemented yet).
 -Improved Cast Bar
 -Made Magic Skill improve spells not Casting Speed and modified all Spells Accordingly
--Added Config Options to bind Casting and Rune Master Activation keys.
--Improved SpellProjectiles
+-Added Config Options to bind Casting and Profession Activation keys.
+-Improved Spell Projectiles
 -Improved Magic Missile
+

@@ -5,10 +5,9 @@ namespace RuneMagic.Source.Spells
 {
     public class Translocation : Spell
     {
-        public Translocation() : base()
+        public Translocation() : base(School.Alteration)
         {
-            School = School.Alteration;
-            Description = "The caster changes position with a target living creature.";
+            Description += "The caster changes position with a target living creature.";
             Level = 4;
         }
 
@@ -18,7 +17,7 @@ namespace RuneMagic.Source.Spells
             if (Target != null)
             {
                 (Game1.player.Position, Target.Position) = (Target.Position, Game1.player.Position);
-                return true;
+                return base.Cast();
             }
             else
             {

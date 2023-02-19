@@ -9,9 +9,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Vitalized : SpellEffect
     {
-        public Vitalized(string name) : base(name, Duration.Long)
+        public Vitalized(Spell spell) : base(spell, Duration.Long)
         {
-            Name = name;
             Start();
         }
 

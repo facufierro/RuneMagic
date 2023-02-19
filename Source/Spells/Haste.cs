@@ -6,19 +6,18 @@ namespace RuneMagic.Source.Spells
 {
     public class Haste : Spell
     {
-        public Haste() : base()
+        public Haste() : base(School.Abjuration)
         {
-            School = School.Enchantment;
-            Description = "Increases the caster's movement speed.";
-            Level = 4;
+            Description += "Increases the caster's movement speed.";
+            Level = 3;
         }
 
         public override bool Cast()
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Hastened>().Any())
             {
-                Effect = new Hastened(Name);
-                return true;
+                Effect = new Hastened(this);
+                return base.Cast();
             }
             else
                 return false;

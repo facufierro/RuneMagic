@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Netcode;
 using RuneMagic.Source.Items;
 using RuneMagic.Source.Skills;
 using SpaceCore;
@@ -7,13 +9,14 @@ using StardewValley;
 using System;
 using System.Collections.Generic;
 using xTile.Dimensions;
+using static SpaceCore.Skills;
 
 namespace RuneMagic.Source
 {
     // A class for tracking and manipulating the player's magical abilities and actions in the game
     public class PlayerStats
     {
-        public MagicSkill MagicSkill { get; set; } // The player's magic skill added using SpaceCore
+        public Dictionary<School, MagicSkill> MagicSkills { get; set; }
         public List<SpellEffect> ActiveEffects { get; set; }
         public bool MagicLearned { get; set; } = false; // Indicates whether the player has learned magic
         public bool IsCasting { get; set; } = false; // Indicates whether the player is currently casting a spell
@@ -25,7 +28,17 @@ namespace RuneMagic.Source
 
         public PlayerStats()
         {
-            MagicSkill = new MagicSkill();
+            MagicSkills = new Dictionary<School, MagicSkill>
+            {
+                { School.Abjuration, new AbjurationSkill( new List<Color>() { new Color(200,200,200),new Color(175,175,175) }) },
+                { School.Alteration, new AlterationSkill( new List<Color>() { new Color(0,0, 200),new Color(0,0, 175) }) },
+                { School.Conjuration, new ConjurationSkill( new List<Color>() { Color.Orange, Color.DarkOrange }) },
+                { School.Evocation, new EvocationSkill( new List<Color>() { new Color(200, 0, 0),new Color(175, 0, 0)}) },
+            };
+            foreach (var magicSkill in MagicSkills)
+            {
+                RegisterSkill(magicSkill.Value);
+            }
             ActiveEffects = new List<SpellEffect>();
         }
 
@@ -84,37 +97,41 @@ namespace RuneMagic.Source
         // player's current magic level and the list of spells
         public void LearnRecipes()
         {
-            var level = Game1.player.GetCustomSkillLevel(MagicSkill);
-            if (level < 1) return;
-
-            var craftingRecipes = new string[]
+            foreach (var magicSkill in RuneMagic.PlayerStats.MagicSkills)
             {
-                "Runic Anvil",
-                "Inscription Table",
-                "Magic Grinder",
-                "Blank Rune",
-                "Blank Parchment"
-            };
+                var level = Game1.player.GetCustomSkillLevel(magicSkill.Value);
+                if (level < 1) return;
 
-            // Add crafting recipes for the above items
-            foreach (var recipe in craftingRecipes)
-            {
-                if (!Game1.player.craftingRecipes.ContainsKey(recipe))
-                    Game1.player.craftingRecipes.Add(recipe, 0);
-            }
-
-            // Add crafting recipes for each spell that the player has learned
-            foreach (var spell in RuneMagic.Spells)
-            {
-                if (level >= spell.Level)
+                var craftingRecipes = new string[]
                 {
-                    var runeName = $"Rune of {spell.Name}";
-                    if (!Game1.player.craftingRecipes.ContainsKey(runeName))
-                        Game1.player.craftingRecipes.Add(runeName, 0);
+            "Runic Anvil",
+            "Inscription Table",
+            "Magic Grinder",
+            "Blank Rune",
+            "Blank Parchment"
+                };
 
-                    var scrollName = $"{spell.Name} Scroll";
-                    if (!Game1.player.craftingRecipes.ContainsKey(scrollName))
-                        Game1.player.craftingRecipes.Add(scrollName, 0);
+                // Add crafting recipes for the above items
+                foreach (var recipe in craftingRecipes)
+                {
+                    if (!Game1.player.craftingRecipes.ContainsKey(recipe))
+                        Game1.player.craftingRecipes.Add(recipe, 0);
+                }
+
+                // Add crafting recipes for spells that the player can learn at their level
+                foreach (var spell in RuneMagic.Spells)
+                {
+                    var spellLevel = spell.Level;
+                    if (level >= spellLevel && ((spellLevel < 5 && level >= spellLevel * 2 - 1) || (spellLevel == 5 && level >= 10)))
+                    {
+                        var runeName = $"Rune of {spell.Name}";
+                        if (!Game1.player.craftingRecipes.ContainsKey(runeName))
+                            Game1.player.craftingRecipes.Add(runeName, 0);
+
+                        var scrollName = $"{spell.Name} Scroll";
+                        if (!Game1.player.craftingRecipes.ContainsKey(scrollName))
+                            Game1.player.craftingRecipes.Add(scrollName, 0);
+                    }
                 }
             }
         }

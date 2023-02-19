@@ -6,10 +6,9 @@ namespace RuneMagic.Source.Spells
 {
     public class Regeneration : Spell
     {
-        public Regeneration() : base()
+        public Regeneration() : base(School.Abjuration)
         {
-            School = School.Enchantment;
-            Description = "Slowly regenerates the caster's Stamina.";
+            Description += "Slowly regenerates the caster's Stamina.";
             Level = 4;
         }
 
@@ -17,8 +16,8 @@ namespace RuneMagic.Source.Spells
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Regenerating>().Any())
             {
-                Effect = new Regenerating(Name);
-                return true;
+                Effect = new Regenerating(this);
+                return base.Cast();
             }
             else
                 return false;

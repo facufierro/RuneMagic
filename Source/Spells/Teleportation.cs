@@ -4,17 +4,16 @@ namespace RuneMagic.Source.Spells
 {
     public class Teleportation : Spell
     {
-        public Teleportation() : base()
+        public Teleportation() : base(School.Alteration)
         {
-            School = School.Alteration;
-            Description = "Teleports the caster to their home.";
-            Level = 8;
+            Description += "Teleports the caster to their home.";
+            Level = 5;
         }
 
         public override bool Cast()
         {
             Game1.warpFarmer("FarmHouse", 4, 3, false);
-            return true;
+            return base.Cast();
         }
     }
 }

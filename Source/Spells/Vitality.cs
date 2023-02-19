@@ -6,19 +6,18 @@ namespace RuneMagic.Source.Spells
 {
     public class Vitality : Spell
     {
-        public Vitality() : base()
+        public Vitality() : base(School.Abjuration)
         {
-            School = School.Enchantment;
-            Description = "Increases the casters Health and Stamina for a long period of time.";
-            Level = 8;
+            Description += "Increases the casters Health and Stamina for a long period of time.";
+            Level = 4;
         }
 
         public override bool Cast()
         {
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Vitalized>().Any())
             {
-                Effect = new Vitalized(Name);
-                return true;
+                Effect = new Vitalized(this);
+                return base.Cast();
             }
             else
                 return false;

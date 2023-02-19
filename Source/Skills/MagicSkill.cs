@@ -1,111 +1,68 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Force.DeepCloner;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using static SpaceCore.Skills;
 
 namespace RuneMagic.Source.Skills
 {
     public class MagicSkill : Skill
     {
-        public static readonly string MagicSkillId = "fierro.rune_magic.skill";
-        public static MagicProfession Scribe;
-        public static MagicProfession Lorekeeper;
-        public static MagicProfession Sage;
-        public static MagicProfession Runesmith;
-        public static MagicProfession Runelord;
-        public static MagicProfession Runemaster;
+        public static readonly string MagicSkillId = "fierro.rune_magic.magic_skill";
+        public string Name { get; set; }
+        public static List<MagicProfession> MagicProfessions { get; set; }
+        public List<Color> Colors { get; set; }
+        public string Description { get; set; }
+        public List<Texture2D> Icons { get; set; }
 
-        public MagicSkill()
-            : base(MagicSkillId)
+        public MagicSkill(string id, List<Color> colors, List<Texture2D> icons)
+            : base(id)
         {
-            Icon = RuneMagic.Textures["interface_skill_icon_magic"];
-            SkillsPageIcon = RuneMagic.Textures["interface_skill_icon_magic"];
+            Name = GetType().Name.Replace("Skill", " Magic");
+            Colors = colors;
+            Icons = icons;
+            Icon = Icons[1];
+            SkillsPageIcon = Icons[0];
             ExperienceCurve = new[] { 100, 380, 770, 1300, 2150, 3300, 4800, 6900, 10000, 15000 };
-            ExperienceBarColor = Color.DarkBlue;
-
-            Runesmith = new MagicProfession(this, "fierro.rune_magic.runesmith")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_runesmith"],
-                Name = "Runesmith",
-                Description = "Your runes recharge 50% faster.",
-            };
-            Professions.Add(Runesmith);
-            Scribe = new MagicProfession(this, "fierro.rune_magic.scribe")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_scribe"],
-                Name = "Scribe",
-                Description = "Scroll casting time is reduced by 20%.",
-            };
-            Professions.Add(Scribe);
-            ProfessionsForLevels.Add(new ProfessionPair(5, Runesmith, Scribe));
-
-            Runelord = new MagicProfession(this, "fierro.rune_magic.runelord")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_runelord"],
-                Name = "Rune Lord",
-                Description = "When you craft a rune it has 10 charges instead of 5.",
-            };
-            Professions.Add(Runelord);
-            Runemaster = new MagicProfession(this, "fierro.rune_magic.runemaster")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_runemaster"],
-                Name = "Rune Master",
-                Description = "The caster can spend 3 charges of a rune to make it instant cast."
-            };
-            Professions.Add(Runemaster);
-            ProfessionsForLevels.Add(new ProfessionPair(10, Runelord, Runemaster, Runesmith));
-
-            Lorekeeper = new MagicProfession(this, "fierro.rune_magic.lorekeeper")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_lorekeeper"],
-                Name = "Lorekeeper",
-                Description = "The caster has 20% chance to not consume a scroll when casting."
-            };
-            Professions.Add(Lorekeeper);
-            Sage = new MagicProfession(this, "fierro.rune_magic.sage")
-            {
-                Icon = RuneMagic.Textures["interface_skill_icon_sage"],
-                Name = "Sage",
-                Description = "The caster can walk while casting.",
-            };
-            Professions.Add(Sage);
-            ProfessionsForLevels.Add(new ProfessionPair(10, Lorekeeper, Sage, Scribe));
+            ExperienceBarColor = Colors[1];
         }
 
         public override string GetName()
         {
-            return "Magic";
+            return Name;
         }
 
         public override List<string> GetExtraLevelUpInfo(int level)
         {
-            List<string> info;
-            if (level == 1)
-                info = new List<string>(){
-                $"The wizard has taught you the basics of magic." };
-            else
-                info = new List<string>(){
-                $"Your spells have become more powerful." };
-            info.Add($"You have gained access to the following spells:");
+            var info = new List<string>();
+            var spellInfo = "";
+            info.Add($"Your Spells in this School are now more powerful.");
 
-            string spellList = "";
             foreach (var spell in RuneMagic.Spells)
             {
-                if (spell.Level == level)
-                {
-                    spellList = spellList + spell.Name + (spellList == "" ? "" : ", ");
-                }
+                if (level == 1 && spell.Level == 1 && spell.Skill == this) { spellInfo += $"{spell.Name} \n"; }
+                if (level == 3 && spell.Level == 2 && spell.Skill == this) { spellInfo += $"{spell.Name} \n"; }
+                if (level == 5 && spell.Level == 3 && spell.Skill == this) { spellInfo += $"{spell.Name} \n"; }
+                if (level == 7 && spell.Level == 4 && spell.Skill == this) { spellInfo += $"{spell.Name} \n"; }
+                if (level == 10 && spell.Level == 5 && spell.Skill == this) { spellInfo += $"{spell.Name} \n"; }
             }
-            //remove the last comma from spellList
-            spellList = spellList.TrimEnd(new char[] { ',', ' ' });
-            info.Add($" {spellList}");
+            if (spellInfo != "")
+            {
+                info.Add($"You have learned the following Spells:");
+                info.Add($"{spellInfo}");
+            }
+
             return info;
         }
 
         public override string GetSkillPageHoverText(int level)
         {
-            return $"+{level}% Spell Potency";
+            return $"+{level} {Name.Replace(" Skill", "")} Spell Power";
         }
     }
 }

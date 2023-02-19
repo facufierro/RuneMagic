@@ -10,16 +10,16 @@ namespace RuneMagic.Source
         public int Timer { get; set; }
         public Duration Duration { get; set; }
 
-        public SpellEffect(string name, Duration duration)
+        public SpellEffect(Spell spell, Duration duration)
         {
-            Name = $"Glyph of {name}";
+            Name = $"Glyph of {spell.Name}";
             Duration = duration;
             switch (Duration)
             {
                 case Duration.Instant: Timer = 0; break;
-                case Duration.Short: Timer = (5 + Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
-                case Duration.Medium: Timer = (10 * Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
-                case Duration.Long: Timer = (30 * Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkill)) * 60; break;
+                case Duration.Short: Timer = (5 + Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
+                case Duration.Medium: Timer = (10 * Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
+                case Duration.Long: Timer = (30 * Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
                 case Duration.Permanent: Timer = 999999999; break;
             }
         }

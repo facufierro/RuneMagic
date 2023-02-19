@@ -12,9 +12,8 @@ namespace RuneMagic.Source.Effects
     {
         private NPC Target;
 
-        public Charmed(string name, NPC target) : base(name, Duration.Medium)
+        public Charmed(Spell spell, NPC target) : base(spell, Duration.Medium)
         {
-            Name = name;
             Target = target;
             Start();
         }
@@ -27,7 +26,7 @@ namespace RuneMagic.Source.Effects
 
         public override void Stop()
         {
-            Game1.player.changeFriendship(-250 - 250 / 2, Target);
+            Game1.player.changeFriendship(-250, Target);
             base.Stop();
         }
     }

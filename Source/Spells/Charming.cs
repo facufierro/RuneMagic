@@ -6,10 +6,9 @@ namespace RuneMagic.Source.Spells
 {
     public class Charming : Spell
     {
-        public Charming() : base()
+        public Charming() : base(School.Alteration)
         {
-            Description = "Charms the target for a short time, when the effect ends the target will be annoyed";
-            School = School.Illusion;
+            Description += "Charms the target for a period time.";
             Level = 2;
         }
 
@@ -18,8 +17,8 @@ namespace RuneMagic.Source.Spells
             Target = Game1.currentLocation.characters.FirstOrDefault(c => c.getTileLocation() == Game1.currentCursorTile);
             if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Charmed>().Any())
             {
-                Effect = new Charmed(Name, Target);
-                return true;
+                Effect = new Charmed(this, Target);
+                return base.Cast();
             }
             else
                 return false;

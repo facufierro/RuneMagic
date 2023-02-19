@@ -10,9 +10,8 @@ namespace RuneMagic.Source.Effects
 {
     public class Invisible : SpellEffect
     {
-        public Invisible(string name) : base(name, Duration.Short)
+        public Invisible(Spell spell) : base(spell, Duration.Short)
         {
-            Name = name;
             Start();
         }
 

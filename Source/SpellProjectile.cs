@@ -26,8 +26,6 @@ namespace RuneMagic.Source
         public Texture2D Texture { get; set; }
         public bool Homing { get; set; }
 
-        private Random random = new Random();
-
         public SpellProjectile(Texture2D texture, int minDamage, int maxDamage, int bonusDamage, int velocity, bool homing)
         {
             Source = Game1.player;
