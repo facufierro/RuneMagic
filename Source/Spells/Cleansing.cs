@@ -1,4 +1,5 @@
-﻿using StardewValley;
+﻿using RuneMagic.Source.Effects;
+using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,19 @@ namespace RuneMagic.Source.Spells
         public Cleansing() : base(School.Abjuration)
 
         {
-            Description += "Removes harmful effects from the player";
+            Description += "Removes all effects from the player for a short duration of time.";
             Level = 2;
+        }
+
+        public override bool Cast()
+        {
+            if (!RuneMagic.PlayerStats.ActiveEffects.OfType<Cleansed>().Any())
+            {
+                Effect = new Cleansed(this);
+                return base.Cast();
+            }
+            else
+                return false;
         }
     }
 }
