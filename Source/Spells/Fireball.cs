@@ -7,7 +7,7 @@ namespace RuneMagic.Source.Spells
     {
         public Fireball() : base(School.Evocation)
         {
-            Description += "Shoots a fireball";
+            Description += "Shoots a fire ball, damaging monsters in a big area around the target location";
             Level = 4;
         }
 
@@ -17,7 +17,7 @@ namespace RuneMagic.Source.Spells
             var minDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
             var maxDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]) * 3;
             var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
-            var area = 2;
+            var area = 1;
             var speed = 5;
 
             Game1.currentLocation.projectiles.Add(new SpellProjectile(texture, minDamage, maxDamage, bonusDamage, area, speed, false));

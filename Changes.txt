@@ -3,4 +3,5 @@ Implemented Shielding Spell
 Implemented Fireball Spell
 Implemented Summoning Spell
 Implemented Cleansing Spell
+Implemented Firebolt
 
