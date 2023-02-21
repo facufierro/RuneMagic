@@ -19,7 +19,6 @@ namespace RuneMagic.Source.Spells
             Target = Game1.currentCursorTile;
             var radius = 1 + (Game1.player.GetCustomSkillLevel(Skill) - 4) / 6;
             Game1.currentLocation.explode(Target, radius, Game1.player);
-            RuneMagic.Instance.Monitor.Log(radius.ToString());
             return base.Cast();
         }
     }
