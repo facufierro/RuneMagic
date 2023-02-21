@@ -116,7 +116,6 @@ namespace RuneMagic.Source
 
         private void OnBlankSave(object sender, EventArgs e)
         {
-            Config.MagicLearned = false;
             if (Config.DevMode)
             {
                 Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
@@ -510,7 +509,7 @@ namespace RuneMagic.Source
         public void WizardEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && Config.MagicLearned == false && Game1.player.GetCustomSkillLevel(PlayerStats.MagicSkills[School.Abjuration]) < 1)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && Game1.player.GetCustomSkillLevel(PlayerStats.MagicSkills[School.Abjuration]) < 1)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
@@ -527,10 +526,7 @@ namespace RuneMagic.Source
                        $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
-                Config.MagicLearned = true;
             }
-            else if (Game1.player.GetCustomSkillLevel(PlayerStats.MagicSkills[School.Abjuration]) < 1)
-                Config.MagicLearned = true;
         }
 
         public void PlayerAnimation()
@@ -600,11 +596,7 @@ namespace RuneMagic.Source
                 name: () => "Casting Key",
                 getValue: () => Config.CastKey,
                 setValue: value => Config.CastKey = value);
-            ConfigMenuApi.AddBoolOption(
-                mod: ModManifest,
-                name: () => "Magic Learned",
-                getValue: () => Config.MagicLearned,
-                setValue: value => Config.MagicLearned = value);
+
             ConfigMenuApi.SetTitleScreenOnlyForNextOptions(ModManifest, true);
             ConfigMenuApi.AddBoolOption(
                mod: ModManifest,

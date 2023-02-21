@@ -21,10 +21,10 @@ namespace RuneMagic.Source.Effects
             Game1.player.addedSpeed = 5;
         }
 
-        public override void Stop()
+        public override void End()
         {
             Game1.player.addedSpeed = 0;
-            base.Stop();
+            base.End();
         }
     }
 }

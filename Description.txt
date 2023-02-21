@@ -81,8 +81,9 @@ Use R to cast and Q to activate Professions (You can bind the keys to whatever y
 
 [center][size=5][b]Compatibility[/b][/size][/center]
 [list][size=2]
-[*][b]Other Mods: [/b]It should compatible with almost anything, even Magic from spacechace0, it would be redundant and not balanced though.Also I tested this with SVE and like 50 mods and haven't had any problems with it yet, but remember its ALPHA anything could happen.
-[*][b]Multiplayer: [/b]This mod has not been tested in multiplayer. I have no friends.
+[*][b]Other Mods: [/b]It should compatible with almost anything, even Magic from spacechace0, it would be redundant and not balanced though.
+    Also I tested this with SVE and like 50 mods and haven't had any problems with it yet, but remember its ALPHA anything could happen.
+[*][b]Multiplayer: [/b]Confirmed not working in multiplayer. I'll look into it when the mod is more complete.
 [*][b]Mobile: [/b]This mod is made for PC only, and there are no plans to port it to mobile.
 [/size][/list]
 

@@ -27,10 +27,10 @@ namespace RuneMagic.Source.Effects
             base.Start();
         }
 
-        public override void Stop()
+        public override void End()
         {
             Game1.buffsDisplay.removeOtherBuff(15065);
-            base.Stop();
+            base.End();
         }
 
         public override void Update()

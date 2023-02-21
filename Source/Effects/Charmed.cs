@@ -24,10 +24,10 @@ namespace RuneMagic.Source.Effects
             Game1.player.changeFriendship(250, Target);
         }
 
-        public override void Stop()
+        public override void End()
         {
             Game1.player.changeFriendship(-250, Target);
-            base.Stop();
+            base.End();
         }
     }
 }

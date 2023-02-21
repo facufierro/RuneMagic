@@ -21,11 +21,11 @@ namespace RuneMagic.Source.Effects
             Game1.player.health += 50;
         }
 
-        public override void Stop()
+        public override void End()
         {
             Game1.player.stamina -= 50;
             Game1.player.health -= 50;
-            base.Stop();
+            base.End();
         }
     }
 }

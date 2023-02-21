@@ -29,7 +29,7 @@ namespace RuneMagic.Source
             RuneMagic.PlayerStats.ActiveEffects.Add(this);
         }
 
-        public virtual void Stop()
+        public virtual void End()
         {
             RuneMagic.PlayerStats.ActiveEffects.Remove(this);
         }
@@ -40,7 +40,7 @@ namespace RuneMagic.Source
             {
                 if (Timer == 0)
                 {
-                    Stop();
+                    End();
                     return;
                 }
                 Timer--;

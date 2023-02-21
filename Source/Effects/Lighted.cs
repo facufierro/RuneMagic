@@ -25,10 +25,10 @@ namespace RuneMagic.Source.Effects
             Game1.currentLocation.objects.Add(Target, new Torch(Target, 1));
         }
 
-        public override void Stop()
+        public override void End()
         {
             Game1.currentLocation.objects.Remove(Target);
-            base.Stop();
+            base.End();
         }
     }
 }
