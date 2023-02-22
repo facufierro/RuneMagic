@@ -84,7 +84,7 @@ namespace RuneMagic.Source
                 new() { new BigCraftableIngredient() { Object = "Wood", Count = 40 }, new BigCraftableIngredient() { Object = "Amethyst", Count = 25 }, }));
             jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["item_magic_grinder"],
                 new() { new BigCraftableIngredient() { Object = "Stone", Count = 40 }, new BigCraftableIngredient() { Object = "Topaz", Count = 25 }, }));
-
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Spell Excavation", "", Textures["spell_excavation"], null));
             //Register Runes and Scrolls
             int textureIndex = 0;
             foreach (var spell in Spells)
@@ -320,7 +320,7 @@ namespace RuneMagic.Source
                 Category = ObjectCategory.Crafting,
                 Price = 0,
                 HideFromShippingCollection = true,
-                Recipe = recipe
+                Recipe = recipe,
             };
         }
 
