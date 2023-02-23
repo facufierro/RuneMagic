@@ -22,7 +22,7 @@ namespace RuneMagic.Source.Spells
             var texture = RuneMagic.Textures["spell_fireball"];
             var minDamage = 1;
             var maxDamage = 6;
-            var bonusDamage = 2 * Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
+            var bonusDamage = 2 * Skill.Level;
             var area = 1;
             var speed = 5;
 

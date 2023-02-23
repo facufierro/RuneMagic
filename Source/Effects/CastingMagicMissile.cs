@@ -1,11 +1,11 @@
-﻿using RuneMagic.Source.Skills;
-using SpaceCore;
+﻿using SpaceCore;
 using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SpaceCore.Skills;
 
 namespace RuneMagic.Source.Effects
 {
@@ -16,7 +16,7 @@ namespace RuneMagic.Source.Effects
         public CastingMagicMissile(Spell spell) : base(spell, Duration.Instant)
         {
             Interval = 3;
-            Timer = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]) * Interval;
+            Timer = RuneMagic.PlayerStats.Skills[spell.School].Level;
             if (Timer > 12)
                 Timer = 12;
             Start();
@@ -27,7 +27,7 @@ namespace RuneMagic.Source.Effects
             var texture = RuneMagic.Textures["spell_magic_missile"];
             var minDamage = 1;
             var maxDamage = 4;
-            var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
+            var bonusDamage = RuneMagic.PlayerStats.Skills[Spell.School].Level;
             var area = 0;
             var speed = 5;
 

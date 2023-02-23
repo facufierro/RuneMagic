@@ -7,11 +7,14 @@ Please back up your save file if you use it with other mods!
 [/size][/b][/color][/center]
 
 [color=yellow][b][size=4][center]Big Update
-This update is huge, it adds a lot of new features and fixes a lot of bugs. If you are updating from a previous version please remove every item that has spells on it from inventory and chests.
-You will need to restart the wizard event using the config menu.
+Another Big Update, Implemented a lot of spells and fixed some more bugs.
+Next up is the professions and the rest of the spells.
+
+Sadly the only way is to remove all items which contain spells from the inventory or chests before updating. I'll try to look into a way to fix this in the future.
+Also the summoning spell is incomplete right now, it will only summon a slime that follows the player.
 
 The professions don't work yet, they are a priority for the next update.
-Also, some of the spells are not working yet, you'll see the big NOT IMPLEMENTED on the description.
+Some of the spells are not working yet, you'll see the big NOT IMPLEMENTED on the description.
 [/size][/b][/color][/center]
 
 [center][size=5][b]Features[/b][/size][/center]

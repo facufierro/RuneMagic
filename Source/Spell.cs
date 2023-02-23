@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RuneMagic.Source.Skills;
+using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using StardewValley;
 using System;
@@ -14,22 +14,24 @@ namespace RuneMagic.Source
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public MagicSkill Skill { get; set; }
+        public Skill Skill { get; set; }
         public School School { get; set; }
         public dynamic Target { get; set; }
         public SpellEffect Effect { get; set; }
         public int Level { get; set; } = 1;
         public float CastingTime { get; set; } = 1;
+        public Texture2D Icon { get; set; }
 
         public Spell(School school)
         {
             Name = GetType().Name;
             CastingTime = 1 + (Level / 10f) * 1.5f;
             School = school;
-            Skill = RuneMagic.PlayerStats.MagicSkills[School];
+            Skill = RuneMagic.PlayerStats.Skills[School];
+            SetGlyph(RuneMagic.Textures["glyph_0"]);
             if (GetType().GetMethod(nameof(Cast)).DeclaringType == typeof(Spell))
             {
-                Description = "This spell is not yet implemented.\n".ToUpper();
+                Description = "NOT IMPLEMENTED.\n";
             }
             else
             {
@@ -39,8 +41,23 @@ namespace RuneMagic.Source
 
         public virtual bool Cast()
         {
-            Game1.player.AddCustomSkillExperience(Skill, 5);
+            RuneMagic.PlayerStats.Skills[School].Experience += 5;
             return true;
+        }
+
+        public void SetGlyph(Texture2D texture)
+        {
+            var data = new Color[texture.Width * texture.Height];
+            texture.GetData(data);
+            for (int i = 0; i < data.Length; ++i)
+            {
+                if (data[i] == Color.White)
+                    data[i] = Skill.Colors.Item1;
+                if (data[i] == Color.Black)
+                    data[i] = Skill.Colors.Item2;
+            }
+            texture.SetData(data);
+            Icon = texture;
         }
     }
 }

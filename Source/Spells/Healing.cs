@@ -15,7 +15,7 @@ namespace RuneMagic.Source.Spells
         {
             if (Game1.player.health >= Game1.player.maxHealth)
                 return false;
-            var heal = Game1.player.GetCustomSkillLevel(Skill) * 10;
+            var heal = Skill.Level * 10;
             if (heal > Game1.player.maxHealth - Game1.player.health)
                 heal = Game1.player.maxHealth - Game1.player.health;
             Game1.player.health += heal;

@@ -2,17 +2,19 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using RuneMagic.Source.Interface;
 using RuneMagic.Source.Items;
-using RuneMagic.Source.Skills;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Locations;
+using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using static SpaceCore.Skills;
@@ -143,6 +145,8 @@ namespace RuneMagic.Source
                 return;
             ManageMagicItems(Game1.player, JsonAssetsApi);
             ManageSpellEffects();
+            PlayerStats.LearnSpells();
+            PlayerStats.LearnRecipes();
             if (Game1.player.CurrentItem is IMagicItem)
             {
                 PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
@@ -154,10 +158,6 @@ namespace RuneMagic.Source
         {
             if (Game1.CurrentEvent.id == 15065001)
             {
-                foreach (var magicSkill in PlayerStats.MagicSkills)
-                {
-                    Game1.player.AddCustomSkillExperience(magicSkill.Value, 100);
-                }
                 Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
             }
         }
@@ -178,38 +178,17 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-                //if (e.Button == SButton.Q)
-                //{
-                //    if (Game1.player.HasCustomProfession(MagicSkill.Runemaster) && Game1.player.CurrentItem is Rune rune)
-                //    {
-                //        if (!rune.RunemasterActive && rune.Charges >= 3)
-                //        {
-                //            rune.RunemasterActive = true;
-                //            rune.Spell.CastingTime = 0.01f;
-                //        }
-                //        else
-                //        {
-                //            rune.RunemasterActive = false;
-                //            rune.Spell.CastingTime = 1 + (rune.Spell.Level / 10f) * 1.5f;
-                //        }
-                //    }
-                //}
                 if (Config.DevMode)
                 {
                     switch (e.Button)
                     {
-                        case SButton.F9:
-                            foreach (var magicSkill in PlayerStats.MagicSkills)
-                            {
-                                Game1.player.AddCustomSkillExperience(magicSkill.Value, 100);
-                            }
+                        case SButton.F5:
+                            //render a menu with text
+                            Game1.activeClickableMenu = new SpellBookMenu();
                             break;
 
-                        case SButton.F10:
-                            foreach (var magicSkill in PlayerStats.MagicSkills)
-                            {
-                                Game1.player.AddCustomSkillExperience(magicSkill.Value, 1500);
-                            }
+                        case SButton.F9:
+                            PlayerStats.ActiveSkill.Level += 1;
                             break;
 
                         case SButton.F11:
@@ -242,13 +221,17 @@ namespace RuneMagic.Source
             {
                 Textures.Add($"rune_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Runes/{Path.GetFileName(file)}"));
             }
+            foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Glyphs"))
+            {
+                Textures.Add($"glyph_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Glyphs/{Path.GetFileName(file)}"));
+            }
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Items"))
             {
                 Textures.Add($"item_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Items/{Path.GetFileName(file)}"));
             }
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Interface"))
             {
-                Textures.Add($"interface_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Interface/{Path.GetFileName(file)}"));
+                Textures.Add($"{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Interface/{Path.GetFileName(file)}"));
             }
             //print the Textures keys on console as alert
             foreach (var texture in Textures)
@@ -260,10 +243,17 @@ namespace RuneMagic.Source
         public void RegisterSpells()
         {
             var spellTypes = typeof(RuneMagic).Assembly
-              .GetTypes()
-              .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(Spell).IsAssignableFrom(t));
+            .GetTypes()
+            .Where(t => t.Namespace == "RuneMagic.Source.Spells" && typeof(Spell).IsAssignableFrom(t));
 
-            Spells = spellTypes.Select(t => (Spell)Activator.CreateInstance(t)).ToList();
+            Spells = spellTypes
+                .Select(t =>
+                {
+                    ConstructorInfo constructor = t.GetConstructor(Type.EmptyTypes);
+                    return constructor.Invoke(null) as Spell;
+                })
+                .ToList();
+
             Spells = Spells.OrderBy(s => s.Level).ThenBy(s => s.School).ThenBy(s => s.Name).ToList();
             var spellGroups = Spells.GroupBy(s => s.Level);
             Instance.Monitor.Log($"Registering Spells...", LogLevel.Debug);
@@ -275,7 +265,16 @@ namespace RuneMagic.Source
                     Instance.Monitor.Log($"\t{spell.Name,-25}REGISTERED \t {spell.School}", LogLevel.Debug);
                 }
             }
-            Spells = Spells.OrderBy(s => s.School).ThenBy(s => s.Level).ThenBy(s => s.Name).ToList();
+            Spells = Spells.OrderBy(s => s.Level).ThenBy(s => s.School).ThenBy(s => s.Name).ToList();
+            //get the number of files in the Glyphs folder
+            var glyphIndex = 0;
+            foreach (var spell in Spells)
+            {
+                if (glyphIndex >= Directory.GetFiles($"{Helper.DirectoryPath}/assets/Glyphs").Length)
+                    glyphIndex = 0;
+                spell.SetGlyph(Instance.Helper.ModContent.Load<Texture2D>($"assets/Glyphs/{glyphIndex}"));
+                glyphIndex++;
+            }
         }
 
         public BigCraftableData SetBigCraftableData(string name, string description, Texture2D texture, List<BigCraftableIngredient> ingredients)
@@ -356,9 +355,9 @@ namespace RuneMagic.Source
             for (int i = 0; i < data.Length; ++i)
             {
                 if (data[i] == Color.White)
-                    data[i] = spell.Skill.Colors[0];
+                    data[i] = spell.Skill.Colors.Item1;
                 if (data[i] == Color.Black)
-                    data[i] = spell.Skill.Colors[1];
+                    data[i] = spell.Skill.Colors.Item2;
             }
             texture.SetData(data);
             return new ObjectData()
@@ -368,7 +367,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.Skill.Colors[1],
+                CategoryColorOverride = spell.Skill.Colors.Item2,
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -400,9 +399,9 @@ namespace RuneMagic.Source
             for (int i = 0; i < data.Length; ++i)
             {
                 if (data[i] == Color.White)
-                    data[i] = spell.Skill.Colors[0];
+                    data[i] = spell.Skill.Colors.Item1;
                 if (data[i] == Color.Black)
-                    data[i] = spell.Skill.Colors[1];
+                    data[i] = spell.Skill.Colors.Item2;
             }
             texture.SetData(data);
             return new ObjectData()
@@ -412,7 +411,7 @@ namespace RuneMagic.Source
                 Texture = texture,
                 Category = ObjectCategory.Crafting,
                 CategoryTextOverride = $"{spell.School}",
-                CategoryColorOverride = spell.Skill.Colors[1],
+                CategoryColorOverride = spell.Skill.Colors.Item2,
                 Price = 0,
                 HideFromShippingCollection = true,
                 Recipe = new ObjectRecipe()
@@ -509,7 +508,7 @@ namespace RuneMagic.Source
         public void WizardEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && Game1.player.GetCustomSkillLevel(PlayerStats.MagicSkills[School.Abjuration]) < 1)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in my friend, come in...\"" +

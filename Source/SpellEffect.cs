@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Skills;
-using SpaceCore;
+﻿using SpaceCore;
 using StardewValley;
 
 namespace RuneMagic.Source
@@ -7,6 +6,7 @@ namespace RuneMagic.Source
     public abstract class SpellEffect
     {
         public string Name { get; set; }
+        public Spell Spell { get; set; }
         public int Timer { get; set; }
         public Duration Duration { get; set; }
 
@@ -14,12 +14,13 @@ namespace RuneMagic.Source
         {
             Name = $"Glyph of {spell.Name}";
             Duration = duration;
+            Spell = spell;
             switch (Duration)
             {
                 case Duration.Instant: Timer = 0; break;
-                case Duration.Short: Timer = (5 + Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
-                case Duration.Medium: Timer = (10 * Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
-                case Duration.Long: Timer = (30 * Game1.player.GetCustomSkillLevel(spell.Skill)) * 60; break;
+                case Duration.Short: Timer = 5 + spell.Skill.Level * 60; break;
+                case Duration.Medium: Timer = 10 * spell.Skill.Level * 60; break;
+                case Duration.Long: Timer = 30 * spell.Skill.Level * 60; break;
                 case Duration.Permanent: Timer = 999999999; break;
             }
         }

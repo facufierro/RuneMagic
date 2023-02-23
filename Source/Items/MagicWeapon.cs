@@ -89,7 +89,7 @@ namespace RuneMagic.Source.Items
                     var castingTime = Spell.CastingTime;
                     var castbarWidth = (int)(RuneMagic.PlayerStats.CastingTimer / (castingTime * 60) * 58);
 
-                    spriteBatch.Draw(RuneMagic.Textures["interface_castbar_frame"], new Rectangle((int)objectPosition.X, (int)objectPosition.Y, 64, 84), Color.White);
+                    spriteBatch.Draw(RuneMagic.Textures["castbar_frame"], new Rectangle((int)objectPosition.X, (int)objectPosition.Y, 64, 84), Color.White);
                     spriteBatch.Draw(Game1.staminaRect, new Rectangle((int)objectPosition.X + 3, (int)objectPosition.Y + 75, castbarWidth, 5), new Color(new Vector4(0, 0, 200, 0.8f)));
                 }
             }

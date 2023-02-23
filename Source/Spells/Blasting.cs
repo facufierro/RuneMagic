@@ -1,5 +1,4 @@
-﻿using RuneMagic.Source.Skills;
-using SpaceCore;
+﻿using SpaceCore;
 using StardewValley;
 using static SpaceCore.Skills;
 
@@ -17,7 +16,7 @@ namespace RuneMagic.Source.Spells
         public override bool Cast()
         {
             Target = Game1.currentCursorTile;
-            var radius = 1 + (Game1.player.GetCustomSkillLevel(Skill) - 4) / 6;
+            var radius = 1 + (Skill.Level - 4) / 6;
             Game1.currentLocation.explode(Target, radius, Game1.player);
             return base.Cast();
         }

@@ -16,7 +16,7 @@ namespace RuneMagic.Source.Spells
         public override bool Cast()
         {
             var tool = new WateringCan();
-            var potency = 1 + (Game1.player.GetCustomSkillLevel(Skill) - Level) / 4;
+            var potency = 1 + (Skill.Level - Level) / 4;
             tool.DoFunction(Game1.currentLocation, (int)Game1.currentCursorTile.X * Game1.tileSize, (int)Game1.currentCursorTile.Y * Game1.tileSize, potency, Game1.player);
             return base.Cast();
         }

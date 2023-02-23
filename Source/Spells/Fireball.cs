@@ -14,9 +14,9 @@ namespace RuneMagic.Source.Spells
         public override bool Cast()
         {
             var texture = RuneMagic.Textures["spell_fireball"];
-            var minDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
-            var maxDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]) * 3;
-            var bonusDamage = Game1.player.GetCustomSkillLevel(RuneMagic.PlayerStats.MagicSkills[School.Evocation]);
+            var minDamage = Skill.Level;
+            var maxDamage = Skill.Level * 3;
+            var bonusDamage = Skill.Level;
             var area = 1;
             var speed = 5;
 
