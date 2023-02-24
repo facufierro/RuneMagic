@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -9,6 +10,7 @@ using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Menus;
+using StardewValley.Minigames;
 using static SpaceCore.Skills;
 
 namespace RuneMagic.Source.Interface
@@ -21,16 +23,15 @@ namespace RuneMagic.Source.Interface
         private Point GridSize;
         private Point[,] Grid;
 
-        private List<Rectangle> KnownSpellSlots;
-        private List<Rectangle> MemorizedSpellSlots;
+        private List<KnownSpellSlot> KnownSpellSlots;
+        private MemorizedSpellSlot[] MemorizedSpellSlots = new MemorizedSpellSlot[5];
 
         public SpellBookMenu()
             : base((Game1.viewport.Width - WindowWidth) / 2, (Game1.viewport.Height - WindowHeight) / 2, WindowWidth, WindowHeight)
         {
+            KnownSpellSlots = new List<KnownSpellSlot>();
+            MemorizedSpellSlots = new MemorizedSpellSlot[5];
             GridSize = new Point(WindowWidth / RectSize, WindowHeight / RectSize);
-
-            KnownSpellSlots = new List<Rectangle>();
-            MemorizedSpellSlots = new List<Rectangle>();
 
             Grid = new Point[GridSize.X, GridSize.Y];
             for (int x = 0; x < GridSize.X; x++)
@@ -42,47 +43,12 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        public override void update(GameTime time)
-        {
-            base.update(time);
-            //check for left click
-        }
-
         public override void draw(SpriteBatch b)
         {
             drawTextureBox(b, xPositionOnScreen, yPositionOnScreen, WindowWidth, WindowHeight, Color.White);
             DrawSkillBar(b, RuneMagic.PlayerStats.ActiveSkill);
-            DrawKnownSpellSlots(b);
-            DrawMemorizedSpellSlots(b);
-            if (RuneMagic.Instance.Helper.Input.IsDown(SButton.MouseLeft))
-            {
-                Point mousePos = new(Game1.getMouseX(), Game1.getMouseY());
-                for (int i = 0; i < KnownSpellSlots.Count; i++)
-                {
-                    int index = i;
-                    if (KnownSpellSlots[i].Contains(mousePos))
-                    {
-                        // Check if spell is already memorized
-                        if (!RuneMagic.PlayerStats.MemorizedSpells.Contains(RuneMagic.PlayerStats.KnownSpells[i]))
-                        {
-                            // If the number of memorized spells is at the maximum, remove the first
-                            // (oldest) spell
-                            if (RuneMagic.PlayerStats.MemorizedSpells.Count >= 10)
-                            {
-                                if (index > 10)
-                                    index = 0;
-                                RuneMagic.PlayerStats.MemorizedSpells.RemoveAt(index);
-                            }
-                            // Add new spell to the end of the list
-                            RuneMagic.PlayerStats.MemorizedSpells.Add(RuneMagic.Spells[i]);
-                        }
-                        break;
-                    }
-                }
-                RuneMagic.Instance.Monitor.Log($"Memorized Spells");
-                foreach (var spell in RuneMagic.PlayerStats.MemorizedSpells)
-                    RuneMagic.Instance.Monitor.Log($"-{spell.Name}");
-            }
+            SetSlots();
+            DrawSlots(b);
             base.draw(b);
             drawMouse(b);
         }
@@ -124,45 +90,99 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        private void DrawKnownSpellSlots(SpriteBatch b)
+        private void SetSlots()
         {
             int xOffset = 2;
             int yOffset = 8;
-
-            // Draw the spell icons for each level
             for (int level = 1; level <= 5; level++)
             {
-                // Draw the spell icons for the current level
-                if (RuneMagic.PlayerStats.KnownSpells.Count > 0)
-                    foreach (var spell in RuneMagic.PlayerStats.KnownSpells.Where(s => s.Level == level))
-                    {
-                        b.Draw(RuneMagic.Textures["icon_spell_slot_known"], GridRectangle(xOffset, yOffset, 4, 4), Color.White);
-                        b.Draw(spell.Icon, GridRectangle(xOffset, yOffset, 4, 4), Color.White);
-                        KnownSpellSlots.Add(GridRectangle(xOffset, yOffset, 4, 4));
-                        xOffset += 3;
-                    }
+                foreach (var spell in RuneMagic.PlayerStats.KnownSpells.Where(s => s.Level == level))
+                {
+                    var spellSlot = new KnownSpellSlot(spell, GridRectangle(xOffset, yOffset, 4, 4));
+                    KnownSpellSlots.Add(spellSlot);
+                    xOffset += 3;
+                }
                 xOffset = 2;
+                yOffset += 3;
+            }
+            yOffset = 8;
+            xOffset = 30;
+            for (int i = 0; i < MemorizedSpellSlots.Length; i++)
+            {
+                if (RuneMagic.PlayerStats.MemorizedSpells[i] != null)
+                {
+                    var spellSlot = new MemorizedSpellSlot(RuneMagic.PlayerStats.MemorizedSpells[i], GridRectangle(xOffset, yOffset, 4, 4));
+                    MemorizedSpellSlots[i] = spellSlot;
+                }
+                else
+                {
+                    var emptySlot = new MemorizedSpellSlot(null, GridRectangle(xOffset, yOffset, 4, 4));
+                    MemorizedSpellSlots[i] = emptySlot;
+                }
                 yOffset += 3;
             }
         }
 
-        private void DrawMemorizedSpellSlots(SpriteBatch b)
+        private void DrawSlots(SpriteBatch b)
         {
-            int yOffset = 8;
-            int xOffset = 30;
-            // Draw the memorized spell slots in two columns of 5
-
-            foreach (var spell in RuneMagic.PlayerStats.MemorizedSpells)
+            foreach (var slot in KnownSpellSlots)
             {
-                if (RuneMagic.PlayerStats.MemorizedSpells.IndexOf(spell) == 5)
+                b.Draw(slot.ButtonTexture, slot.Rectangle, slot.Color);
+                b.Draw(slot.Icon, slot.Rectangle, slot.Color);
+                //RuneMagic.Instance.Monitor.LogOnce(slot.ToString());
+            }
+            int xOffset = 30;
+            int yOffset = 8;
+
+            foreach (var slot in MemorizedSpellSlots)
+            {
+                if (slot.Spell == null)
                 {
-                    yOffset = 8;
-                    xOffset += 3;
+                    b.Draw(RuneMagic.Textures["spellslot_active"], GridRectangle(xOffset, yOffset, 4, 4), Color.White);
                 }
-                b.Draw(RuneMagic.Textures["icon_spell_slot_memorized"], GridRectangle(xOffset, yOffset, 4, 4), Color.White);
-                b.Draw(spell.Icon, GridRectangle(xOffset, yOffset, 4, 4), Color.White);
-                MemorizedSpellSlots.Add(GridRectangle(xOffset, yOffset, 4, 4));
+                else
+                {
+                    b.Draw(slot.ButtonTexture, slot.Rectangle, slot.Color);
+                    b.Draw(slot.Icon, slot.Rectangle, slot.Color);
+                }
                 yOffset += 3;
+                //RuneMagic.Instance.Monitor.LogOnce($"{slot.Spell}");
+            }
+        }
+
+        public void MemorizeSpell()
+        {
+            foreach (var knownSlot in KnownSpellSlots)
+            {
+                if (knownSlot.Rectangle.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                {
+                    if (!RuneMagic.PlayerStats.MemorizedSpells.Contains(knownSlot.Spell) && RuneMagic.PlayerStats.MemorizedSpells.Contains(null))
+                    {
+                        foreach (var memorizedSlot in MemorizedSpellSlots)
+                        {
+                            if (memorizedSlot.Spell == null)
+                            {
+                                var index = Array.IndexOf(MemorizedSpellSlots, memorizedSlot);
+                                RuneMagic.PlayerStats.MemorizedSpells[index] = knownSlot.Spell;
+                                knownSlot.SetButtonTexture();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var memorizedSlot in MemorizedSpellSlots)
+            {
+                if (memorizedSlot.Rectangle.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                {
+                    if (memorizedSlot.Spell != null)
+                    {
+                        var index = Array.IndexOf(MemorizedSpellSlots, memorizedSlot);
+                        RuneMagic.PlayerStats.MemorizedSpells[index] = null;
+                        memorizedSlot.SetButtonTexture();
+                        return;
+                    }
+                }
             }
         }
     }

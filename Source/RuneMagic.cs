@@ -30,6 +30,7 @@ namespace RuneMagic.Source
 
         public static Dictionary<string, Texture2D> Textures;
 
+        private SpellBookMenu SpellBook;
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
         public static IGenericModConfigMenuApi ConfigMenuApi { get; private set; }
@@ -55,6 +56,7 @@ namespace RuneMagic.Source
 
             LoadTextures();
             PlayerStats = new PlayerStats();
+            SpellBook = new SpellBookMenu();
             RegisterSpells();
             RegisterCustomCraftingStations();
         }
@@ -178,13 +180,16 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
+                if (Game1.activeClickableMenu is not null and SpellBookMenu)
+                    if (e.Button == SButton.MouseLeft)
+                        (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
                 if (Config.DevMode)
                 {
                     switch (e.Button)
                     {
                         case SButton.F5:
                             //render a menu with text
-                            Game1.activeClickableMenu = new SpellBookMenu();
+                            Game1.activeClickableMenu = SpellBook;
                             break;
 
                         case SButton.F9:

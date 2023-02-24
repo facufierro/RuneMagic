@@ -7,6 +7,7 @@ using StardewModdingAPI;
 using StardewValley;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using xTile.Dimensions;
 using static SpaceCore.Skills;
 
@@ -18,7 +19,7 @@ namespace RuneMagic.Source
         public Skill ActiveSkill { get; set; }
         public Dictionary<School, Skill> Skills { get; set; }
         public List<Spell> KnownSpells { get; set; }
-        public List<Spell> MemorizedSpells { get; set; }
+        public Spell[] MemorizedSpells { get; set; }
         public List<SpellEffect> ActiveEffects { get; set; }
         public bool IsCasting { get; set; } = false; // Indicates whether the player is currently casting a spell
         public float CastingTimer { get; set; } = 0; // Tracks how long the player has been casting the current spell
@@ -30,7 +31,11 @@ namespace RuneMagic.Source
         {
             Skills = new Dictionary<School, Skill>();
             KnownSpells = new List<Spell>();
-            MemorizedSpells = new List<Spell>();
+            MemorizedSpells = new Spell[5];
+            for (int i = 0; i < MemorizedSpells.Length; i++)
+            {
+                MemorizedSpells[i] = null;
+            }
             foreach (School school in Enum.GetValues(typeof(School)))
             {
                 Skills.Add(school, new Skill(school));
