@@ -45,7 +45,7 @@ namespace RuneMagic.Source
 
                 case School.Conjuration:
                     Description = "";
-                    Colors = new(Color.Orange, Color.DarkOrange);
+                    Colors = new(new Color(200, 0, 200), new Color(200, 0, 175));
                     break;
 
                 case School.Evocation:

@@ -31,6 +31,7 @@ namespace RuneMagic.Source
         public static Dictionary<string, Texture2D> Textures;
 
         private SpellBookMenu SpellBook;
+        private SpellActionBar ActionBar;
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
         public static IGenericModConfigMenuApi ConfigMenuApi { get; private set; }
@@ -50,13 +51,14 @@ namespace RuneMagic.Source
             helper.Events.Input.ButtonPressed += OnButtonPressed;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
-
+            helper.Events.Display.RenderedHud += OnRenderedHud;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
 
             LoadTextures();
             PlayerStats = new PlayerStats();
             SpellBook = new SpellBookMenu();
+            ActionBar = new SpellActionBar();
             RegisterSpells();
             RegisterCustomCraftingStations();
         }
@@ -107,7 +109,7 @@ namespace RuneMagic.Source
             jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Parchment", "A peace of parchment ready for inscribing.", Textures[$"item_blank_parchment"],
                 new List<ObjectIngredient>() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, }));
             jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Magic Dust", "Magically processed dust obtained from Gems", Textures[$"item_magic_dust"], null));
-
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Spell Book", "A magic journal with intricate symbols on cover and pages detailing secrets of spellcasting.", Textures[$"item_spell_book"], null));
             //Register Weapons
             jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Apprentice Staff", "A stick with strange markings in it.", Textures[$"item_apprentice_staff"], WeaponType.Club, 10));
             jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Adept Staff", "A stick with strange markings in it.", Textures[$"item_adept_staff"], WeaponType.Club, 80));
@@ -118,6 +120,11 @@ namespace RuneMagic.Source
         {
         }
 
+        private void OnRenderedHud(object sender, RenderedHudEventArgs e)
+        {
+            ActionBar.Render(e.SpriteBatch);
+        }
+
         private void OnBlankSave(object sender, EventArgs e)
         {
             if (Config.DevMode)
@@ -125,7 +132,7 @@ namespace RuneMagic.Source
                 Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
                 Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
                 Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-                Game1.player.addItemToInventory(new Object(72, 100));
+                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Spell Book"), 1));
                 Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
                 Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
                 Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
@@ -180,9 +187,21 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-                if (Game1.activeClickableMenu is not null and SpellBookMenu)
-                    if (e.Button == SButton.MouseLeft)
-                        (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
+                switch (e.Button)
+                {
+                    case SButton.MouseLeft:
+                        if (Game1.activeClickableMenu is not null and SpellBookMenu)
+                            (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
+                        break;
+
+                    case SButton.MouseRight:
+                        if (Game1.activeClickableMenu is null)
+                        {
+                            if (JsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic").Contains(Game1.player.CurrentItem.Name) && Game1.player.CurrentItem.Name == "Spell Book")
+                                Game1.activeClickableMenu = SpellBook;
+                        }
+                        break;
+                }
                 if (Config.DevMode)
                 {
                     switch (e.Button)

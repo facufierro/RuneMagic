@@ -23,14 +23,14 @@ namespace RuneMagic.Source.Interface
         private Point GridSize;
         private Point[,] Grid;
 
-        private List<KnownSpellSlot> KnownSpellSlots;
-        private MemorizedSpellSlot[] MemorizedSpellSlots = new MemorizedSpellSlot[5];
+        private List<SpellSlot> KnownSpellSlots;
+        private SpellSlot[] MemorizedSpellSlots = new SpellSlot[5];
 
         public SpellBookMenu()
             : base((Game1.viewport.Width - WindowWidth) / 2, (Game1.viewport.Height - WindowHeight) / 2, WindowWidth, WindowHeight)
         {
-            KnownSpellSlots = new List<KnownSpellSlot>();
-            MemorizedSpellSlots = new MemorizedSpellSlot[5];
+            KnownSpellSlots = new List<SpellSlot>();
+            MemorizedSpellSlots = new SpellSlot[RuneMagic.PlayerStats.MemorizedSpells.Length];
             GridSize = new Point(WindowWidth / RectSize, WindowHeight / RectSize);
 
             Grid = new Point[GridSize.X, GridSize.Y];
@@ -98,7 +98,7 @@ namespace RuneMagic.Source.Interface
             {
                 foreach (var spell in RuneMagic.PlayerStats.KnownSpells.Where(s => s.Level == level))
                 {
-                    var spellSlot = new KnownSpellSlot(spell, GridRectangle(xOffset, yOffset, 4, 4));
+                    var spellSlot = new SpellSlot(spell, GridRectangle(xOffset, yOffset, 4, 4));
                     KnownSpellSlots.Add(spellSlot);
                     xOffset += 3;
                 }
@@ -111,12 +111,12 @@ namespace RuneMagic.Source.Interface
             {
                 if (RuneMagic.PlayerStats.MemorizedSpells[i] != null)
                 {
-                    var spellSlot = new MemorizedSpellSlot(RuneMagic.PlayerStats.MemorizedSpells[i], GridRectangle(xOffset, yOffset, 4, 4));
+                    var spellSlot = new SpellSlot(RuneMagic.PlayerStats.MemorizedSpells[i], GridRectangle(xOffset, yOffset, 4, 4));
                     MemorizedSpellSlots[i] = spellSlot;
                 }
                 else
                 {
-                    var emptySlot = new MemorizedSpellSlot(null, GridRectangle(xOffset, yOffset, 4, 4));
+                    var emptySlot = new SpellSlot(null, GridRectangle(xOffset, yOffset, 4, 4));
                     MemorizedSpellSlots[i] = emptySlot;
                 }
                 yOffset += 3;
@@ -127,26 +127,12 @@ namespace RuneMagic.Source.Interface
         {
             foreach (var slot in KnownSpellSlots)
             {
-                b.Draw(slot.ButtonTexture, slot.Rectangle, slot.Color);
-                b.Draw(slot.Icon, slot.Rectangle, slot.Color);
-                //RuneMagic.Instance.Monitor.LogOnce(slot.ToString());
+                slot.Render(b);
             }
-            int xOffset = 30;
-            int yOffset = 8;
 
             foreach (var slot in MemorizedSpellSlots)
             {
-                if (slot.Spell == null)
-                {
-                    b.Draw(RuneMagic.Textures["spellslot_active"], GridRectangle(xOffset, yOffset, 4, 4), Color.White);
-                }
-                else
-                {
-                    b.Draw(slot.ButtonTexture, slot.Rectangle, slot.Color);
-                    b.Draw(slot.Icon, slot.Rectangle, slot.Color);
-                }
-                yOffset += 3;
-                //RuneMagic.Instance.Monitor.LogOnce($"{slot.Spell}");
+                slot.Render(b);
             }
         }
 
@@ -164,7 +150,7 @@ namespace RuneMagic.Source.Interface
                             {
                                 var index = Array.IndexOf(MemorizedSpellSlots, memorizedSlot);
                                 RuneMagic.PlayerStats.MemorizedSpells[index] = knownSlot.Spell;
-                                knownSlot.SetButtonTexture();
+
                                 return;
                             }
                         }
@@ -179,7 +165,7 @@ namespace RuneMagic.Source.Interface
                     {
                         var index = Array.IndexOf(MemorizedSpellSlots, memorizedSlot);
                         RuneMagic.PlayerStats.MemorizedSpells[index] = null;
-                        memorizedSlot.SetButtonTexture();
+
                         return;
                     }
                 }
