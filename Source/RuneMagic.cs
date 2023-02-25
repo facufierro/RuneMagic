@@ -27,9 +27,9 @@ namespace RuneMagic.Source
         public static RuneMagic Instance { get; private set; }
         public static PlayerStats PlayerStats { get; private set; }
         public static List<Spell> Spells { get; private set; }
-
         public static Dictionary<string, Texture2D> Textures;
 
+        public static Dictionary<School, MagicSkill> MagicSkills { get; set; }
         private SpellBookMenu SpellBook;
         private SpellActionBar ActionBar;
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
@@ -52,14 +52,26 @@ namespace RuneMagic.Source
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.Display.RenderedHud += OnRenderedHud;
+            helper.Events.GameLoop.OneSecondUpdateTicked += OnOneSecondUpdateTicked;
             SpaceCore.Events.SpaceEvents.OnEventFinished += OnEventFinished;
             SpaceCore.Events.SpaceEvents.OnBlankSave += OnBlankSave;
 
             LoadTextures();
+            MagicSkills = new Dictionary<School, MagicSkill>()
+            {
+                {School.Abjuration,new(School.Abjuration) },
+                {School.Alteration,new(School.Alteration) },
+                {School.Conjuration,new(School.Conjuration) },
+                {School.Evocation,new(School.Evocation) },
+            };
             PlayerStats = new PlayerStats();
+
             SpellBook = new SpellBookMenu();
+
             ActionBar = new SpellActionBar();
+
             RegisterSpells();
+
             RegisterCustomCraftingStations();
         }
 
@@ -69,7 +81,7 @@ namespace RuneMagic.Source
             SpaceCoreApi = Helper.ModRegistry.GetApi<IApi>("spacechase0.SpaceCore");
             JsonAssetsApi = Helper.ModRegistry.GetApi<JsonAssets.IApi>("spacechase0.JsonAssets");
             ConfigMenuApi = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
-
+            SpaceCoreApi.RegisterSerializerType(typeof(SpellBook));
             SpaceCoreApi.RegisterSerializerType(typeof(Rune));
             SpaceCoreApi.RegisterSerializerType(typeof(Scroll));
             SpaceCoreApi.RegisterSerializerType(typeof(MagicWeapon));
@@ -129,13 +141,7 @@ namespace RuneMagic.Source
         {
             if (Config.DevMode)
             {
-                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
-                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
-                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
-                Game1.player.addItemToInventory(new Object(JsonAssetsApi.GetObjectId("Spell Book"), 1));
-                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
-                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
-                Game1.player.addItemToInventory(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Magic Grinder")));
+                Game1.player.addItemToInventory(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
             }
         }
 
@@ -143,8 +149,8 @@ namespace RuneMagic.Source
         {
             foreach (var item in Game1.player.Items)
             {
-                if (item is IMagicItem)
-                    (item as IMagicItem).Spell = null;
+                if (item is ISpellCastingItem)
+                    (item as ISpellCastingItem).Spell = null;
             }
         }
 
@@ -152,14 +158,43 @@ namespace RuneMagic.Source
         {
             if (!Context.IsWorldReady)
                 return;
-            ManageMagicItems(Game1.player, JsonAssetsApi);
-            ManageSpellEffects();
-            PlayerStats.LearnSpells();
-            PlayerStats.LearnRecipes();
-            if (Game1.player.CurrentItem is IMagicItem)
+
+            PlayerStats.Update();
+
+            if (Game1.player.CurrentItem is ISpellCastingItem)
             {
-                PlayerStats.Cast(Game1.player.CurrentItem as IMagicItem);
+                //PlayerStats.Cast(Game1.player.CurrentItem as ISpellCastingItem);
                 PlayerAnimation();
+            }
+        }
+
+        private void OnOneSecondUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
+        {
+            if (!Context.IsWorldReady)
+                return;
+            foreach (var spellSlot in ActionBar.SpellSlots)
+            {
+                if (spellSlot != null)
+                {
+                    //set the cursor position to the spell slot position
+                    var slotPosition = spellSlot.Rectangle.Center.ToVector2();
+                    //set the cursor position to the closest slotPosition
+                    var closestSlotPosition = slotPosition;
+                    var closestDistance = float.MaxValue;
+                    foreach (var slot in ActionBar.SpellSlots)
+                    {
+                        if (slot != null)
+                        {
+                            var distance = Vector2.Distance(slot.Rectangle.Center.ToVector2(), Game1.getMousePosition().ToVector2());
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                closestSlotPosition = slot.Rectangle.Center.ToVector2();
+                            }
+                        }
+                    }
+                    Game1.setMousePosition((int)closestSlotPosition.X, (int)closestSlotPosition.Y);
+                }
             }
         }
 
@@ -176,7 +211,7 @@ namespace RuneMagic.Source
             PlayerStats.LearnRecipes();
             foreach (Item item in Game1.player.Items)
             {
-                if (item is IMagicItem magicItem && magicItem.Spell == null)
+                if (item is ISpellCastingItem magicItem && magicItem.Spell == null)
                 {
                     magicItem.InitializeSpell();
                 }
@@ -212,7 +247,7 @@ namespace RuneMagic.Source
                             break;
 
                         case SButton.F9:
-                            PlayerStats.ActiveSkill.Level += 1;
+                            PlayerStats.MagicSkill.Level += 1;
                             break;
 
                         case SButton.F11:
@@ -264,7 +299,7 @@ namespace RuneMagic.Source
             }
         }
 
-        public void RegisterSpells()
+        private void RegisterSpells()
         {
             var spellTypes = typeof(RuneMagic).Assembly
             .GetTypes()
@@ -488,47 +523,6 @@ namespace RuneMagic.Source
             File.WriteAllText(fullPath, json);
         }
 
-        //Game Management Methods
-        public void ManageMagicItems(Farmer player, JsonAssets.IApi jsonAssetsApi)
-        {
-            if (!Context.IsWorldReady)
-                return;
-
-            for (int i = 0; i < player.Items.Count; i++)
-            {
-                var inventory = player.Items;
-                List<string> objectsFromPack = new(jsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic"));
-                List<string> weaponsFromPack = new(jsonAssetsApi.GetAllWeaponsFromContentPack("fierro.rune_magic"));
-
-                if (inventory[i] is not IMagicItem and not null)
-                {
-                    if (objectsFromPack.Contains(inventory[i].Name))
-                    {
-                        if (inventory[i].Name.Contains("Rune of "))
-                            player.Items[i] = new Rune(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                        if (inventory[i].Name.Contains(" Scroll"))
-                            player.Items[i] = new Scroll(inventory[i].ParentSheetIndex, inventory[i].Stack);
-                    }
-                    if (weaponsFromPack.Contains(inventory[i].Name))
-                    {
-                        player.Items[i] = new MagicWeapon(JsonAssetsApi.GetWeaponId(inventory[i].Name));
-                    }
-                }
-                if (inventory[i] is IMagicItem magicItem)
-                {
-                    magicItem.Update();
-                }
-            }
-        }
-
-        public void ManageSpellEffects()
-        {
-            for (int i = 0; i < PlayerStats.ActiveEffects.Count; i++)
-            {
-                PlayerStats.ActiveEffects[i].Update();
-            }
-        }
-
         public void WizardEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
@@ -593,7 +587,7 @@ namespace RuneMagic.Source
                 {
                     Game1.player.FarmerSprite.animate(0, time);
                 }
-                else if (PlayerStats.IsCasting)
+                else if (PlayerStats.CastingTime > 0)
                 {
                     Game1.player.faceDirection(2);
                     Game1.player.showCarrying();

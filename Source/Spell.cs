@@ -14,7 +14,7 @@ namespace RuneMagic.Source
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public Skill Skill { get; set; }
+        public MagicSkill Skill { get; set; }
         public School School { get; set; }
         public dynamic Target { get; set; }
         public SpellEffect Effect { get; set; }
@@ -27,7 +27,7 @@ namespace RuneMagic.Source
             Name = GetType().Name;
             CastingTime = 1 + (Level / 10f) * 1.5f;
             School = school;
-            Skill = RuneMagic.PlayerStats.Skills[School];
+            Skill = RuneMagic.MagicSkills[School];
             SetGlyph(RuneMagic.Textures["glyph_0"]);
             if (GetType().GetMethod(nameof(Cast)).DeclaringType == typeof(Spell))
             {
@@ -41,7 +41,7 @@ namespace RuneMagic.Source
 
         public virtual bool Cast()
         {
-            RuneMagic.PlayerStats.Skills[School].Experience += 5;
+            RuneMagic.PlayerStats.MagicSkill.Experience += 5;
             return true;
         }
 

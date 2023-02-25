@@ -10,8 +10,7 @@ using System.Xml.Serialization;
 
 namespace RuneMagic.Source
 {
-    [XmlType("Mods_Skill")]
-    public class Skill
+    public class MagicSkill
     {
         public string Name { get; set; }
         public School School { get; set; }
@@ -21,10 +20,7 @@ namespace RuneMagic.Source
         public Texture2D Icon { get; set; }
         public Tuple<Color, Color> Colors { get; set; }
 
-        public Skill()
-        { }
-
-        public Skill(School school)
+        public MagicSkill(School school)
         {
             Name = school.ToString();
             School = school;

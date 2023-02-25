@@ -46,7 +46,7 @@ namespace RuneMagic.Source.Interface
         public override void draw(SpriteBatch b)
         {
             drawTextureBox(b, xPositionOnScreen, yPositionOnScreen, WindowWidth, WindowHeight, Color.White);
-            DrawSkillBar(b, RuneMagic.PlayerStats.ActiveSkill);
+            DrawSkillBar(b, RuneMagic.PlayerStats.MagicSkill);
             SetSlots();
             DrawSlots(b);
             base.draw(b);
@@ -58,7 +58,7 @@ namespace RuneMagic.Source.Interface
             return new Rectangle(Grid[x, y], new Point(width * RectSize, height * RectSize));
         }
 
-        private void DrawSkillBar(SpriteBatch b, Skill skill)
+        private void DrawSkillBar(SpriteBatch b, MagicSkill skill)
         {
             //draw the skill icon at rect[1,1] of rectSize*3
 
@@ -142,7 +142,7 @@ namespace RuneMagic.Source.Interface
             {
                 if (knownSlot.Rectangle.Contains(Game1.getMouseX(), Game1.getMouseY()))
                 {
-                    if (!RuneMagic.PlayerStats.MemorizedSpells.Contains(knownSlot.Spell) && RuneMagic.PlayerStats.MemorizedSpells.Contains(null))
+                    if (RuneMagic.PlayerStats.MemorizedSpells.Contains(null))
                     {
                         foreach (var memorizedSlot in MemorizedSpellSlots)
                         {
