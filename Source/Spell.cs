@@ -25,7 +25,6 @@ namespace RuneMagic.Source
         public Spell(School school)
         {
             Name = GetType().Name;
-            CastingTime = 1 + (Level / 10f) * 1.5f;
             School = school;
             Skill = RuneMagic.MagicSkills[School];
             SetGlyph(RuneMagic.Textures["glyph_0"]);

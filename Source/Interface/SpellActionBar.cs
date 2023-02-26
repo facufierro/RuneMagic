@@ -1,10 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using RuneMagic.Source.Items;
 using StardewModdingAPI;
 using StardewValley;
+using StardewValley.Minigames;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +16,8 @@ namespace RuneMagic.Source.Interface
 {
     public class SpellActionBar
     {
-        public SpellSlot[] SpellSlots { get; set; }
+        public List<SpellSlot> SpellSlots { get; set; }
+
         public float Scale { get; set; }
         public Texture2D ArrowTexture { get; set; }
         public Vector2 Center { get; set; }
@@ -21,13 +26,19 @@ namespace RuneMagic.Source.Interface
         {
             ArrowTexture = RuneMagic.Textures["casting_bar_arrow"];
             Scale = 5f;
-            SpellSlots = new SpellSlot[RuneMagic.PlayerStats.MemorizedSpells.Length];
+
+            SpellSlots = new List<SpellSlot>();
+            for (int i = 0; i < RuneMagic.PlayerStats.MemorizedSpells.Count; i++)
+            {
+                SpellSlots.Add(new SpellSlot());
+            }
         }
 
         public void Render(SpriteBatch b)
         {
-            if (RuneMagic.Instance.Helper.Input.IsDown(SButton.Q))
+            if (RuneMagic.Instance.Helper.Input.IsDown(SButton.Q) && Game1.player.CurrentItem is SpellBook)
             {
+                var memorizedSpells = RuneMagic.PlayerStats.MemorizedSpells;
                 var viewport = b.GraphicsDevice.Viewport;
                 Center = new Vector2(viewport.Width / 2, viewport.Height / 2);
                 var slotSize = new Vector2(128, 128);
@@ -35,25 +46,58 @@ namespace RuneMagic.Source.Interface
                 var radius = 150;
 
                 // Convert angleIncrement from radians to degrees
-                var angleIncrement = 360f / SpellSlots.Length;
+                var angleIncrement = 360f / memorizedSpells.Count;
                 var angle = -90f;
 
-                foreach (var spell in RuneMagic.PlayerStats.MemorizedSpells)
+                for (int i = 0; i < memorizedSpells.Count; i++)
                 {
-                    // Convert angle from degrees to radians
                     var angleRadians = angle * (Math.PI / 180);
-
                     slotPosition.X = (float)(Center.X - slotSize.X / 2 + radius * Math.Cos(angleRadians));
                     slotPosition.Y = (float)(Center.Y - slotSize.Y / 2 + radius * Math.Sin(angleRadians));
-                    SpellSlot slot;
-                    if (spell is not null)
-                        slot = new SpellSlot(spell, new Rectangle((int)slotPosition.X, (int)slotPosition.Y, (int)slotSize.X, (int)slotSize.Y));
+
+                    if (memorizedSpells[i] != null)
+                        SpellSlots[i].Spell = RuneMagic.PlayerStats.MemorizedSpells[i];
                     else
-                        slot = new SpellSlot(null, new Rectangle((int)slotPosition.X, (int)slotPosition.Y, (int)slotSize.X, (int)slotSize.Y));
+                        SpellSlots[i].Spell = null;
 
-                    slot.Render(b);
+                    SpellSlots[i].Bounds = new Rectangle((int)slotPosition.X, (int)slotPosition.Y, (int)slotSize.X, (int)slotSize.Y);
 
+                    SpellSlots[i].Render(b);
                     angle += angleIncrement;
+                }
+
+                //make the cursor disappear while selecting
+                Game1.mouseCursorTransparency = 0;
+
+                if (Game1.player.CurrentItem is SpellBook spellBook)
+                {
+                    //make the cursor disappear
+
+                    // Find the slot closest to the mouse position
+                    var closestSlot = SpellSlots.OrderBy(slot =>
+                    {
+                        var center = new Vector2(slot.Bounds.Center.X, slot.Bounds.Center.Y);
+                        return Vector2.Distance(center, new Vector2(Game1.getMouseX(), Game1.getMouseY()));
+                    }).First();
+
+                    // Deselect all non-selected slots
+                    foreach (var slot in SpellSlots)
+                    {
+                        if (slot != closestSlot)
+                            slot.Selected = false;
+                    }
+
+                    // Select the closest slot and initialize the spell
+                    closestSlot.Selected = true;
+                    //make closest slot rectangle bigger
+                    if (closestSlot.Spell != null)
+                    {
+                        var lastSize = closestSlot.Bounds;
+                        var newSize = new Rectangle(lastSize.X - 20, lastSize.Y - 20, lastSize.Width + 40, lastSize.Height + 40);
+                        closestSlot.Render(b, newSize);
+                        spellBook.SelectedSlot = closestSlot;
+                        spellBook.InitializeSpell();
+                    }
                 }
             }
         }

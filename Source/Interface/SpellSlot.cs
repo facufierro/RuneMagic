@@ -15,36 +15,114 @@ namespace RuneMagic.Source.Interface
         public Texture2D Icon { get; set; }
         public Texture2D Texture { get; set; }
         public bool Selected { get; set; } = false;
-        public Rectangle Rectangle { get; set; }
+        public bool Active { get; set; } = true;
+        public Rectangle Bounds { get; set; }
         public Color Color { get; set; }
 
-        public SpellSlot(Spell spell, Rectangle rectangle)
+        public SpellSlot()
+        { Color = Color.White; }
+
+        public SpellSlot(Spell spell) : this()
         {
             Spell = spell;
-            Rectangle = rectangle;
-            Color = Color.White;
         }
 
-        public override string ToString()
+        public SpellSlot(Spell spell, Rectangle rectangle) : this(spell)
         {
-            return $"Spell: {Spell}, Coordenates: {Rectangle.X}, {Rectangle.Y}, Size: {Rectangle.Size.X}, {Rectangle.Size.Y}";
+            Spell = spell;
+            Bounds = rectangle;
         }
 
         public void Render(SpriteBatch b)
         {
-            if (Spell != null)
+            if (Active)
             {
-                Icon = Spell.Icon;
-                Texture = RuneMagic.Textures["spell_slot_filled"];
-                b.Draw(Texture, Rectangle, Color);
-                b.Draw(Icon, new Rectangle(Rectangle.X + 5, Rectangle.Y + 5, Rectangle.Width - 10, Rectangle.Height - 10), Color.White);
+                if (Spell != null)
+                {
+                    Icon = Spell.Icon;
+                    if (Selected)
+                        Texture = RuneMagic.Textures["spell_slot_empty"];
+                    else
+                        Texture = RuneMagic.Textures["spell_slot_filled"];
+                    b.Draw(Texture, Bounds, Color);
+                    b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
+                }
+                else
+                {
+                    Icon = null;
+                    Texture = RuneMagic.Textures["spell_slot_empty"];
+                    b.Draw(Texture, Bounds, Color);
+                }
             }
             else
             {
-                Icon = null;
-                Texture = RuneMagic.Textures["spell_slot_empty"];
-                b.Draw(Texture, Rectangle, Color);
+                Texture = RuneMagic.Textures["spell_slot_disabled"];
+                b.Draw(Texture, Bounds, Color);
             }
+        }
+
+        public void Render(SpriteBatch b, Rectangle bounds)
+        {
+            Bounds = bounds;
+            if (Active)
+            {
+                if (Spell != null)
+                {
+                    Icon = Spell.Icon;
+                    if (Selected)
+                        Texture = RuneMagic.Textures["spell_slot_empty"];
+                    else
+                        Texture = RuneMagic.Textures["spell_slot_filled"];
+                    b.Draw(Texture, Bounds, Color);
+                    b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
+                }
+                else
+                {
+                    Icon = null;
+                    Texture = RuneMagic.Textures["spell_slot_empty"];
+                    b.Draw(Texture, Bounds, Color);
+                }
+            }
+            else
+            {
+                Texture = RuneMagic.Textures["spell_slot_disabled"];
+                b.Draw(Texture, Bounds, Color);
+            }
+        }
+
+        public void Render(SpriteBatch b, Rectangle bounds, Spell spell)
+        {
+            Bounds = bounds;
+            Spell = spell;
+            if (Active)
+            {
+                if (Spell != null)
+                {
+                    Icon = Spell.Icon;
+                    if (Selected)
+                        Texture = RuneMagic.Textures["spell_slot_empty"];
+                    else
+                        Texture = RuneMagic.Textures["spell_slot_filled"];
+                    b.Draw(Texture, Bounds, Color);
+                    b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
+                }
+                else
+                {
+                    Icon = null;
+                    Texture = RuneMagic.Textures["spell_slot_empty"];
+                    b.Draw(Texture, Bounds, Color);
+                }
+            }
+            else
+            {
+                Texture = RuneMagic.Textures["spell_slot_disabled"];
+                b.Draw(Texture, Bounds, Color);
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"Spell: {Spell}, Coordenates: {Bounds.X}, {Bounds.Y}, Size: {Bounds.Size.X}, {Bounds.Size.Y}";
         }
     }
 }

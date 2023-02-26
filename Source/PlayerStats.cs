@@ -17,43 +17,41 @@ namespace RuneMagic.Source
     public class PlayerStats
     {
         public MagicSkill MagicSkill { get; set; } = null;
-        public Spell ActiveSpell { get; set; } = null;
-        public List<Spell> KnownSpells { get; set; }
-        public Spell[] MemorizedSpells { get; set; }
-        public List<SpellEffect> ActiveEffects { get; set; }
-        public float CastingTime { get; set; } = 0;
 
+        public List<SpellEffect> ActiveEffects { get; set; }
+
+        public List<Spell> KnownSpells { get; set; }
+        public List<Spell> MemorizedSpells { get; set; }
+
+        public float CastingTime { get; set; } = 0;
         private int _healthBeforeCasting;
 
         public PlayerStats()
         {
             KnownSpells = new List<Spell>();
-            MemorizedSpells = new Spell[5];
+            MemorizedSpells = new List<Spell>();
+
             MagicSkill = RuneMagic.MagicSkills[School.Abjuration];
-            for (int i = 0; i < MemorizedSpells.Length; i++)
-            {
-                MemorizedSpells[i] = null;
-            }
 
             ActiveEffects = new List<SpellEffect>();
         }
 
         public void Update()
         {
-            //Casting
+            if (MagicSkill.Level > 14)
+            {
+                MagicSkill.Level = 14;
+            }
             ActivateSpellCastingItem(Game1.player.CurrentItem as ISpellCastingItem);
-            //Spells
             LearnSpells();
 
             //Effects
-            foreach (var effect in ActiveEffects)
-                effect.Update();
+            for (int i = 0; i < ActiveEffects.Count; i++)
+                ActiveEffects[i].Update();
         }
 
         public void ActivateSpellCastingItem(ISpellCastingItem item)
         {
-            // Check if the player is holding a valid magic item and whether the "R" key is being
-            //pressed
             if (Game1.player.CurrentItem is not ISpellCastingItem) return;
 
             if (!RuneMagic.Instance.Helper.Input.IsDown(SButton.R))
@@ -67,23 +65,17 @@ namespace RuneMagic.Source
                 _healthBeforeCasting = Game1.player.health;
             }
 
-            // Check if the player has taken damage during the casting process and interrupt
-            //casting
             if (Game1.player.health < _healthBeforeCasting)
             {
                 CastingTime = 0;
                 RuneMagic.Instance.Helper.Input.Suppress(SButton.R); return;
             }
 
-            // Enter a casting state and suppress certain movement keys
-
             RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
             RuneMagic.Instance.Helper.Input.Suppress(SButton.A);
             RuneMagic.Instance.Helper.Input.Suppress(SButton.S);
             RuneMagic.Instance.Helper.Input.Suppress(SButton.D);
 
-            // If the casting timer exceeds the casting time of the spell, activate the spell and
-            // reset the casting state
             if (item.Spell != null && CastingTime >= Math.Floor(item.Spell.CastingTime * 60))
             {
                 item.Activate(); RuneMagic.Instance.Helper.Input.Suppress(SButton.R);
@@ -94,6 +86,9 @@ namespace RuneMagic.Source
 
         public void LearnSpells()
         {
+            //add null to memorized spells to allow for empty slots
+            while (MemorizedSpells.Count < MagicSkill.Level + 1)
+                MemorizedSpells.Add(null);
             // Add crafting recipes for spells that the player can learn at their level
             foreach (var spell in RuneMagic.Spells)
             {

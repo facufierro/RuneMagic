@@ -30,13 +30,13 @@ namespace RuneMagic.Source
         public static Dictionary<string, Texture2D> Textures;
 
         public static Dictionary<School, MagicSkill> MagicSkills { get; set; }
-        private SpellBookMenu SpellBook;
+        public static SpellBookMenu SpellBook { get; private set; }
         private SpellActionBar ActionBar;
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
         public static IGenericModConfigMenuApi ConfigMenuApi { get; private set; }
 
-        private ModConfig Config;
+        public static ModConfig Config { get; private set; }
 
         public override void Entry(IModHelper helper)
         {
@@ -172,30 +172,6 @@ namespace RuneMagic.Source
         {
             if (!Context.IsWorldReady)
                 return;
-            foreach (var spellSlot in ActionBar.SpellSlots)
-            {
-                if (spellSlot != null)
-                {
-                    //set the cursor position to the spell slot position
-                    var slotPosition = spellSlot.Rectangle.Center.ToVector2();
-                    //set the cursor position to the closest slotPosition
-                    var closestSlotPosition = slotPosition;
-                    var closestDistance = float.MaxValue;
-                    foreach (var slot in ActionBar.SpellSlots)
-                    {
-                        if (slot != null)
-                        {
-                            var distance = Vector2.Distance(slot.Rectangle.Center.ToVector2(), Game1.getMousePosition().ToVector2());
-                            if (distance < closestDistance)
-                            {
-                                closestDistance = distance;
-                                closestSlotPosition = slot.Rectangle.Center.ToVector2();
-                            }
-                        }
-                    }
-                    Game1.setMousePosition((int)closestSlotPosition.X, (int)closestSlotPosition.Y);
-                }
-            }
         }
 
         private void OnEventFinished(object sender, EventArgs e)
