@@ -17,6 +17,8 @@ namespace RuneMagic.Source
     public class PlayerStats
     {
         public MagicSkill MagicSkill { get; set; } = null;
+        public bool RuneCarving { get; set; }
+        public bool ScrollScribing { get; set; }
 
         public List<SpellEffect> ActiveEffects { get; set; }
 

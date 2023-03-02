@@ -177,7 +177,11 @@ namespace RuneMagic.Source
         {
             if (Game1.CurrentEvent.id == 15065001)
             {
-                Game1.player.addItemToInventory(new MagicWeapon(JsonAssetsApi.GetWeaponId("Apprentice Staff")));
+                Game1.player.addItemToInventory(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
+            }
+            if (Game1.CurrentEvent.id == 15065002)
+            {
+                PlayerStats.ScrollScribing = true;
             }
         }
 
@@ -504,7 +508,7 @@ namespace RuneMagic.Source
         public void WizardEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && PlayerStats.MagicSkill.Level == 0)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
@@ -514,13 +518,27 @@ namespace RuneMagic.Source
                        $"/pause 2000" +
                        $"/speak Wizard \"What do you think about this? Beautiful, isn't it?\"" +
                        $"/pause 500" +
-                       $"/speak Wizard \"It's a Magic Staff.\"" +
-                       $"/pause 500" +
-                       $"/speak Wizard \"It is a gift for you...\"" +
+                       $"/speak Wizard \"It's a Spell Book, a gift for you...\"" +
                        $"/pause 1000" +
                        $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
+            }
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 4 && RuneMagic.PlayerStats.ScrollScribing == false)
+            {
+                var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                       $"/speak Wizard \"@! Come in young adept, come in...\"" +
+                       $"/pause 400" +
+                       $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
+                       $"/move farmer 0 -6 0 true" +
+                       $"/pause 2000" +
+                       $"/speak Wizard \"Today I am going to teach you a new form of magic.\"" +
+                       $"/pause 500" +
+                       $"/speak Wizard \"Scroll Scribing.\"" +
+                       $"/pause 1000" +
+                       $"/speak Wizard \"Now pay attention, this can be a bit tricky. And if not done properly even dangerous!\"" +
+                       $"/end";
+                location.startEvent(new Event(eventString, 15065002));
             }
         }
 
