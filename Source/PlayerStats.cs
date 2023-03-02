@@ -87,8 +87,11 @@ namespace RuneMagic.Source
         public void LearnSpells()
         {
             //add null to memorized spells to allow for empty slots
-            while (MemorizedSpells.Count < MagicSkill.Level + 1)
+            if (MemorizedSpells.Count < MagicSkill.Level + 1)
+            {
                 MemorizedSpells.Add(null);
+            }
+
             // Add crafting recipes for spells that the player can learn at their level
             foreach (var spell in RuneMagic.Spells)
             {

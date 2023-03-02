@@ -12,6 +12,7 @@ using StardewValley.Locations;
 using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,8 +31,6 @@ namespace RuneMagic.Source
         public static Dictionary<string, Texture2D> Textures;
 
         public static Dictionary<School, MagicSkill> MagicSkills { get; set; }
-        public static SpellBookMenu SpellBook { get; private set; }
-        private SpellActionBar ActionBar;
         public static JsonAssets.IApi JsonAssetsApi { get; private set; }
         public static IApi SpaceCoreApi { get; private set; }
         public static IGenericModConfigMenuApi ConfigMenuApi { get; private set; }
@@ -65,10 +64,6 @@ namespace RuneMagic.Source
                 {School.Evocation,new(School.Evocation) },
             };
             PlayerStats = new PlayerStats();
-
-            SpellBook = new SpellBookMenu();
-
-            ActionBar = new SpellActionBar();
 
             RegisterSpells();
 
@@ -134,7 +129,12 @@ namespace RuneMagic.Source
 
         private void OnRenderedHud(object sender, RenderedHudEventArgs e)
         {
-            ActionBar.Render(e.SpriteBatch);
+            if (!Context.IsWorldReady)
+                return;
+            if (Instance.Helper.Input.IsDown(SButton.Q) && Game1.player.CurrentItem is SpellBook spellBook)
+            {
+                spellBook.ActionBar.Render(e.SpriteBatch);
+            }
         }
 
         private void OnBlankSave(object sender, EventArgs e)
@@ -160,7 +160,6 @@ namespace RuneMagic.Source
                 return;
 
             PlayerStats.Update();
-
             if (Game1.player.CurrentItem is ISpellCastingItem)
             {
                 //PlayerStats.Cast(Game1.player.CurrentItem as ISpellCastingItem);
@@ -185,11 +184,22 @@ namespace RuneMagic.Source
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
             PlayerStats.LearnRecipes();
+
             foreach (Item item in Game1.player.Items)
             {
                 if (item is ISpellCastingItem magicItem && magicItem.Spell == null)
                 {
                     magicItem.InitializeSpell();
+                }
+            }
+
+            //if the player has a SpellBook in the inventory set all its slots to active
+            foreach (Item item in Game1.player.Items)
+            {
+                if (item is SpellBook spellBook)
+                {
+                    foreach (var slot in spellBook.MemorizedSpellSlots)
+                        slot.Active = true;
                 }
             }
         }
@@ -205,23 +215,15 @@ namespace RuneMagic.Source
                             (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
                         break;
 
-                    case SButton.MouseRight:
-                        if (Game1.activeClickableMenu is null)
-                        {
-                            if (JsonAssetsApi.GetAllObjectsFromContentPack("fierro.rune_magic").Contains(Game1.player.CurrentItem.Name) && Game1.player.CurrentItem.Name == "Spell Book")
-                                Game1.activeClickableMenu = SpellBook;
-                        }
+                    case SButton.K:
+                        if (Game1.player.CurrentItem is SpellBook spellBook)
+                            Game1.activeClickableMenu = spellBook.Menu;
                         break;
                 }
                 if (Config.DevMode)
                 {
                     switch (e.Button)
                     {
-                        case SButton.F5:
-                            //render a menu with text
-                            Game1.activeClickableMenu = SpellBook;
-                            break;
-
                         case SButton.F9:
                             PlayerStats.MagicSkill.Level += 1;
                             break;

@@ -90,36 +90,6 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        public void Render(SpriteBatch b, Rectangle bounds, Spell spell)
-        {
-            Bounds = bounds;
-            Spell = spell;
-            if (Active)
-            {
-                if (Spell != null)
-                {
-                    Icon = Spell.Icon;
-                    if (Selected)
-                        Texture = RuneMagic.Textures["spell_slot_empty"];
-                    else
-                        Texture = RuneMagic.Textures["spell_slot_filled"];
-                    b.Draw(Texture, Bounds, Color);
-                    b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
-                }
-                else
-                {
-                    Icon = null;
-                    Texture = RuneMagic.Textures["spell_slot_empty"];
-                    b.Draw(Texture, Bounds, Color);
-                }
-            }
-            else
-            {
-                Texture = RuneMagic.Textures["spell_slot_disabled"];
-                b.Draw(Texture, Bounds, Color);
-            }
-        }
-
         public override string ToString()
         {
             return $"Spell: {Spell}, Coordenates: {Bounds.X}, {Bounds.Y}, Size: {Bounds.Size.X}, {Bounds.Size.Y}";
