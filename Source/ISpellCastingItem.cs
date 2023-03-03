@@ -12,7 +12,10 @@ namespace RuneMagic.Source
 
         public void InitializeSpell();
 
-        public void Activate();
+        public virtual void Activate()
+        {
+            RuneMagic.PlayerStats.MagicSkill.Experience += 5;
+        }
 
         public void Update();
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Netcode;
+using RuneMagic.Source.Interface;
 using RuneMagic.Source.Items;
 using SpaceCore;
 using StardewModdingAPI;
@@ -17,9 +18,10 @@ namespace RuneMagic.Source
     public class PlayerStats
     {
         public MagicSkill MagicSkill { get; set; } = null;
-        public bool RuneCarving { get; set; }
-        public bool ScrollScribing { get; set; }
-
+        public bool RuneCarving { get; set; } = false;
+        public bool ScrollScribing { get; set; } = false;
+        public bool MagicLearned { get; set; } = false;
+        public CastBar CastBar { get; set; }
         public List<SpellEffect> ActiveEffects { get; set; }
 
         public List<Spell> KnownSpells { get; set; }
@@ -36,14 +38,13 @@ namespace RuneMagic.Source
             MagicSkill = RuneMagic.MagicSkills[School.Abjuration];
 
             ActiveEffects = new List<SpellEffect>();
+            CastBar = new CastBar();
         }
 
         public void Update()
         {
-            if (MagicSkill.Level > 14)
-            {
-                MagicSkill.Level = 14;
-            }
+            MagicSkill.SetLevel();
+
             ActivateSpellCastingItem(Game1.player.CurrentItem as ISpellCastingItem);
             LearnSpells();
 
@@ -116,31 +117,30 @@ namespace RuneMagic.Source
 
         public void LearnRecipes()
         {
-            //foreach (var skill in RuneMagic.PlayerStats.Skills.Values)
-            //{
-            //    var level = skill.Level;
-            //    if (level < 1) return;
-
-            // var craftingRecipes = new string[] { "Runic Anvil", "Inscription Table", "Magic
-            // Grinder", "Blank Rune", "Blank Parchment" };
-
-            // // Add crafting recipes for the above items foreach (var recipe in craftingRecipes) {
-            // if (!Game1.player.craftingRecipes.ContainsKey(recipe))
-            // Game1.player.craftingRecipes.Add(recipe, 0); }
-
-            // // Add crafting recipes for spells that the player can learn at their level foreach
-            // (var spell in RuneMagic.Spells) { var spellLevel = spell.Level; if (level >=
-            // spellLevel && ((spellLevel < 5 && level >= spellLevel * 2 - 1) || (spellLevel == 5 &&
-            // level >= 10))) { var runeName = $"Rune of {spell.Name}"; if
-            // (!Game1.player.craftingRecipes.ContainsKey(runeName))
-            // Game1.player.craftingRecipes.Add(runeName, 0);
-
-            //            var scrollName = $"{spell.Name} Scroll";
-            //            if (!Game1.player.craftingRecipes.ContainsKey(scrollName))
-            //                Game1.player.craftingRecipes.Add(scrollName, 0);
-            //        }
-            //    }
-            //}
+            if (RuneMagic.PlayerStats.ScrollScribing)
+            {
+                if (!Game1.player.craftingRecipes.ContainsKey("Inscription Table"))
+                    Game1.player.craftingRecipes.Add("Inscription Table", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Magic Grinder"))
+                    Game1.player.craftingRecipes.Add("Magic Grinder", 0);
+                foreach (var spell in RuneMagic.PlayerStats.KnownSpells)
+                {
+                    if (!Game1.player.craftingRecipes.ContainsKey($"{spell.Name} Scroll"))
+                        Game1.player.craftingRecipes.Add($"{spell.Name} Scroll", 0);
+                }
+            }
+            if (RuneMagic.PlayerStats.RuneCarving)
+            {
+                if (!Game1.player.craftingRecipes.ContainsKey("Runic Anvil"))
+                    Game1.player.craftingRecipes.Add("Runic Anvil", 0);
+                if (!Game1.player.craftingRecipes.ContainsKey("Magic Grinder"))
+                    Game1.player.craftingRecipes.Add("Magic Grinder", 0);
+                foreach (var spell in RuneMagic.PlayerStats.KnownSpells)
+                {
+                    if (!Game1.player.craftingRecipes.ContainsKey($"Rune of {spell.Name}"))
+                        Game1.player.craftingRecipes.Add($"Rune of {spell.Name}", 0);
+                }
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace RuneMagic.Source
         public School School { get; set; }
         public string Description { get; set; }
         public int Level { get; set; }
-        public int Experience { get; set; }
+        public int Experience { get; set; } = 0;
         public Texture2D Icon { get; set; }
         public Tuple<Color, Color> Colors { get; set; }
 
@@ -49,6 +49,15 @@ namespace RuneMagic.Source
                     Colors = new(new Color(200, 0, 0), new Color(175, 0, 0));
                     break;
             }
+        }
+
+        public void SetLevel()
+        {
+            if (Level > 15)
+            {
+                Level = 15;
+            }
+            Level = (int)Math.Floor(Math.Pow(Experience / 100, 1.2));
         }
     }
 }

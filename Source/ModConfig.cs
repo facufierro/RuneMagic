@@ -12,6 +12,7 @@ namespace RuneMagic.Source
     {
         public bool DevMode { get; set; } = false;
         public SButton CastKey { get; set; } = SButton.R;
-        //public SButton RunemasterKey { get; set; } = SButton.Q;
+        public SButton ActionBarKey { get; set; } = SButton.Q;
+        public SButton SpellBookKey { get; set; } = SButton.K;
     }
 }

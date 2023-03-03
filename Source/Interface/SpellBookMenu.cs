@@ -75,7 +75,7 @@ namespace RuneMagic.Source.Interface
                 Texture2D texture;
                 if (i == 4 || i == 9 || i == 14)
                 {
-                    if (i > skill.Level)
+                    if (i >= skill.Level)
                         texture = RuneMagic.Textures["icon_profession_empty"];
                     else
                         texture = RuneMagic.Textures["icon_profession_filled"];

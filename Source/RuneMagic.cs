@@ -131,9 +131,16 @@ namespace RuneMagic.Source
         {
             if (!Context.IsWorldReady)
                 return;
-            if (Instance.Helper.Input.IsDown(SButton.Q) && Game1.player.CurrentItem is SpellBook spellBook)
+            if (Game1.player.CurrentItem is SpellBook spellBook)
             {
-                spellBook.ActionBar.Render(e.SpriteBatch);
+                if (Instance.Helper.Input.IsDown(Config.ActionBarKey))
+                {
+                    spellBook.ActionBar.Render(e.SpriteBatch);
+                }
+                if (Instance.Helper.Input.IsDown(Config.CastKey))
+                {
+                    PlayerStats.CastBar.Render(e.SpriteBatch, spellBook);
+                }
             }
         }
 
@@ -178,10 +185,18 @@ namespace RuneMagic.Source
             if (Game1.CurrentEvent.id == 15065001)
             {
                 Game1.player.addItemToInventory(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
+                PlayerStats.MagicLearned = true;
+                PlayerStats.LearnRecipes();
             }
             if (Game1.CurrentEvent.id == 15065002)
             {
                 PlayerStats.ScrollScribing = true;
+                PlayerStats.LearnRecipes();
+            }
+            if (Game1.CurrentEvent.id == 15065003)
+            {
+                PlayerStats.RuneCarving = true;
+                PlayerStats.LearnRecipes();
             }
         }
 
@@ -212,24 +227,26 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-                switch (e.Button)
-                {
-                    case SButton.MouseLeft:
-                        if (Game1.activeClickableMenu is not null and SpellBookMenu)
-                            (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
-                        break;
+                if (e.Button == SButton.MouseLeft)
+                    if (Game1.activeClickableMenu is not null and SpellBookMenu)
+                        (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
+                if (e.Button == Config.SpellBookKey)
+                    //if the player has a spellbook in inventory open spellmenu
+                    foreach (Item item in Game1.player.Items)
+                    {
+                        if (item is SpellBook spellBook)
+                        {
+                            Game1.activeClickableMenu = new SpellBookMenu(spellBook);
+                            break;
+                        }
+                    }
 
-                    case SButton.K:
-                        if (Game1.player.CurrentItem is SpellBook spellBook)
-                            Game1.activeClickableMenu = spellBook.Menu;
-                        break;
-                }
                 if (Config.DevMode)
                 {
                     switch (e.Button)
                     {
                         case SButton.F9:
-                            PlayerStats.MagicSkill.Level += 1;
+                            PlayerStats.MagicSkill.Experience += 100;
                             break;
 
                         case SButton.F11:
@@ -247,7 +264,8 @@ namespace RuneMagic.Source
 
         private void OnWarped(object sender, WarpedEventArgs e)
         {
-            WizardEvent(e.NewLocation);
+            TriggerEvent(e.NewLocation);
+            Monitor.Log(e.NewLocation.Name);
         }
 
         //Registering Methods
@@ -505,10 +523,10 @@ namespace RuneMagic.Source
             File.WriteAllText(fullPath, json);
         }
 
-        public void WizardEvent(GameLocation location)
+        public void TriggerEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && PlayerStats.MagicSkill.Level == 0)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && PlayerStats.MagicLearned == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
@@ -524,7 +542,7 @@ namespace RuneMagic.Source
                        $"/end";
                 location.startEvent(new Event(eventString, 15065001));
             }
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 4 && RuneMagic.PlayerStats.ScrollScribing == false)
+            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 4 && PlayerStats.ScrollScribing == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
                        $"/speak Wizard \"@! Come in young adept, come in...\"" +
@@ -539,6 +557,21 @@ namespace RuneMagic.Source
                        $"/speak Wizard \"Now pay attention, this can be a bit tricky. And if not done properly even dangerous!\"" +
                        $"/end";
                 location.startEvent(new Event(eventString, 15065002));
+            }
+            if (location.Name == "Mine" && Game1.player.getFriendshipHeartLevelForNPC("Dwarf") >= 4 && PlayerStats.RuneCarving == false && Game1.player.canUnderstandDwarves)
+            {
+                var eventString = $"WizardSong/43 8/Dwarf 43 6 2 farmer 39 8 1/skippable" +
+                       $"/speak Dwarf \"Hey!\"" +
+                       $"/pause 400" +
+                       $"/advancedMove farmer false 43 8 1 100 43 7 3 3000" +
+                       $"/pause 2000" +
+                       $"/speak Dwarf \"Did you know that dwarves know how to use magic?.\"" +
+                       $"/pause 500" +
+                       $"/speak Wizard \"We do it different though, like this!\"" +
+                       $"/pause 1000" +
+                       $"/speak Wizard \"Wanna try? It's not hard if you already know the basics.\"" +
+                       $"/end";
+                location.startEvent(new Event(eventString, 15065003));
             }
         }
 
@@ -609,7 +642,16 @@ namespace RuneMagic.Source
                 name: () => "Casting Key",
                 getValue: () => Config.CastKey,
                 setValue: value => Config.CastKey = value);
-
+            ConfigMenuApi.AddKeybind(
+                mod: ModManifest,
+                name: () => "Spell Selection Key",
+                getValue: () => Config.ActionBarKey,
+                setValue: value => Config.ActionBarKey = value);
+            ConfigMenuApi.AddKeybind(
+                mod: ModManifest,
+                name: () => "Spell Book Menu Key",
+                getValue: () => Config.SpellBookKey,
+                setValue: value => Config.SpellBookKey = value);
             ConfigMenuApi.SetTitleScreenOnlyForNextOptions(ModManifest, true);
             ConfigMenuApi.AddBoolOption(
                mod: ModManifest,
