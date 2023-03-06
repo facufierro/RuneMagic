@@ -174,7 +174,8 @@ namespace RuneMagic.Source.Interface
                         {
                             var index = SpellBook.MemorizedSpellSlots.IndexOf(memorizedSlot);
                             RuneMagic.PlayerStats.MemorizedSpells[index] = null;
-
+                            memorizedSlot.Spell = null;
+                            memorizedSlot.Selected = false;
                             return;
                         }
                     }

@@ -24,7 +24,6 @@ namespace RuneMagic.Source.Interface
 
         public SpellActionBar(SpellBook spellBook)
         {
-            ArrowTexture = RuneMagic.Textures["casting_bar_arrow"];
             Scale = 5f;
             SpellBook = spellBook;
         }
