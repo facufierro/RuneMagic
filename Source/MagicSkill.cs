@@ -53,11 +53,38 @@ namespace RuneMagic.Source
 
         public void SetLevel()
         {
-            if (Level > 15)
-            {
+            if (Experience < 100)
+                Level = 0;
+            else if (Experience < 300)
+                Level = 1;
+            else if (Experience < 600)
+                Level = 2;
+            else if (Experience < 1000)
+                Level = 3;
+            else if (Experience < 1500)
+                Level = 4;
+            else if (Experience < 2100)
+                Level = 5;
+            else if (Experience < 2800)
+                Level = 6;
+            else if (Experience < 3600)
+                Level = 7;
+            else if (Experience < 4500)
+                Level = 8;
+            else if (Experience < 5500)
+                Level = 9;
+            else if (Experience < 6600)
+                Level = 10;
+            else if (Experience < 7800)
+                Level = 11;
+            else if (Experience < 9100)
+                Level = 12;
+            else if (Experience < 10500)
+                Level = 13;
+            else if (Experience < 12000)
+                Level = 14;
+            else if (Experience >= 12000)
                 Level = 15;
-            }
-            Level = (int)Math.Floor(Math.Pow(Experience / 100, 1.2));
         }
     }
 }

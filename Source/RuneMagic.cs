@@ -131,15 +131,16 @@ namespace RuneMagic.Source
         {
             if (!Context.IsWorldReady)
                 return;
-            if (Game1.player.CurrentItem is SpellBook spellBook)
+            if (Game1.player.CurrentItem is ISpellCastingItem spellItem)
             {
                 if (Instance.Helper.Input.IsDown(Config.ActionBarKey))
                 {
-                    spellBook.ActionBar.Render(e.SpriteBatch);
+                    if (spellItem is SpellBook spellBook)
+                        spellBook.ActionBar.Render(e.SpriteBatch);
                 }
                 if (Instance.Helper.Input.IsDown(Config.CastKey))
                 {
-                    PlayerStats.CastBar.Render(e.SpriteBatch, spellBook);
+                    PlayerStats.CastBar.Render(e.SpriteBatch, spellItem);
                 }
             }
         }
@@ -185,6 +186,7 @@ namespace RuneMagic.Source
             if (Game1.CurrentEvent.id == 15065001)
             {
                 Game1.player.addItemToInventory(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
+
                 PlayerStats.MagicLearned = true;
                 PlayerStats.LearnRecipes();
             }
@@ -217,8 +219,7 @@ namespace RuneMagic.Source
             {
                 if (item is SpellBook spellBook)
                 {
-                    foreach (var slot in spellBook.MemorizedSpellSlots)
-                        slot.Active = true;
+                    spellBook.UpdateSpellSlots();
                 }
             }
         }

@@ -25,7 +25,6 @@ namespace RuneMagic.Source.Interface
         private Point GridSize;
         private Point[,] Grid;
         private SpellBook SpellBook;
-        private int lastLevel = 0;
 
         public SpellBookMenu(SpellBook spellBook)
             : base((Game1.viewport.Width - WindowWidth) / 2, (Game1.viewport.Height - WindowHeight) / 2, WindowWidth, WindowHeight, true)
@@ -86,7 +85,7 @@ namespace RuneMagic.Source.Interface
                 }
                 else
                 {
-                    if (i > skill.Level)
+                    if (i >= skill.Level)
                         texture = RuneMagic.Textures["icon_level_empty"];
                     else
                         texture = RuneMagic.Textures["icon_level_filled"];
@@ -135,20 +134,12 @@ namespace RuneMagic.Source.Interface
                     slot.Active = false;
                 }
 
-                //if the magicskill.level changed set all the spell slots to active
-                if (lastLevel != RuneMagic.PlayerStats.MagicSkill.Level)
-                {
-                    foreach (var s in SpellBook.MemorizedSpellSlots)
-                        s.Active = true;
-                }
                 slot.Bounds = GridRectangle(xOffset, yOffset, 4, 4);
                 slot.Render(b);
                 yOffset += 3;
 
                 if (index == 4 || index == 9)
                     yOffset = 8;
-
-                lastLevel = RuneMagic.PlayerStats.MagicSkill.Level;
             }
         }
 

@@ -8,6 +8,7 @@ using StardewModdingAPI;
 using StardewValley;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using xTile.Dimensions;
 using static SpaceCore.Skills;
@@ -29,6 +30,7 @@ namespace RuneMagic.Source
 
         public float CastingTime { get; set; } = 0;
         private int _healthBeforeCasting;
+        private int _previousMagicSkillLevel = 0;
 
         public PlayerStats()
         {
@@ -51,6 +53,16 @@ namespace RuneMagic.Source
             //Effects
             for (int i = 0; i < ActiveEffects.Count; i++)
                 ActiveEffects[i].Update();
+            if (_previousMagicSkillLevel != MagicSkill.Level)
+                //if the player has a SpellBook in the inventory
+                if (Game1.player.Items.Any(item => item is SpellBook))
+                {
+                    //get the first SpellBook in the inventory
+                    var spellBook = Game1.player.Items.First(item => item is SpellBook) as SpellBook;
+                    //update the spell slots
+                    spellBook.UpdateSpellSlots();
+                }
+            _previousMagicSkillLevel = MagicSkill.Level;
         }
 
         public void ActivateSpellCastingItem(ISpellCastingItem item)
