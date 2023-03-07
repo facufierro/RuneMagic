@@ -77,7 +77,7 @@ namespace RuneMagic.Source.Interface
             }
             if (Rune.Bounds.Contains(x, y))
             {
-                Game1.playSound("hammer");
+                Game1.playSound("stoneCrack");
                 Game1.player.addItemToInventory(new Rune(RuneMagic.JsonAssetsApi.GetObjectId($"Rune of {Rune.Spell.Name}"), 1));
             }
         }
