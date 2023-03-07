@@ -17,18 +17,21 @@ namespace RuneMagic.Source.Items
 
         public int ChargesMax { get; set; }
         public float Charges { get; set; }
+        public int Cracks { get; set; } = 0;
 
         public Rune() : base()
         {
             InitializeSpell();
-            ChargesMax = Game1.random.Next(3, 10);
+            int invertedLevel = 6 - Spell.Level;
+            ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
             Charges = ChargesMax;
         }
 
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             InitializeSpell();
-            ChargesMax = Game1.random.Next(3, 10);
+            int invertedLevel = 6 - Spell.Level;
+            ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
             Charges = ChargesMax;
         }
 
@@ -39,7 +42,7 @@ namespace RuneMagic.Source.Items
                 if (Name.Contains(spell.Name))
                 {
                     Spell = spell;
-                    RuneMagic.Instance.Monitor.Log($"{Name} Initialized", LogLevel.Debug);
+                    //RuneMagic.Instance.Monitor.Log($"{Name} Initialized", LogLevel.Debug);
                     break;
                 }
             }
@@ -48,6 +51,7 @@ namespace RuneMagic.Source.Items
         public void Activate()
         {
             if (!Fizzle())
+            {
                 if (Math.Floor(Charges) > 0)
                 {
                     if (Spell.Cast())
@@ -56,16 +60,17 @@ namespace RuneMagic.Source.Items
                         Charges--;
                     }
                 }
+            }
+            else
+                Cracks++;
         }
 
         public bool Fizzle()
         {
-            if (Game1.random.Next(1, 100) < 0)
+            if (Game1.random.Next(1, 100) < 100)
             {
                 Game1.player.stamina -= 10;
                 Game1.playSound("stoneCrack");
-                Game1.player.removeItemFromInventory(this);
-                Game1.player.addItemToInventory(new Object(390, 1));
                 return true;
             }
             else
@@ -83,12 +88,27 @@ namespace RuneMagic.Source.Items
                 Charges = ChargesMax;
             if (Charges < 0)
                 Charges = 0;
+            if (Cracks >= 3)
+                Game1.player.removeItemFromInventory(this);
         }
 
         public void DrawCharges(SpriteBatch spriteBatch, Vector2 location, float layerDepth)
         {
             spriteBatch.DrawString(Game1.tinyFont, Math.Floor(Charges).ToString(), new Vector2(location.X + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).X, location.Y + 64 - Game1.tinyFont.MeasureString(Math.Floor(Charges).ToString()).Y),
                            Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, layerDepth + 0.0001f);
+        }
+
+        public override void drawInMenu(SpriteBatch spriteBatch, Vector2 location, float scaleSize, float transparency, float layerDepth, StackDrawType drawStackNumber, Color color, bool drawShadow)
+        {
+            base.drawInMenu(spriteBatch, location, scaleSize, transparency, layerDepth, drawStackNumber, color, drawShadow);
+            DrawCharges(spriteBatch, location, layerDepth);
+
+            if (Cracks == 1 || Cracks == 2)
+            {
+                var crackedRune = RuneMagic.Textures[$"cracked_rune{Cracks}"];
+                spriteBatch.Draw(crackedRune, location + new Vector2(32f, 32f), new Rectangle?(Game1.getSourceRectForStandardTileSheet(crackedRune, 0, 16, 16)),
+                                     Color.White * transparency, 0.0f, new Vector2(8f, 8f), 4f * scaleSize, SpriteEffects.None, layerDepth + 0.0001f);
+            }
         }
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)

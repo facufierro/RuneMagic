@@ -63,6 +63,11 @@ namespace RuneMagic.Source
                     spellBook.UpdateSpellSlots();
                 }
             _previousMagicSkillLevel = MagicSkill.Level;
+
+            foreach (ISpellCastingItem spellaCastingItem in Game1.player.Items.Where(item => item is ISpellCastingItem))
+            {
+                spellaCastingItem.Update();
+            }
         }
 
         public void ActivateSpellCastingItem(ISpellCastingItem item)
