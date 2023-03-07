@@ -17,19 +17,81 @@ using static SpaceCore.Skills;
 
 namespace RuneMagic.Source.Interface
 {
-    public class SpellBookMenu : MagicMenu
+    public class ScrollScribingMenu : IClickableMenu
     {
-        public SpellBookMenu(SpellBook spellBook)
-            : base(spellBook)
+        private const int WindowWidth = 640;
+        private const int WindowHeight = 480;
+        private int RectSize = 16;
+        private Point GridSize;
+        private Point[,] Grid;
+        private SpellBook SpellBook;
+
+        public ScrollScribingMenu(SpellBook spellBook)
+            : base((Game1.viewport.Width - WindowWidth) / 2, (Game1.viewport.Height - WindowHeight) / 2, WindowWidth, WindowHeight, true)
         {
+            SpellBook = spellBook;
+            SetGrid();
         }
 
         public override void draw(SpriteBatch b)
         {
-            base.draw(b);
+            drawTextureBox(b, xPositionOnScreen, yPositionOnScreen, WindowWidth, WindowHeight, Color.White);
+            DrawSkillBar(b, RuneMagic.PlayerStats.MagicSkill);
             DrawKnownSlots(b);
             DrawMemorizedSlots(b);
+            base.draw(b);
             drawMouse(b);
+        }
+
+        private void SetGrid()
+        {
+            GridSize = new Point(WindowWidth / RectSize, WindowHeight / RectSize);
+
+            Grid = new Point[GridSize.X, GridSize.Y];
+            for (int x = 0; x < GridSize.X; x++)
+            {
+                for (int y = 0; y < GridSize.Y; y++)
+                {
+                    Grid[x, y] = new Point(xPositionOnScreen + (x * RectSize), yPositionOnScreen + (y * RectSize));
+                }
+            }
+        }
+
+        private Rectangle GridRectangle(int x, int y, int width, int height)
+        {
+            return new Rectangle(Grid[x, y], new Point(width * RectSize, height * RectSize));
+        }
+
+        private void DrawSkillBar(SpriteBatch b, MagicSkill skill)
+        {
+            //draw the skill icon at rect[1,1] of rectSize*3
+
+            b.Draw(skill.Icon, GridRectangle(1, 1, 3, 3), Color.White);
+            var xOffset = 4;
+
+            for (int i = 0; i < 15; i++)
+            {
+                Texture2D texture;
+                if (i == 4 || i == 9 || i == 14)
+                {
+                    if (i >= skill.Level)
+                        texture = RuneMagic.Textures["icon_profession_empty"];
+                    else
+                        texture = RuneMagic.Textures["icon_profession_filled"];
+                    xOffset--;
+                    b.Draw(texture, GridRectangle(xOffset + (i * 2), 1, 6, 3), Color.White);
+
+                    xOffset += 2;
+                }
+                else
+                {
+                    if (i >= skill.Level)
+                        texture = RuneMagic.Textures["icon_level_empty"];
+                    else
+                        texture = RuneMagic.Textures["icon_level_filled"];
+                    b.Draw(texture, GridRectangle(xOffset + (i * 2), 1, 3, 3), Color.White);
+                }
+            }
         }
 
         private void DrawKnownSlots(SpriteBatch b)
@@ -81,16 +143,14 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        public override void receiveLeftClick(int x, int y, bool playSound = true)
+        public void MemorizeSpell()
         {
-            base.receiveLeftClick(x, y, playSound);
-
             //if the current location is home
             if (Game1.currentLocation.Name == "FarmHouse")
             {
                 foreach (var knownSlot in SpellBook.KnownSpellSlots)
                 {
-                    if (knownSlot.Bounds.Contains(x, y))
+                    if (knownSlot.Bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
                     {
                         foreach (var memorizedSlot in SpellBook.MemorizedSpellSlots)
                         {
@@ -108,7 +168,7 @@ namespace RuneMagic.Source.Interface
                 }
                 foreach (var memorizedSlot in SpellBook.MemorizedSpellSlots)
                 {
-                    if (memorizedSlot.Bounds.Contains(x, y))
+                    if (memorizedSlot.Bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
                     {
                         if (memorizedSlot.Spell != null)
                         {

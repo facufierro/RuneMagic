@@ -155,5 +155,38 @@ namespace RuneMagic.Source
                 }
             }
         }
+
+        public void MagicCraftingActions()
+        {
+            var cursorLocation = Game1.currentCursorTile;
+            var objectUnderCursor = Game1.currentLocation.getObjectAtTile((int)cursorLocation.X, (int)cursorLocation.Y);
+
+            if (objectUnderCursor != null && objectUnderCursor.ParentSheetIndex == RuneMagic.JsonAssetsApi.GetBigCraftableId("Runic Anvil"))
+            {
+                foreach (Item item in Game1.player.Items)
+                {
+                    if (item is SpellBook spellBook)
+                    {
+                        var runeCraftingMenu = new RuneCraftingMenu(spellBook);
+                        if (Game1.activeClickableMenu != runeCraftingMenu)
+                            Game1.activeClickableMenu = runeCraftingMenu;
+                        return;
+                    }
+                }
+            }
+            if (objectUnderCursor != null && objectUnderCursor.ParentSheetIndex == RuneMagic.JsonAssetsApi.GetBigCraftableId("Inscription Table"))
+            {
+                foreach (Item item in Game1.player.Items)
+                {
+                    if (item is SpellBook spellBook)
+                    {
+                        var scrollScribingMenu = new ScrollScribingMenu(spellBook);
+                        if (Game1.activeClickableMenu != scrollScribingMenu)
+                            Game1.activeClickableMenu = scrollScribingMenu;
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

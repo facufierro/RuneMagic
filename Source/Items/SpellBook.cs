@@ -21,13 +21,13 @@ namespace RuneMagic.Source.Items
         public Spell Spell { get; set; }
 
         [XmlIgnore]
-        public List<SpellSlot> KnownSpellSlots { get; set; }
+        public List<MagicButton> KnownSpellSlots { get; set; }
 
         [XmlIgnore]
-        public List<SpellSlot> MemorizedSpellSlots { get; set; }
+        public List<MagicButton> MemorizedSpellSlots { get; set; }
 
         [XmlIgnore]
-        public SpellSlot SelectedSlot { get; set; }
+        public MagicButton SelectedSlot { get; set; }
 
         [XmlIgnore]
         public SpellBookMenu Menu { get; set; }
@@ -37,10 +37,10 @@ namespace RuneMagic.Source.Items
 
         public SpellBook() : base()
         {
-            KnownSpellSlots = new List<SpellSlot>();
-            MemorizedSpellSlots = new List<SpellSlot>();
+            KnownSpellSlots = new List<MagicButton>();
+            MemorizedSpellSlots = new List<MagicButton>();
             for (int i = 0; i < 15; i++)
-                MemorizedSpellSlots.Add(new SpellSlot());
+                MemorizedSpellSlots.Add(new MagicButton());
 
             Menu = new SpellBookMenu(this);
             ActionBar = new SpellActionBar(this);
@@ -48,10 +48,10 @@ namespace RuneMagic.Source.Items
 
         public SpellBook(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
-            KnownSpellSlots = new List<SpellSlot>();
-            MemorizedSpellSlots = new List<SpellSlot>();
+            KnownSpellSlots = new List<MagicButton>();
+            MemorizedSpellSlots = new List<MagicButton>();
             for (int i = 0; i < 15; i++)
-                MemorizedSpellSlots.Add(new SpellSlot());
+                MemorizedSpellSlots.Add(new MagicButton());
 
             Menu = new SpellBookMenu(this);
             ActionBar = new SpellActionBar(this);

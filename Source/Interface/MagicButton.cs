@@ -9,7 +9,7 @@ using static SpaceCore.Skills;
 
 namespace RuneMagic.Source.Interface
 {
-    public class SpellSlot
+    public class MagicButton
     {
         public Spell Spell { get; set; }
         public Texture2D Icon { get; set; }
@@ -19,15 +19,15 @@ namespace RuneMagic.Source.Interface
         public Rectangle Bounds { get; set; }
         public Color Color { get; set; }
 
-        public SpellSlot()
+        public MagicButton()
         { Color = Color.White; }
 
-        public SpellSlot(Spell spell) : this()
+        public MagicButton(Spell spell) : this()
         {
             Spell = spell;
         }
 
-        public SpellSlot(Spell spell, Rectangle rectangle) : this(spell)
+        public MagicButton(Spell spell, Rectangle rectangle) : this(spell)
         {
             Spell = spell;
             Bounds = rectangle;
@@ -87,6 +87,18 @@ namespace RuneMagic.Source.Interface
             {
                 Texture = RuneMagic.Textures["spell_slot_disabled"];
                 b.Draw(Texture, Bounds, Color);
+            }
+        }
+
+        public void Render(SpriteBatch b, Texture2D texture)
+        {
+            Texture = texture;
+            b.Draw(Texture, Bounds, Color);
+
+            if (Spell != null)
+            {
+                Icon = Spell.Icon;
+                b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
             }
         }
 

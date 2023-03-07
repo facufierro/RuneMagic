@@ -66,8 +66,6 @@ namespace RuneMagic.Source
             PlayerStats = new PlayerStats();
 
             RegisterSpells();
-
-            RegisterCustomCraftingStations();
         }
 
         //Event Handlers
@@ -91,13 +89,13 @@ namespace RuneMagic.Source
             var jsonAssetsInstance = JsonAssets.Mod.instance;
 
             //Register BigCraftables
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Runic Anvil", "An anvil marked with strange runes.", Textures["item_big_craftable"],
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Runic Anvil", "An anvil marked with strange runes.", Textures["big_craftable"],
                 new() { new BigCraftableIngredient() { Object = "Iron Bar", Count = 20 }, new BigCraftableIngredient() { Object = "Amethyst", Count = 25 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Inscription Table", "A table marked with strange runes.", Textures["item_big_craftable"],
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Inscription Table", "A table marked with strange runes.", Textures["big_craftable"],
                 new() { new BigCraftableIngredient() { Object = "Wood", Count = 40 }, new BigCraftableIngredient() { Object = "Amethyst", Count = 25 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["item_magic_grinder"],
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Magic Grinder", "It's used to produce magic dust for glyphs.", Textures["magic_grinder"],
                 new() { new BigCraftableIngredient() { Object = "Stone", Count = 40 }, new BigCraftableIngredient() { Object = "Topaz", Count = 25 }, }));
-            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Spell Excavation", "", Textures["spell_excavation"], null));
+            jsonAssetsInstance.RegisterBigCraftable(ModManifest, SetBigCraftableData("Spell Excavation", "", Textures["excavation"], null));
             //Register Runes and Scrolls
             int textureIndex = 0;
             foreach (var spell in Spells)
@@ -111,16 +109,16 @@ namespace RuneMagic.Source
             }
 
             //Register other Objects
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Rune", "A stone carved and prepared to carve runes in it.", Textures[$"item_blank_rune"],
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Rune", "A stone carved and prepared to carve runes in it.", Textures[$"blank_rune"],
                 new List<ObjectIngredient>() { new ObjectIngredient() { Object = "Stone", Count = 1 }, }));
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Parchment", "A peace of parchment ready for inscribing.", Textures[$"item_blank_parchment"],
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Blank Parchment", "A peace of parchment ready for inscribing.", Textures[$"blank_parchment"],
                 new List<ObjectIngredient>() { new ObjectIngredient() { Object = "Fiber", Count = 1 }, }));
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Magic Dust", "Magically processed dust obtained from Gems", Textures[$"item_magic_dust"], null));
-            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Spell Book", "A magic journal with intricate symbols on cover and pages detailing secrets of spellcasting.", Textures[$"item_spell_book"], null));
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Magic Dust", "Magically processed dust obtained from Gems", Textures[$"magic_dust"], null));
+            jsonAssetsInstance.RegisterObject(ModManifest, SetObjectData("Spell Book", "A magic journal with intricate symbols on cover and pages detailing secrets of spellcasting.", Textures[$"spell_book"], null));
             //Register Weapons
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Apprentice Staff", "A stick with strange markings in it.", Textures[$"item_apprentice_staff"], WeaponType.Club, 10));
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Adept Staff", "A stick with strange markings in it.", Textures[$"item_adept_staff"], WeaponType.Club, 80));
-            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Master Staff", "A stick with strange markings in it.", Textures[$"item_master_staff"], WeaponType.Club, 120));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Apprentice Staff", "A stick with strange markings in it.", Textures[$"apprentice_staff"], WeaponType.Club, 10));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Adept Staff", "A stick with strange markings in it.", Textures[$"adept_staff"], WeaponType.Club, 80));
+            jsonAssetsInstance.RegisterWeapon(ModManifest, SetWeaponData("Master Staff", "A stick with strange markings in it.", Textures[$"master_staff"], WeaponType.Club, 120));
         }
 
         private void OnSaveLoaded(object sender, SaveLoadedEventArgs e)
@@ -237,9 +235,8 @@ namespace RuneMagic.Source
         {
             if (Context.IsWorldReady)
             {
-                if (e.Button == SButton.MouseLeft)
-                    if (Game1.activeClickableMenu is not null and SpellBookMenu)
-                        (Game1.activeClickableMenu as SpellBookMenu).MemorizeSpell();
+                if (e.Button == SButton.MouseRight)
+                    PlayerStats.MagicCraftingActions();
                 if (e.Button == Config.SpellBookKey)
                     //if the player has a spellbook in inventory open spellmenu
                     foreach (Item item in Game1.player.Items)
@@ -284,7 +281,7 @@ namespace RuneMagic.Source
             Textures = new Dictionary<string, Texture2D>();
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Spells"))
             {
-                Textures.Add($"spell_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Spells/{Path.GetFileName(file)}"));
+                Textures.Add($"{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Spells/{Path.GetFileName(file)}"));
             }
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Runes"))
             {
@@ -296,7 +293,7 @@ namespace RuneMagic.Source
             }
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Items"))
             {
-                Textures.Add($"item_{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Items/{Path.GetFileName(file)}"));
+                Textures.Add($"{Path.GetFileNameWithoutExtension(file)}", Helper.ModContent.Load<Texture2D>($"assets/Items/{Path.GetFileName(file)}"));
             }
             foreach (var file in Directory.GetFiles($"{Helper.DirectoryPath}/assets/Interface"))
             {
@@ -502,35 +499,6 @@ namespace RuneMagic.Source
                     }
                 }
             };
-        }
-
-        public void RegisterCustomCraftingStations()
-
-        {
-            var runeRecipes = new List<string>() { "Blank Rune" };
-            var scrollRecipes = new List<string>() { "Blank Parchment" };
-
-            foreach (var spell in Spells)
-            {
-                if (spell.Name.Contains("_"))
-                {
-                    _ = spell.Name.Replace("_", " ");
-                }
-                runeRecipes.Add($"Rune of {spell.Name}");
-                scrollRecipes.Add($"{spell.Name} Scroll");
-            }
-
-            var craftingStations = new List<Dictionary<string, object>> {
-                new Dictionary<string, object> { { "BigCraftable", "Runic Anvil" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", runeRecipes } },
-                new Dictionary<string, object> { { "BigCraftable", "Inscription Table" }, { "ExclusiveRecipes", true }, { "CraftingRecipes", scrollRecipes } } };
-
-            var json = JsonConvert.SerializeObject(new Dictionary<string, object> { { "CraftingStations", craftingStations } }, Formatting.Indented);
-
-            string rootPath = Path.Combine(Instance.Helper.DirectoryPath, "..", "[RM]ContentPacks/[CCS]RuneMagic/");
-            string fileName = "content.json";
-            string fullPath = Path.Combine(rootPath, fileName);
-
-            File.WriteAllText(fullPath, json);
         }
 
         public void TriggerEvent(GameLocation location)

@@ -24,7 +24,7 @@ namespace RuneMagic.Source.Effects
 
         public override void Update()
         {
-            var texture = RuneMagic.Textures["spell_magic_missile"];
+            var texture = RuneMagic.Textures["magic_missile"];
             var minDamage = 1;
             var maxDamage = 4;
             var bonusDamage = RuneMagic.PlayerStats.MagicSkill.Level;
