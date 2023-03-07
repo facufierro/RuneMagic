@@ -131,6 +131,8 @@ namespace RuneMagic.Source
         {
             if (!Context.IsWorldReady)
                 return;
+            PlayerStats.LearnRecipes();
+
             if (Game1.player.CurrentItem is ISpellCastingItem spellItem)
             {
                 if (Instance.Helper.Input.IsDown(Config.ActionBarKey))
@@ -149,7 +151,16 @@ namespace RuneMagic.Source
         {
             if (Config.DevMode)
             {
-                Game1.player.addItemToInventory(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
+                Game1.player.addItemByMenuIfNecessary(new SpellBook(JsonAssetsApi.GetObjectId("Spell Book"), 1));
+                Game1.player.addItemByMenuIfNecessary(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Runic Anvil")));
+                Game1.player.addItemByMenuIfNecessary(new Object(Vector2.Zero, JsonAssetsApi.GetBigCraftableId("Inscription Table")));
+                Game1.player.addItemByMenuIfNecessary(new Object(JsonAssetsApi.GetObjectId("Magic Dust"), 100));
+                Game1.player.addItemByMenuIfNecessary(new Object(JsonAssetsApi.GetObjectId("Blank Rune"), 100));
+                Game1.player.addItemByMenuIfNecessary(new Object(JsonAssetsApi.GetObjectId("Blank Parchment"), 100));
+
+                PlayerStats.MagicLearned = true;
+                PlayerStats.RuneCarving = true;
+                PlayerStats.ScrollScribing = true;
             }
         }
 
@@ -204,8 +215,6 @@ namespace RuneMagic.Source
 
         private void OnDayStarted(object sender, DayStartedEventArgs e)
         {
-            PlayerStats.LearnRecipes();
-
             foreach (Item item in Game1.player.Items)
             {
                 if (item is ISpellCastingItem magicItem && magicItem.Spell == null)

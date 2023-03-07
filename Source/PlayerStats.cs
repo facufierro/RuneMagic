@@ -69,7 +69,7 @@ namespace RuneMagic.Source
         {
             if (Game1.player.CurrentItem is not ISpellCastingItem) return;
 
-            if (!RuneMagic.Instance.Helper.Input.IsDown(SButton.R))
+            if (!RuneMagic.Instance.Helper.Input.IsDown(RuneMagic.Config.CastKey))
             {
                 CastingTime = 0;
                 return;
@@ -83,7 +83,7 @@ namespace RuneMagic.Source
             if (Game1.player.health < _healthBeforeCasting)
             {
                 CastingTime = 0;
-                RuneMagic.Instance.Helper.Input.Suppress(SButton.R); return;
+                RuneMagic.Instance.Helper.Input.Suppress(RuneMagic.Config.CastKey); return;
             }
 
             RuneMagic.Instance.Helper.Input.Suppress(SButton.W);
@@ -93,7 +93,8 @@ namespace RuneMagic.Source
 
             if (item.Spell != null && CastingTime >= Math.Floor(item.Spell.CastingTime * 60))
             {
-                item.Activate(); RuneMagic.Instance.Helper.Input.Suppress(SButton.R);
+                item.Activate();
+                RuneMagic.Instance.Helper.Input.Suppress(RuneMagic.Config.CastKey);
                 CastingTime = 0;
             }
             else { CastingTime += 1; }
