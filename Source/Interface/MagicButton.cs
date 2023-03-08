@@ -43,7 +43,9 @@ namespace RuneMagic.Source.Interface
                     if (Selected)
                         Texture = RuneMagic.Textures["spell_slot_empty"];
                     else
+                    {
                         Texture = RuneMagic.Textures["spell_slot_filled"];
+                    }
                     b.Draw(Texture, Bounds, Color);
                     b.Draw(Icon, new Rectangle(Bounds.X + 5, Bounds.Y + 5, Bounds.Width - 10, Bounds.Height - 10), Color.White);
                 }

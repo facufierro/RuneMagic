@@ -84,5 +84,17 @@ namespace RuneMagic.Source.Interface
                 }
             }
         }
+
+        public void DrawTooltip(SpriteBatch b)
+        {
+            foreach (var knownSlot in SpellBook.KnownSpellSlots)
+            {
+                var tooltipString = $"{knownSlot.Spell.Name}\n\n" +
+                    $"{knownSlot.Spell.Description}";
+
+                if (knownSlot.Bounds.Contains(Game1.getMouseX(), Game1.getMouseY()))
+                    drawHoverText(b, tooltipString, Game1.smallFont);
+            }
+        }
     }
 }

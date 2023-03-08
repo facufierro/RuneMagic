@@ -28,7 +28,9 @@ namespace RuneMagic.Source.Interface
         {
             base.draw(b);
             DrawKnownSlots(b);
+
             DrawMemorizedSlots(b);
+            DrawTooltip(b);
             drawMouse(b);
         }
 
@@ -45,6 +47,7 @@ namespace RuneMagic.Source.Interface
                     var slot = new MagicButton(spell, GridRectangle(xOffset, yOffset, 4, 4));
                     SpellBook.KnownSpellSlots.Add(slot);
                     slot.Render(b);
+
                     xOffset += 3;
                 }
                 xOffset = 2;

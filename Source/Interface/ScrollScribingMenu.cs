@@ -33,6 +33,7 @@ namespace RuneMagic.Source.Interface
             base.draw(b);
             DrawKnownSlots(b);
             DrawRune(b);
+            DrawTooltip(b);
             drawMouse(b);
         }
 
