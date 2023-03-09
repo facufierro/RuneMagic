@@ -67,7 +67,7 @@ namespace RuneMagic.Source.Items
 
         public bool Fizzle()
         {
-            if (Game1.random.Next(1, 100) < 100)
+            if (Game1.random.Next(1, 100) < 10)
             {
                 Game1.player.stamina -= 10;
                 Game1.playSound("stoneCrack");

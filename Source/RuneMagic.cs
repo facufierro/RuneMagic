@@ -555,17 +555,17 @@ namespace RuneMagic.Source
             }
             if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == true)
             {
-                var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
-                       $"/speak Wizard \"@... I know why you are here my friend...\"" +
-                       $"/pause 400" +
-                       $"/move farmer 0 -6 0 true" +
-                       $"/pause 2000" +
-                       $"/speak Wizard \"You want to specialize in another magic school. I understand, but it's not possible. \"" +
-                       $"/pause 500" +
-                       $"/speak Wizard \"The only way is to reverse your current knowledge and select another. I'm sorry.\"" +
-                       $"/pause 1000" +
-                       $"/speak Wizard \"I'll give you the means to do it, but be warned, it's a costly process.\"" +
-                       $"/end";
+                //var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                //       $"/speak Wizard \"@... I know why you are here my friend...\"" +
+                //       $"/pause 400" +
+                //       $"/move farmer 0 -6 0 true" +
+                //       $"/pause 2000" +
+                //       $"/speak Wizard \"You want to specialize in another magic school. I understand, but it's not possible. \"" +
+                //       $"/pause 500" +
+                //       $"/speak Wizard \"The only way is to reverse your current knowledge and select another. I'm sorry.\"" +
+                //       $"/pause 1000" +
+                //       $"/speak Wizard \"I'll give you the means to do it, but be warned, it's a costly process.\"" +
+                //       $"/end";
                 //location.startEvent(new Event(eventString, 15065004));
             }
             if (location.Name == "Mine" && Game1.player.getFriendshipHeartLevelForNPC("Dwarf") >= 5 && PlayerStats.RuneCarving == false && Game1.player.canUnderstandDwarves && PlayerStats.MagicLearned == true)
@@ -670,7 +670,6 @@ namespace RuneMagic.Source
                 setValue: value => Config.CastbarScale = value,
                 min: 1,
                 max: 3);
-            ConfigMenuApi.addc
             ConfigMenuApi.SetTitleScreenOnlyForNextOptions(ModManifest, true);
             ConfigMenuApi.AddBoolOption(
                mod: ModManifest,

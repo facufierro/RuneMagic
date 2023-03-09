@@ -3,7 +3,8 @@ Added a spell book that functions like wizards do in D&D. The spell book can be 
 Added a rune crafting system. 
 Added a scroll scribing system.
 Added custom menus for the spell book, runes and scrolls.
-Added events to the Wizard for learning magic, scroll scribing and skill reset.
+Added events to the Wizard for learning magic, scroll scribing.
 Added an event to the Dwarf for learning runes.
-
+Added a better castbar
+Added config options for keys and scale of the castbar
 Fixed a lot of bugs (including skill bar taking too much space, hopefully the events too.)
