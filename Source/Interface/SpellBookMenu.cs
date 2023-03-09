@@ -89,7 +89,7 @@ namespace RuneMagic.Source.Interface
             base.receiveLeftClick(x, y, playSound);
 
             //if the current location is home
-            if (Game1.currentLocation.Name == "FarmHouse")
+            if (Game1.currentLocation.Name == "FarmHouse" || Game1.currentLocation.Name == "WizardHouse")
             {
                 foreach (var knownSlot in SpellBook.KnownSpellSlots)
                 {

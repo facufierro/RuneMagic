@@ -86,7 +86,10 @@ namespace RuneMagic.Source.Items
         public void UpdateSpellSlots()
         {
             foreach (var slot in MemorizedSpellSlots)
+            {
                 slot.Active = true;
+                slot.Selected = false;
+            }
         }
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
