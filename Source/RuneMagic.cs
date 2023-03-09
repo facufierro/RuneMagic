@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using xTile.Dimensions;
 using static SpaceCore.Skills;
 using Object = StardewValley.Object;
 
@@ -198,6 +199,18 @@ namespace RuneMagic.Source
 
                 PlayerStats.MagicLearned = true;
                 PlayerStats.LearnRecipes();
+                Response[] responses = new List<Response>()
+                {
+                    new Response("Abjuration", "Abjuration"),
+                    new Response("Alteration", "Alteration"),
+                    new Response("Conjuration", "Conjuration"),
+                    new Response("Evocation", "Evocation")
+                }.ToArray();
+
+                Game1.currentLocation.createQuestionDialogue("Choose your Specialization:", responses, (Farmer f, string responseKey) =>
+                {
+                    PlayerStats.MagicSkill = MagicSkills[(School)Enum.Parse(typeof(School), responseKey)];
+                });
             }
             if (Game1.CurrentEvent.id == 15065002)
             {
@@ -507,17 +520,16 @@ namespace RuneMagic.Source
             if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && PlayerStats.MagicLearned == false)
             {
                 var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
-                       $"/speak Wizard \"@! Come in my friend, come in...\"" +
-                       $"/pause 400" +
-                       $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
-                       $"/move farmer 0 -6 0 true" +
-                       $"/pause 2000" +
-                       $"/speak Wizard \"What do you think about this? Beautiful, isn't it?\"" +
-                       $"/pause 500" +
-                       $"/speak Wizard \"It's a Spell Book, a gift for you...\"" +
-                       $"/pause 1000" +
-                       $"/speak Wizard \"Now pay attention, young adept. I will teach you the bases you will need to learn Magic!\"" +
-                       $"/end";
+                    $"/speak Wizard \"@! Come in my friend, come in...\"" +
+                    $"/pause 400" +
+                    $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
+                    $"/move farmer 0 -6 0 true" +
+                    $"/speak Wizard \"What do you think of this? beautiful isn't it?\"" +
+                    $"/pause 500" +
+                    $"/speak Wizard \"It's a spell book, a gift for you.\"" +
+                    $"/pause 1000" +
+                    $"/speak Wizard \"Now pay attention, young adept! I am going to teach you everything you need to know to use it!\"" +
+                    $"/end";
                 location.startEvent(new Event(eventString, 15065001));
             }
             if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 4 && PlayerStats.ScrollScribing == false)

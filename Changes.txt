@@ -1,1 +1,9 @@
-﻿
+﻿Added 4 custom skills (15 levels) for each magic school.
+Added a spell book that functions like wizards do in D&D. The spell book can be used with a custom casting bar menu (default key Q to select a spell and default key R to cast it).
+Added a rune crafting system. 
+Added a scroll scribing system.
+Added custom menus for the spell book, runes and scrolls.
+Added events to the Wizard for learning magic, scroll scribing and skill reset.
+Added an event to the Dwarf for learning runes.
+
+Fixed a lot of bugs (including skill bar taking too much space, hopefully the events too.)
