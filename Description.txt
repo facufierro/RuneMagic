@@ -2,16 +2,8 @@
 
 
 [color=red][b][size=4][center]WARNING
-This mod is now in BETA, almost every feature is fully functional but there will be bugs. I will try to fix problems as they appear.
-[/size][/b][/color][/center]
-
-[color=yellow][b][size=4][center]Huge Update
-Check the changelog for details!
-
-Sadly the only way to not break anything while updating is to remove all the Runes, Scrolls, Staves and Spell Book from the inventory before doing so.
-
-I'm currently working on implementing the Feat system, which will allow you to customize your character and make it more unique. (Professions)
-Some of the spells are not working yet, you'll see the big NOT IMPLEMENTED on the description.
+This mod is now in BETA, almost every feature is functional but there will be bugs. 
+I will try to fix problems as they appear.
 [/size][/b][/color][/center]
 
 [center][size=5][b]Features[/b][/size][/center]
@@ -96,10 +88,16 @@ R to cast spells.
 
 [center][size=5][b]Compatibility[/b][/size][/center]
 [list][size=2]
+
+[*][b]Compatible (if you find any incompatibility with these please let me know!): [/b]
+[list]
+[*]Stardew Valley Extended
+[*]MARGO
+[*]Romanceable Rasmodius / Rasmodia
+[/list]
 [*][b]Other Mods: [/b]It should compatible with almost everything, even Magic from spacechace0, it would be redundant and not balanced though.
-    Also I tested this with SVE and MARGO and haven't had any problems yet.
 [*][b]Multiplayer: [/b]Confirmed not working in multiplayer. I'll look into it when the mod is more complete.
-[*][b]Mobile: [/b]This mod is made for PC only, and there are no plans to port it to mobile.
+[*][b]Mobile: [/b]This mod is made for PC only, and there are no plans to port it to mobile.w
 [/size][/list]
 
 [b][size=4]Source:[url=http://] https://github.com/facufierro/RuneMagic[/url][/size][/b]
