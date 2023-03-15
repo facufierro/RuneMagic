@@ -22,6 +22,8 @@ namespace RuneMagic.Source.Interface
     {
         private MagicButton Scroll;
         private Scroll ScrollItem;
+        private int _scrollCounter;
+        private Spell _lastSpell = null;
 
         public ScrollScribingMenu(SpellBook spellBook)
             : base(spellBook)
@@ -34,7 +36,7 @@ namespace RuneMagic.Source.Interface
         {
             base.draw(b);
             DrawKnownSlots(b);
-            DrawRune(b);
+            DrawScroll(b);
             DrawTooltip(b);
             drawMouse(b);
         }
@@ -59,22 +61,25 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        private void DrawRune(SpriteBatch b)
+        private void DrawScroll(SpriteBatch b)
         {
-            Scroll.Bounds = GridRectangle(29, 14, 5, 5);
+            var x = 28;
+            var y = 14;
+
+            Scroll.Bounds = GridRectangle(x, y, 5, 5);
             b.Draw(RuneMagic.Textures["inscription_table"], GridRectangle(26, 12, 12, 12), Color.White);
             Scroll.Render(b, RuneMagic.Textures["blank_parchment"]);
+
             if (Scroll.Spell != null)
             {
-                var x = 29;
-                var y = 25;
                 Color color;
-                b.Draw(RuneMagic.Textures["magic_dust"], GridRectangle(x, y, 3, 3), Color.White);
+                b.Draw(RuneMagic.Textures["magic_dust"], GridRectangle(x + 1, y + 10, 3, 3), Color.White);
                 if (ScrollItem.IngredientsMet())
                     color = Color.White;
                 else
                     color = Color.Red;
-                b.DrawString(Game1.smallFont, $"x {ScrollItem.Ingredients[1].Item2}", Grid[x + 3, y + 1].ToVector2(), color);
+                b.DrawString(Game1.smallFont, $"x {ScrollItem.Ingredients[1].Item2}", Grid[x + 4, y + 11].ToVector2(), color);
+                b.DrawString(Game1.tinyFont, $"{_scrollCounter}", Grid[x + 5, y + 4].ToVector2(), Color.White);
             }
         }
 
@@ -85,9 +90,19 @@ namespace RuneMagic.Source.Interface
             {
                 if (knownSlot.Bounds.Contains(x, y))
                 {
-                    //RuneMagic.Instance.Monitor.Log($"{knownSlot.Spell.Name}");
+                    //RuneMagic.Instance.Monitor.Log($"{_scrollCounter}");
 
                     Scroll.Spell = knownSlot.Spell;
+
+                    if (_lastSpell == null || _lastSpell == Scroll.Spell)
+                    {
+                        _scrollCounter++;
+                    }
+                    else
+                    {
+                        _scrollCounter = 1;
+                    }
+                    _lastSpell = Scroll.Spell;
                     ScrollItem.Spell = Scroll.Spell;
                     ScrollItem.Ingredients = new List<(int, int)>
                     {
@@ -98,13 +113,24 @@ namespace RuneMagic.Source.Interface
             }
             if (Scroll.Bounds.Contains(x, y))
             {
-                if (ScrollItem.Spell != null && ScrollItem.IngredientsMet())
+                //if the player has space in inventory
+
+                for (int i = 0; i < _scrollCounter; i++)
                 {
-                    Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[0].Item1, ScrollItem.Ingredients[0].Item2);
-                    Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[1].Item1, ScrollItem.Ingredients[1].Item2);
-                    Game1.playSound("shwip");
-                    Game1.player.addItemToInventory(new Scroll(RuneMagic.JsonAssetsApi.GetObjectId($"{Scroll.Spell.Name} Scroll"), 1));
-                    Scroll.Spell = null;
+                    if (ScrollItem.Spell != null && ScrollItem.IngredientsMet())
+                    {
+                        if (Game1.player.addItemToInventoryBool(new Scroll(RuneMagic.JsonAssetsApi.GetObjectId($"{Scroll.Spell.Name} Scroll"), 1)))
+                        {
+                            Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[0].Item1, ScrollItem.Ingredients[0].Item2);
+                            Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[1].Item1, ScrollItem.Ingredients[1].Item2);
+                        }
+                        Game1.playSound("shwip");
+                        if (i == _scrollCounter - 1)
+                        {
+                            _scrollCounter = 0;
+                            Scroll.Spell = null;
+                        }
+                    }
                 }
             }
         }

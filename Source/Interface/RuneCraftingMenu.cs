@@ -98,14 +98,14 @@ namespace RuneMagic.Source.Interface
             }
             if (Rune.Bounds.Contains(x, y))
             {
-                if (RuneItem.Spell != null && RuneItem.IngredientsMet())
-                {
-                    Game1.player.removeItemsFromInventory(RuneItem.Ingredients[0].Item1, RuneItem.Ingredients[0].Item2);
-                    Game1.player.removeItemsFromInventory(RuneItem.Ingredients[1].Item1, RuneItem.Ingredients[1].Item2);
-                    Game1.playSound("stoneCrack");
-                    Game1.player.addItemToInventory(new Rune(RuneMagic.JsonAssetsApi.GetObjectId($"Rune of {Rune.Spell.Name}"), 1));
-                    Rune.Spell = null;
-                }
+                if (RuneItem.IngredientsMet() && Rune.Spell != null)
+                    if (Game1.player.addItemToInventoryBool(new Rune(RuneMagic.JsonAssetsApi.GetObjectId($"Rune of {Rune.Spell.Name}"), 1)))
+                    {
+                        Game1.player.removeItemsFromInventory(RuneItem.Ingredients[0].Item1, RuneItem.Ingredients[0].Item2);
+                        Game1.player.removeItemsFromInventory(RuneItem.Ingredients[1].Item1, RuneItem.Ingredients[1].Item2);
+                        Game1.playSound("hammer");
+                        Rune.Spell = null;
+                    }
             }
         }
     }
