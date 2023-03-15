@@ -522,37 +522,39 @@ namespace RuneMagic.Source
         public void TriggerEvent(GameLocation location)
         {
             //Instance.Monitor.Log(PlayerStats.MagicLearned.ToString());
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3 && PlayerStats.MagicLearned == false)
-            {
-                var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
-                    $"/speak Wizard \"@! Come in my friend, come in...\"" +
-                    $"/pause 400" +
-                    $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
-                    $"/move farmer 0 -6 0 true" +
-                    $"/speak Wizard \"What do you think of this? beautiful isn't it?\"" +
-                    $"/pause 500" +
-                    $"/speak Wizard \"It's a spell book, a gift for you.\"" +
-                    $"/pause 1000" +
-                    $"/speak Wizard \"Now pay attention, young adept! I am going to teach you everything you need to know to use it!\"" +
-                    $"/end";
-                location.startEvent(new Event(eventString, 15065001));
-            }
-            if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 5 && PlayerStats.ScrollScribing == false && PlayerStats.MagicLearned == true)
-            {
-                var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
-                       $"/speak Wizard \"@! Come in young adept, come in...\"" +
-                       $"/pause 400" +
-                       $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
-                       $"/move farmer 0 -6 0 true" +
-                       $"/pause 2000" +
-                       $"/speak Wizard \"Today I am going to teach you a new form of magic.\"" +
-                       $"/pause 500" +
-                       $"/speak Wizard \"Scroll Scribing.\"" +
-                       $"/pause 1000" +
-                       $"/speak Wizard \"Now pay attention, this can be a bit tricky. And if not done properly even dangerous!\"" +
-                       $"/end";
-                location.startEvent(new Event(eventString, 15065002));
-            }
+            if (!Game1.player.eventsSeen.Contains(15065001))
+                if (PlayerStats.MagicLearned == false && location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 3)
+                {
+                    var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                        $"/speak Wizard \"@! Come in my friend, come in...\"" +
+                        $"/pause 400" +
+                        $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
+                        $"/move farmer 0 -6 0 true" +
+                        $"/speak Wizard \"What do you think of this? beautiful isn't it?\"" +
+                        $"/pause 500" +
+                        $"/speak Wizard \"It's a spell book, a gift for you.\"" +
+                        $"/pause 1000" +
+                        $"/speak Wizard \"Now pay attention, young adept! I am going to teach you everything you need to know to use it!\"" +
+                        $"/end";
+                    location.startEvent(new Event(eventString, 15065001));
+                }
+            if (!Game1.player.eventsSeen.Contains(15065002))
+                if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 5 && PlayerStats.ScrollScribing == false && PlayerStats.MagicLearned == true)
+                {
+                    var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
+                           $"/speak Wizard \"@! Come in young adept, come in...\"" +
+                           $"/pause 400" +
+                           $"/advancedMove Wizard false -2 0 3 100 0 2 2 3000" +
+                           $"/move farmer 0 -6 0 true" +
+                           $"/pause 2000" +
+                           $"/speak Wizard \"Today I am going to teach you a new form of magic.\"" +
+                           $"/pause 500" +
+                           $"/speak Wizard \"Scroll Scribing.\"" +
+                           $"/pause 1000" +
+                           $"/speak Wizard \"Now pay attention, this can be a bit tricky. And if not done properly even dangerous!\"" +
+                           $"/end";
+                    location.startEvent(new Event(eventString, 15065002));
+                }
             if (location.Name == "WizardHouse" && Game1.player.getFriendshipHeartLevelForNPC("Wizard") >= 6 && PlayerStats.MagicLearned == true)
             {
                 //var eventString = $"WizardSong/6 18/Wizard 10 15 2 farmer 8 24 0/skippable" +
@@ -568,21 +570,22 @@ namespace RuneMagic.Source
                 //       $"/end";
                 //location.startEvent(new Event(eventString, 15065004));
             }
-            if (location.Name == "Mine" && Game1.player.getFriendshipHeartLevelForNPC("Dwarf") >= 5 && PlayerStats.RuneCarving == false && Game1.player.canUnderstandDwarves && PlayerStats.MagicLearned == true)
-            {
-                var eventString = $"WizardSong/43 8/Dwarf 43 6 2 farmer 39 8 1/skippable" +
-                       $"/speak Dwarf \"Hey!\"" +
-                       $"/pause 400" +
-                       $"/advancedMove farmer false 43 8 1 100 43 7 3 3000" +
-                       $"/pause 2000" +
-                       $"/speak Dwarf \"Did you know that dwarves know how to use magic?.\"" +
-                       $"/pause 500" +
-                       $"/speak Wizard \"We do it different though, like this!\"" +
-                       $"/pause 1000" +
-                       $"/speak Wizard \"Wanna try? It's not hard if you already know the basics.\"" +
-                       $"/end";
-                location.startEvent(new Event(eventString, 15065003));
-            }
+            if (!Game1.player.eventsSeen.Contains(15065003))
+                if (location.Name == "Mine" && Game1.player.getFriendshipHeartLevelForNPC("Dwarf") >= 5 && PlayerStats.RuneCarving == false && Game1.player.canUnderstandDwarves && PlayerStats.MagicLearned == true)
+                {
+                    var eventString = $"WizardSong/43 8/Dwarf 43 6 2 farmer 39 8 1/skippable" +
+                           $"/speak Dwarf \"Hey!\"" +
+                           $"/pause 400" +
+                           $"/advancedMove farmer false 43 8 1 100 43 7 3 3000" +
+                           $"/pause 2000" +
+                           $"/speak Dwarf \"Did you know that dwarves know how to use magic?.\"" +
+                           $"/pause 500" +
+                           $"/speak Wizard \"We do it different though, like this!\"" +
+                           $"/pause 1000" +
+                           $"/speak Wizard \"Wanna try? It's not hard if you already know the basics.\"" +
+                           $"/end";
+                    location.startEvent(new Event(eventString, 15065003));
+                }
         }
 
         public void PlayerAnimation()
