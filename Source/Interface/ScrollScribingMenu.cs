@@ -21,11 +21,13 @@ namespace RuneMagic.Source.Interface
     public class ScrollScribingMenu : MagicMenu
     {
         private MagicButton Scroll;
+        private Scroll ScrollItem;
 
         public ScrollScribingMenu(SpellBook spellBook)
             : base(spellBook)
         {
-            Scroll = new MagicButton();
+            Scroll = new();
+            ScrollItem = new();
         }
 
         public override void draw(SpriteBatch b)
@@ -62,6 +64,18 @@ namespace RuneMagic.Source.Interface
             Scroll.Bounds = GridRectangle(29, 14, 5, 5);
             b.Draw(RuneMagic.Textures["inscription_table"], GridRectangle(26, 12, 12, 12), Color.White);
             Scroll.Render(b, RuneMagic.Textures["blank_parchment"]);
+            if (Scroll.Spell != null)
+            {
+                var x = 29;
+                var y = 25;
+                Color color;
+                b.Draw(RuneMagic.Textures["magic_dust"], GridRectangle(x, y, 3, 3), Color.White);
+                if (ScrollItem.IngredientsMet())
+                    color = Color.White;
+                else
+                    color = Color.Red;
+                b.DrawString(Game1.smallFont, $"x {ScrollItem.Ingredients[1].Item2}", Grid[x + 3, y + 1].ToVector2(), color);
+            }
         }
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
@@ -71,15 +85,27 @@ namespace RuneMagic.Source.Interface
             {
                 if (knownSlot.Bounds.Contains(x, y))
                 {
-                    RuneMagic.Instance.Monitor.Log($"{knownSlot.Spell.Name}");
+                    //RuneMagic.Instance.Monitor.Log($"{knownSlot.Spell.Name}");
 
                     Scroll.Spell = knownSlot.Spell;
+                    ScrollItem.Spell = Scroll.Spell;
+                    ScrollItem.Ingredients = new List<(int, int)>
+                    {
+                        (RuneMagic.JsonAssetsApi.GetObjectId("Blank Parchment"), 1),
+                        (RuneMagic.JsonAssetsApi.GetObjectId("Magic Dust"), ScrollItem.Spell.Level)
+                    };
                 }
             }
             if (Scroll.Bounds.Contains(x, y))
             {
-                Game1.playSound("shwip");
-                Game1.player.addItemToInventory(new Scroll(RuneMagic.JsonAssetsApi.GetObjectId($"{Scroll.Spell.Name} Scroll"), 1));
+                if (ScrollItem.Spell != null && ScrollItem.IngredientsMet())
+                {
+                    Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[0].Item1, ScrollItem.Ingredients[0].Item2);
+                    Game1.player.removeItemsFromInventory(ScrollItem.Ingredients[1].Item1, ScrollItem.Ingredients[1].Item2);
+                    Game1.playSound("shwip");
+                    Game1.player.addItemToInventory(new Scroll(RuneMagic.JsonAssetsApi.GetObjectId($"{Scroll.Spell.Name} Scroll"), 1));
+                    Scroll.Spell = null;
+                }
             }
         }
     }

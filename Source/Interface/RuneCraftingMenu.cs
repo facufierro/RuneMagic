@@ -21,11 +21,13 @@ namespace RuneMagic.Source.Interface
     public class RuneCraftingMenu : MagicMenu
     {
         private MagicButton Rune;
+        private Rune RuneItem;
 
         public RuneCraftingMenu(SpellBook spellBook)
             : base(spellBook)
         {
-            Rune = new MagicButton();
+            Rune = new();
+            RuneItem = new();
         }
 
         public override void draw(SpriteBatch b)
@@ -62,6 +64,18 @@ namespace RuneMagic.Source.Interface
             Rune.Bounds = GridRectangle(29, 14, 5, 5);
             b.Draw(RuneMagic.Textures["runic_anvil"], GridRectangle(26, 12, 12, 12), Color.White);
             Rune.Render(b, RuneMagic.Textures["blank_rune"]);
+            if (Rune.Spell != null)
+            {
+                var x = 29;
+                var y = 25;
+                Color color;
+                b.Draw(RuneMagic.Textures["magic_dust"], GridRectangle(x, y, 3, 3), Color.White);
+                if (RuneItem.IngredientsMet())
+                    color = Color.White;
+                else
+                    color = Color.Red;
+                b.DrawString(Game1.smallFont, $"x {RuneItem.Ingredients[1].Item2}", Grid[x + 3, y + 1].ToVector2(), color);
+            }
         }
 
         public override void receiveLeftClick(int x, int y, bool playSound = true)
@@ -71,15 +85,27 @@ namespace RuneMagic.Source.Interface
             {
                 if (knownSlot.Bounds.Contains(x, y))
                 {
-                    RuneMagic.Instance.Monitor.Log($"{knownSlot.Spell.Name}");
+                    //RuneMagic.Instance.Monitor.Log($"{knownSlot.Spell.Name}");
 
                     Rune.Spell = knownSlot.Spell;
+                    RuneItem.Spell = knownSlot.Spell;
+                    RuneItem.Ingredients = new List<(int, int)>
+                    {
+                       ( RuneMagic.JsonAssetsApi.GetObjectId("Blank Rune"), 1 ),
+                       ( RuneMagic.JsonAssetsApi.GetObjectId("Magic Dust"), RuneItem.Spell.Level * 5 )
+                    };
                 }
             }
             if (Rune.Bounds.Contains(x, y))
             {
-                Game1.playSound("stoneCrack");
-                Game1.player.addItemToInventory(new Rune(RuneMagic.JsonAssetsApi.GetObjectId($"Rune of {Rune.Spell.Name}"), 1));
+                if (RuneItem.Spell != null && RuneItem.IngredientsMet())
+                {
+                    Game1.player.removeItemsFromInventory(RuneItem.Ingredients[0].Item1, RuneItem.Ingredients[0].Item2);
+                    Game1.player.removeItemsFromInventory(RuneItem.Ingredients[1].Item1, RuneItem.Ingredients[1].Item2);
+                    Game1.playSound("stoneCrack");
+                    Game1.player.addItemToInventory(new Rune(RuneMagic.JsonAssetsApi.GetObjectId($"Rune of {Rune.Spell.Name}"), 1));
+                    Rune.Spell = null;
+                }
             }
         }
     }

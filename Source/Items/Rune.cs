@@ -4,6 +4,7 @@ using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
 using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
@@ -19,20 +20,28 @@ namespace RuneMagic.Source.Items
         public float Charges { get; set; }
         public int Cracks { get; set; } = 0;
 
+        public List<(int, int)> Ingredients { get; set; }
+
         public Rune() : base()
         {
             InitializeSpell();
-            int invertedLevel = 6 - Spell.Level;
-            ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
-            Charges = ChargesMax;
+            if (Spell != null)
+            {
+                int invertedLevel = 6 - Spell.Level;
+                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
+                Charges = ChargesMax;
+            }
         }
 
         public Rune(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             InitializeSpell();
-            int invertedLevel = 6 - Spell.Level;
-            ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
-            Charges = ChargesMax;
+            if (Spell != null)
+            {
+                int invertedLevel = 6 - Spell.Level;
+                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
+                Charges = ChargesMax;
+            }
         }
 
         public void InitializeSpell()
@@ -46,6 +55,14 @@ namespace RuneMagic.Source.Items
                     break;
                 }
             }
+        }
+
+        public bool IngredientsMet()
+        {
+            if (Game1.player.hasItemInInventory(Ingredients[0].Item1, Ingredients[0].Item2) && Game1.player.hasItemInInventory(Ingredients[1].Item1, Ingredients[1].Item2))
+                return true;
+            else
+                return false;
         }
 
         public void Activate()

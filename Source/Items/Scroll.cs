@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceCore;
 using StardewModdingAPI;
 using StardewValley;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Object = StardewValley.Object;
 
@@ -14,6 +15,8 @@ namespace RuneMagic.Source.Items
         [XmlIgnore]
         public Spell Spell { get; set; }
 
+        public List<(int, int)> Ingredients { get; set; }
+
         public Scroll() : base()
         {
             InitializeSpell();
@@ -22,6 +25,11 @@ namespace RuneMagic.Source.Items
         public Scroll(int parentSheetIndex, int stack) : base(parentSheetIndex, stack)
         {
             InitializeSpell();
+            Ingredients = new List<(int, int)>
+            {
+                (RuneMagic.JsonAssetsApi.GetObjectId("Blank Parchment"), 1),
+                (RuneMagic.JsonAssetsApi.GetObjectId("Magic Dust"), Spell.Level)
+            };
         }
 
         public void InitializeSpell()
@@ -36,6 +44,14 @@ namespace RuneMagic.Source.Items
                     break;
                 }
             }
+        }
+
+        public bool IngredientsMet()
+        {
+            if (Game1.player.hasItemInInventory(Ingredients[0].Item1, Ingredients[0].Item2) && Game1.player.hasItemInInventory(Ingredients[1].Item1, Ingredients[1].Item2))
+                return true;
+            else
+                return false;
         }
 
         public void Activate()
