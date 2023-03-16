@@ -27,32 +27,10 @@ namespace RuneMagic.Source.Interface
         public override void draw(SpriteBatch b)
         {
             base.draw(b);
-            DrawKnownSlots(b);
 
             DrawMemorizedSlots(b);
             DrawTooltip(b);
             drawMouse(b);
-        }
-
-        private void DrawKnownSlots(SpriteBatch b)
-        {
-            SpellBook.KnownSpellSlots.Clear();
-
-            int xOffset = 2;
-            int yOffset = 8;
-            for (int level = 1; level <= 5; level++)
-            {
-                foreach (var spell in RuneMagic.PlayerStats.KnownSpells.Where(s => s.Level == level))
-                {
-                    var slot = new MagicButton(spell, GridRectangle(xOffset, yOffset, 4, 4));
-                    SpellBook.KnownSpellSlots.Add(slot);
-                    slot.Render(b);
-
-                    xOffset += 3;
-                }
-                xOffset = 2;
-                yOffset += 3;
-            }
         }
 
         private void DrawMemorizedSlots(SpriteBatch b)
@@ -70,7 +48,7 @@ namespace RuneMagic.Source.Interface
                 else if (index < 15)
                     xOffset = 34;
 
-                if (index >= RuneMagic.PlayerStats.MemorizedSpells.Count)
+                if (index >= Player.MagicStats.MemorizedSpells.Count)
                 {
                     slot.Active = false;
                 }
@@ -97,10 +75,10 @@ namespace RuneMagic.Source.Interface
                     {
                         foreach (var memorizedSlot in SpellBook.MemorizedSpellSlots)
                         {
-                            if (RuneMagic.PlayerStats.MemorizedSpells.Contains(null))
+                            if (Player.MagicStats.MemorizedSpells.Contains(null))
                             {
-                                int nullIndex = RuneMagic.PlayerStats.MemorizedSpells.FindIndex(x => x == null);
-                                RuneMagic.PlayerStats.MemorizedSpells[nullIndex] = knownSlot.Spell;
+                                int nullIndex = Player.MagicStats.MemorizedSpells.FindIndex(x => x == null);
+                                Player.MagicStats.MemorizedSpells[nullIndex] = knownSlot.Spell;
                                 SpellBook.MemorizedSpellSlots[nullIndex].Spell = knownSlot.Spell;
                                 //RuneMagic.Instance.Monitor.Log($"{memorizedSlot.Spell.Name}");
 
@@ -116,7 +94,7 @@ namespace RuneMagic.Source.Interface
                         if (memorizedSlot.Spell != null)
                         {
                             var index = SpellBook.MemorizedSpellSlots.IndexOf(memorizedSlot);
-                            RuneMagic.PlayerStats.MemorizedSpells[index] = null;
+                            Player.MagicStats.MemorizedSpells[index] = null;
                             memorizedSlot.Spell = null;
                             memorizedSlot.Selected = false;
                             return;

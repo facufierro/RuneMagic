@@ -34,7 +34,7 @@ namespace RuneMagic.Source.Interface
             if (spellCastingItem.Spell == null)
                 return;
             var castingTime = spellCastingItem.Spell.CastingTime;
-            if (RuneMagic.PlayerStats.CastingTime > 0)
+            if (Player.MagicStats.CastingTime > 0)
             {
                 var x = (int)(spriteBatch.GraphicsDevice.Viewport.Width / 2 - (64 * Scale) / 2);
                 var y = (int)(spriteBatch.GraphicsDevice.Viewport.Height / 6 * 5 - Scale * 64);
@@ -42,7 +42,7 @@ namespace RuneMagic.Source.Interface
                 var height = (int)(64 * Scale);
                 spriteBatch.Draw(Background, new Rectangle(x, y, width, height), Color.White);
 
-                width = (int)(RuneMagic.PlayerStats.CastingTime / (castingTime * 60) * 64);
+                width = (int)(Player.MagicStats.CastingTime / (castingTime * 60) * 64);
                 spriteBatch.Draw(Bar, new Rectangle(x, y, (int)(width * Scale), height), BarColor);
 
                 width = (int)(64 * Scale);

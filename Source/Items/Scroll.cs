@@ -36,7 +36,7 @@ namespace RuneMagic.Source.Items
         {
             //set spellName to Name without " Scroll" at the end
 
-            foreach (var spell in RuneMagic.Spells)
+            foreach (var spell in Spell.List)
             {
                 if (Name.Contains(spell.Name))
                 {
@@ -76,7 +76,7 @@ namespace RuneMagic.Source.Items
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.CastingTime > 0)
+            if (Player.MagicStats.CastingTime > 0)
                 base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
     }

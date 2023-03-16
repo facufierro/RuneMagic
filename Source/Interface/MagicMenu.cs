@@ -30,7 +30,8 @@ namespace RuneMagic.Source.Interface
         public override void draw(SpriteBatch b)
         {
             drawTextureBox(b, xPositionOnScreen, yPositionOnScreen, WindowWidth, WindowHeight, Color.White);
-            DrawSkillBar(b, RuneMagic.PlayerStats.MagicSkill);
+            DrawSkillBar(b, Player.MagicStats.ActiveSchool);
+            DrawKnownSlots(b);
             base.draw(b);
         }
 
@@ -53,7 +54,7 @@ namespace RuneMagic.Source.Interface
             }
         }
 
-        private void DrawSkillBar(SpriteBatch b, MagicSkill skill)
+        private void DrawSkillBar(SpriteBatch b, School skill)
         {
             //draw the skill icon at rect[1,1] of rectSize*3
 
@@ -82,6 +83,25 @@ namespace RuneMagic.Source.Interface
                         texture = RuneMagic.Textures["icon_level_filled"];
                     b.Draw(texture, GridRectangle(xOffset + (i * 2), 1, 3, 3), Color.White);
                 }
+            }
+        }
+
+        private void DrawKnownSlots(SpriteBatch b)
+        {
+            SpellBook.KnownSpellSlots.Clear();
+            int xOffset = 2;
+            int yOffset = 8;
+            for (int level = 1; level <= 5; level++)
+            {
+                foreach (var spell in Player.MagicStats.KnownSpells.Where(s => s.Level == level))
+                {
+                    var slot = new MagicButton(spell, GridRectangle(xOffset, yOffset, 4, 4));
+                    SpellBook.KnownSpellSlots.Add(slot);
+                    slot.Render(b);
+                    xOffset += 3;
+                }
+                xOffset = 2;
+                yOffset += 3;
             }
         }
 

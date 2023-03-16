@@ -71,7 +71,7 @@ namespace RuneMagic.Source.Items
             {
                 Game1.playSound("flameSpell");
                 SelectedSlot.Active = false;
-                RuneMagic.PlayerStats.MemorizedSpells.Remove(Spell);
+                Player.MagicStats.MemorizedSpells.Remove(Spell);
                 SelectedSlot.Spell = null;
 
                 Spell = null;
@@ -94,7 +94,7 @@ namespace RuneMagic.Source.Items
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.CastingTime > 0)
+            if (Player.MagicStats.CastingTime > 0)
                 base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
 

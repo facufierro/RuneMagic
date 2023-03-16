@@ -16,7 +16,7 @@ namespace RuneMagic.Source.Effects
         public CastingMagicMissile(Spell spell) : base(spell, Duration.Instant)
         {
             Interval = 3;
-            Timer = RuneMagic.PlayerStats.MagicSkill.Level;
+            Timer = Player.MagicStats.ActiveSchool.Level;
             if (Timer > 12)
                 Timer = 12;
             Start();
@@ -27,7 +27,7 @@ namespace RuneMagic.Source.Effects
             var texture = RuneMagic.Textures["magic_missile"];
             var minDamage = 1;
             var maxDamage = 4;
-            var bonusDamage = RuneMagic.PlayerStats.MagicSkill.Level;
+            var bonusDamage = Player.MagicStats.ActiveSchool.Level;
             var area = 0;
             var speed = 5;
 

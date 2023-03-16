@@ -28,7 +28,7 @@ namespace RuneMagic.Source.Items
             if (Spell != null)
             {
                 int invertedLevel = 6 - Spell.Level;
-                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
+                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + Player.MagicStats.ActiveSchool.Level / 3);
                 Charges = ChargesMax;
             }
         }
@@ -39,14 +39,14 @@ namespace RuneMagic.Source.Items
             if (Spell != null)
             {
                 int invertedLevel = 6 - Spell.Level;
-                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + RuneMagic.PlayerStats.MagicSkill.Level / 3);
+                ChargesMax = Game1.random.Next(3, 5 + invertedLevel + Player.MagicStats.ActiveSchool.Level / 3);
                 Charges = ChargesMax;
             }
         }
 
         public void InitializeSpell()
         {
-            foreach (var spell in RuneMagic.Spells)
+            foreach (var spell in Spell.List)
             {
                 if (Name.Contains(spell.Name))
                 {
@@ -130,7 +130,7 @@ namespace RuneMagic.Source.Items
 
         public override void drawWhenHeld(SpriteBatch spriteBatch, Vector2 objectPosition, Farmer f)
         {
-            if (RuneMagic.PlayerStats.CastingTime > 0)
+            if (Player.MagicStats.CastingTime > 0)
                 base.drawWhenHeld(spriteBatch, objectPosition, f);
         }
 

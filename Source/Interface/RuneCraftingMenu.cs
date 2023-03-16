@@ -33,30 +33,9 @@ namespace RuneMagic.Source.Interface
         public override void draw(SpriteBatch b)
         {
             base.draw(b);
-            DrawKnownSlots(b);
             DrawRune(b);
             DrawTooltip(b);
             drawMouse(b);
-        }
-
-        private void DrawKnownSlots(SpriteBatch b)
-        {
-            SpellBook.KnownSpellSlots.Clear();
-
-            int xOffset = 2;
-            int yOffset = 8;
-            for (int level = 1; level <= 5; level++)
-            {
-                foreach (var spell in RuneMagic.PlayerStats.KnownSpells.Where(s => s.Level == level))
-                {
-                    var slot = new MagicButton(spell, GridRectangle(xOffset, yOffset, 4, 4));
-                    SpellBook.KnownSpellSlots.Add(slot);
-                    slot.Render(b);
-                    xOffset += 3;
-                }
-                xOffset = 2;
-                yOffset += 3;
-            }
         }
 
         private void DrawRune(SpriteBatch b)

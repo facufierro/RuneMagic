@@ -30,7 +30,7 @@ namespace RuneMagic.Source.Interface
 
         public void Render(SpriteBatch b)
         {
-            if (RuneMagic.PlayerStats.MemorizedSpells == null)
+            if (Player.MagicStats.MemorizedSpells == null)
                 return;
 
             //set data for the slot wheel

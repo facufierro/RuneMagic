@@ -14,7 +14,7 @@ namespace RuneMagic.Source
 
         public virtual void Activate()
         {
-            RuneMagic.PlayerStats.MagicSkill.Experience += 5;
+            Player.MagicStats.ActiveSchool.Experience += 5;
         }
 
         public void Update();
